@@ -103,6 +103,15 @@ namespace generic
             const auto player = client->_gameEnginePlayer.lock();
             player->addCommandToBuffer(client->inputBuffer);
         } else {
+            if (client->inputBuffer == "GRAPHIC") {
+                client->managedByGameEngine = true;
+                client->isGraphical = true;
+                client->_gameEngineGraphicalClient = zappyServer.createNewGraphicalClient();
+                std::cout << "[TRACE] CLIENT ID " << client->clientID << " JOINED THE GRAPHIC TEAM" << std::endl;
+                auto graphic_client_ptr = client->_gameEngineGraphicalClient.lock();
+                graphic_client_ptr.get()->sendInitData(client->connectionFD, zappyServer.getConfig());
+                return;
+            }
             try {
                 client->_gameEnginePlayer = zappyServer.createNewPlayerInTeam(client->inputBuffer);
                 client->managedByGameEngine = true;

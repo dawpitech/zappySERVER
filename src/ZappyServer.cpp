@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "ZappyServer.hpp"
+#include "engine/graphical/Graphical.hpp"
 
 zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
     : _config(config)
@@ -35,6 +36,10 @@ void zappy::ZappyServer::launch()
 std::weak_ptr<zappy::engine::Player> zappy::ZappyServer::createNewPlayerInTeam(const std::string& teamName)
 {
     return this->_world->addPlayer(teamName);
+}
+
+std::weak_ptr<zappy::engine::GraphicalClient> zappy::ZappyServer::createNewGraphicalClient() {
+    return this->_world->addGraphicalClient();
 }
 
 const zappy::utils::ZappyConfig& zappy::ZappyServer::getConfig()

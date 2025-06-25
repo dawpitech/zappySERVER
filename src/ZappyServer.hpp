@@ -25,6 +25,7 @@ namespace zappy
             void launch();
 
             std::weak_ptr<zappy::engine::Player> createNewPlayerInTeam(const std::string& teamName);
+	    std::weak_ptr<zappy::engine::GraphicalClient> createNewGraphicalClient();
 
             const utils::ZappyConfig& getConfig();
         private:

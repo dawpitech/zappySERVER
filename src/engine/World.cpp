@@ -6,6 +6,7 @@
 */
 
 #include "World.hpp"
+#include "graphical/Graphical.hpp"
 
 namespace zappy::engine
 {
@@ -26,5 +27,10 @@ namespace zappy::engine
             throw std::runtime_error("Unknown team " + teamName);
         this->players.emplace_back(std::make_shared<Player>(2, 2, teamID));
         return {this->players.back()};
+    }
+
+    std::weak_ptr<GraphicalClient> World::addGraphicalClient() {
+        this->graphical_clients.emplace_back(std::make_shared<GraphicalClient>());
+        return {this->graphical_clients.back()};
     }
 }

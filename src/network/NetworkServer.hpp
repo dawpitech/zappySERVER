@@ -16,6 +16,7 @@
 #include <sys/socket.h>
 
 #include "../engine/Player.hpp"
+#include "../engine/graphical/Graphical.hpp"
 
 namespace zappy
 {
@@ -67,7 +68,9 @@ namespace generic
                     int connectionFD;
 
                     bool managedByGameEngine = false;
+                    bool isGraphical = false;
                     std::weak_ptr<zappy::engine::Player> _gameEnginePlayer;
+		    std::weak_ptr<zappy::engine::GraphicalClient> _gameEngineGraphicalClient;
 
                     std::string inputBuffer;
             };

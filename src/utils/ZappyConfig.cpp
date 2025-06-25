@@ -14,7 +14,7 @@ zappy::utils::ZappyConfig::ZappyConfig(const int argc, const char** argv)
 {
     auto status = ParseStatus::UNKNOWN;
 
-    if (argc <= 13 || argv == nullptr)
+    if (argc < 13 || argv == nullptr)
         throw errors::InvalidArgsException();
 
     for (int i = 1; i < argc; i++)
