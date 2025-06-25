@@ -10,5 +10,7 @@ namespace zappy::engine {
 	void sendInitData(unsigned int fd, const zappy::utils::ZappyConfig &config);
     private:
 	void sendMsz(unsigned int fd, const zappy::utils::ZappyConfig &config);
+	void sendSgt(unsigned int fd, const zappy::utils::ZappyConfig &config);
+	void sendTna(unsigned int fd, const zappy::utils::ZappyConfig &config);
     };
 }
