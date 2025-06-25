@@ -5,16 +5,12 @@
 ** main.cpp
 */
 
-#include <iostream>
-
 #include "ZappyServer.hpp"
 
 int main(const int argc, const char **argv)
 {
-    auto server = zappy::ZappyServer();
+    const auto config = zappy::utils::ZappyConfig(argc, argv);
+    auto server = zappy::ZappyServer(config);
 
-    server.parseArgs(argc, argv);
     server.launch();
-
-    return 0;
 }

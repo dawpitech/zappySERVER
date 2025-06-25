@@ -7,39 +7,28 @@
 
 #pragma once
 
-#include <vector>
+#include <memory>
 
-#include "ZappyErrors.hpp"
+#include "engine/Player.hpp"
+#include "engine/World.hpp"
+#include "network/NetworkServer.hpp"
+#include "utils/ZappyConfig.hpp"
 
 namespace zappy
 {
     class ZappyServer
     {
         public:
-            ZappyServer() = default;
+            explicit ZappyServer(const utils::ZappyConfig& config);
             ~ZappyServer() = default;
-
-            void parseArgs(int argc, const char **argv);
 
             void launch();
 
-        private:
-            enum class ParseStatus
-            {
-                UNKNOWN,
-                PORT,
-                WIDTH,
-                HEIGHT,
-                TEAM_NAME,
-                TEAM_SIZE,
-                FREQ,
-            };
+            std::weak_ptr<zappy::engine::Player> createNewPlayerInTeam(const std::string& teamName);
 
-            unsigned int listeningPort;
-            unsigned int worldWidth;
-            unsigned int worldHeight;
-            std::vector<std::string> teamNames;
-            unsigned int initialTeamSize;
-            float freqValue;
+        private:
+            utils::ZappyConfig _config;
+            std::unique_ptr<generic::NetworkServer> _networkServer;
+            std::unique_ptr<engine::World> _world;
     };
 }
