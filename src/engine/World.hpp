@@ -27,6 +27,8 @@ namespace zappy::engine
             std::weak_ptr<GraphicalClient> addGraphicalClient();
 
         private:
+            void tickPlayer(const std::shared_ptr<Player>& player);
+
             std::vector<std::shared_ptr<Player>> players;
             std::vector<std::shared_ptr<GraphicalClient>> graphical_clients;
             std::vector<std::string> teams;

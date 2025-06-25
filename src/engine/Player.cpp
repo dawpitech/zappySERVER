@@ -11,7 +11,7 @@
 
 zappy::engine::Player::Player(const unsigned int x, const unsigned int y, const unsigned int teamID)
     : _currentX(x), _currentY(y), _teamID(teamID), _currentLevel(0), _facing(Directions::NORTH),
-      waitingCyclesRemaining(0), _status(Status::WAITING_FOR_COMMAND)
+      _waitingCyclesRemaining(0), _status(Status::WAITING_FOR_COMMAND)
 {
     std::cout << "PLAYER CREATED AT " << x << ":" << y << std::endl;
 }

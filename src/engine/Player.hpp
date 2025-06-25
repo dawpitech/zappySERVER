@@ -31,10 +31,11 @@ namespace zappy::engine
             void addCommandToBuffer(const std::string& command);
             std::queue<std::string>& getCommandsBuffer();
 
-            unsigned int& getWaitingCyclesRemaining() { return this->waitingCyclesRemaining; }
-
             [[nodiscard]] Status getStatus() const { return this->_status; }
             void setStatus(const Status playerStatus) { this->_status = playerStatus; }
+
+            [[nodiscard]] unsigned int getWaitingCyclesRemaining() const { return this->_waitingCyclesRemaining; }
+            void setWaitingCyclesRemaining(const unsigned int remainingCycles) { this->_waitingCyclesRemaining = remainingCycles; }
 
         private:
             unsigned int _currentX;
@@ -45,7 +46,7 @@ namespace zappy::engine
             Directions _facing;
 
             Status _status;
-            unsigned int waitingCyclesRemaining;
+            unsigned int _waitingCyclesRemaining;
             std::queue<std::string> _commandsBuffer;
     };
 }
