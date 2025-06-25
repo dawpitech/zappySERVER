@@ -36,3 +36,8 @@ std::weak_ptr<zappy::engine::Player> zappy::ZappyServer::createNewPlayerInTeam(c
 {
     return this->_world->addPlayer(teamName);
 }
+
+const zappy::utils::ZappyConfig& zappy::ZappyServer::getConfig()
+{
+    return this->_config;
+}

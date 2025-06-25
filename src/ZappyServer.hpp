@@ -26,6 +26,7 @@ namespace zappy
 
             std::weak_ptr<zappy::engine::Player> createNewPlayerInTeam(const std::string& teamName);
 
+            const utils::ZappyConfig& getConfig();
         private:
             utils::ZappyConfig _config;
             std::unique_ptr<generic::NetworkServer> _networkServer;
