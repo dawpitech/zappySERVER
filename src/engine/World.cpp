@@ -8,10 +8,32 @@
 #include "World.hpp"
 #include "graphical/Graphical.hpp"
 
+#include <iostream>
+
 namespace zappy::engine
 {
     World::World(const utils::ZappyConfig& config) {
         this->teams = config.teamNames;
+    }
+
+    void World::tick()
+    {
+        //std::cout << "[TRACE] World ticking" << std::endl;
+        for (const auto& player : this->players) {
+            if (player->getStatus() == Player::Status::WAITING_BEFORE_EXECUTE) {
+                if (--player->getWaitingCyclesRemaining() <= 0) {
+                    std::cout << "[INFO] EXECUTING COMMAND " << player->getCommandsBuffer().front() << std::endl;
+                    player->getCommandsBuffer().pop();
+                    player->setStatus(Player::Status::WAITING_FOR_COMMAND);
+                }
+            }
+            if (player->getStatus() == Player::Status::WAITING_FOR_COMMAND) {
+                if (player->getCommandsBuffer().empty())
+                    continue;
+                player->getWaitingCyclesRemaining() = 7;
+                player->setStatus(Player::Status::WAITING_BEFORE_EXECUTE);
+            }
+        }
     }
 
     std::weak_ptr<Player> World::addPlayer(const std::string& teamName) {

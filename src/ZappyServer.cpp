@@ -29,8 +29,10 @@ void zappy::ZappyServer::launch()
     std::cout << "Team size:\t" << this->_config.initialTeamSize << std::endl;
     std::cout << "Freq:\t\t" << this->_config.freqValue << std::endl;
 
-    while (true)
+    while (true) {
         this->_networkServer->pollNetworkActivity(*this);
+        this->_world->tick();
+    }
 }
 
 std::weak_ptr<zappy::engine::Player> zappy::ZappyServer::createNewPlayerInTeam(const std::string& teamName)

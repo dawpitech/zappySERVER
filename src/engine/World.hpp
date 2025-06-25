@@ -21,6 +21,8 @@ namespace zappy::engine
         public:
             explicit World(const utils::ZappyConfig& config);
 
+            void tick();
+
             std::weak_ptr<Player> addPlayer(const std::string& teamName);
             std::weak_ptr<GraphicalClient> addGraphicalClient();
 

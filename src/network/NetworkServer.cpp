@@ -51,7 +51,10 @@ namespace generic
             polls.at(i + 1).fd = this->_clients.at(i)->connectionFD;
         }
 
-        poll(polls.data(), POLLS_SIZE, -1);
+        const int pollResult = poll(polls.data(), POLLS_SIZE, static_cast<int>(1000 / zappyServer.getConfig().freqValue));
+
+        if (pollResult == 0)
+            return;
 
         for (int i = static_cast<int>(POLLS_SIZE) - 1; i >= 0; --i) {
             if (polls.at(i).revents == 0)

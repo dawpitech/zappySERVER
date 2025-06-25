@@ -21,15 +21,20 @@ namespace zappy::engine
         public:
             enum class Status
             {
-                EGG,
-                ALIVE,
-                DEAD
+                WAITING_FOR_COMMAND,
+                WAITING_BEFORE_EXECUTE,
             };
 
             Player(unsigned int x, unsigned int y, unsigned int teamID);
             ~Player() = default;
 
             void addCommandToBuffer(const std::string& command);
+            std::queue<std::string>& getCommandsBuffer();
+
+            unsigned int& getWaitingCyclesRemaining() { return this->waitingCyclesRemaining; }
+
+            [[nodiscard]] Status getStatus() const { return this->_status; }
+            void setStatus(const Status playerStatus) { this->_status = playerStatus; }
 
         private:
             unsigned int _currentX;
@@ -38,6 +43,9 @@ namespace zappy::engine
             unsigned int _currentLevel;
             std::map<int, Ressources> _inventory;
             Directions _facing;
+
+            Status _status;
+            unsigned int waitingCyclesRemaining;
             std::queue<std::string> _commandsBuffer;
     };
 }

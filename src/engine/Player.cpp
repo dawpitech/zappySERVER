@@ -10,7 +10,8 @@
 #include <iostream>
 
 zappy::engine::Player::Player(const unsigned int x, const unsigned int y, const unsigned int teamID)
-    : _currentX(x), _currentY(y), _teamID(teamID), _currentLevel(0), _facing(Directions::NORTH)
+    : _currentX(x), _currentY(y), _teamID(teamID), _currentLevel(0), _facing(Directions::NORTH),
+      waitingCyclesRemaining(0), _status(Status::WAITING_FOR_COMMAND)
 {
     std::cout << "PLAYER CREATED AT " << x << ":" << y << std::endl;
 }
@@ -22,4 +23,9 @@ void zappy::engine::Player::addCommandToBuffer(const std::string& command)
         return;
     }
     this->_commandsBuffer.emplace(command);
+}
+
+std::queue<std::string>& zappy::engine::Player::getCommandsBuffer()
+{
+    return this->_commandsBuffer;
 }
