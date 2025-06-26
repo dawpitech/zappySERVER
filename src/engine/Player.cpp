@@ -37,8 +37,21 @@ std::queue<std::string>& zappy::engine::Player::getCommandsBuffer()
     return this->_commandsBuffer;
 }
 
+void zappy::engine::Player::removeRessource(const Ressources type, const int quantity)
+{
+    if (quantity > this->_inventory.at(type))
+        throw std::runtime_error("Not enough ressources in player inventory to take action");
+    this->_inventory.at(type) = this->_inventory.at(type) - quantity;
+}
+
+void zappy::engine::Player::addRessource(const Ressources type, const int quantity)
+{
+    this->_inventory.at(type) = this->_inventory.at(type) + quantity;
+}
+
 void zappy::engine::Player::setPosition(const int x, const int y)
 {
     this->_currentX = x;
     this->_currentY = y;
+
 }

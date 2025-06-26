@@ -28,7 +28,7 @@ namespace zappy::engine
         {"Incantation", {Command::INCANTATION, 300, &CommandInterpreter::dummyAction}},
     };
 
-    void CommandInterpreter::dummyAction(Player& player, World& world, const std::string& args)
+    void CommandInterpreter::dummyAction(std::weak_ptr<Player> player, World& world, const std::string& args)
     {
         std::cout << "Dummy action due to request: " << args << std::endl;
     }

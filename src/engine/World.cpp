@@ -71,7 +71,7 @@ namespace zappy::engine
                     std::string fullCommand = player->getCommandsBuffer().front();
                     std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
 
-                    CommandInterpreter::COMMANDS.at(action).handler(*player, *this, fullCommand);
+                    CommandInterpreter::COMMANDS.at(action).handler(player, *this, fullCommand);
                     player->getCommandsBuffer().pop();
                     player->setStatus(Player::Status::WAITING_FOR_COMMAND);
                 }

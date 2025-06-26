@@ -15,28 +15,34 @@
 
 namespace zappy::engine::cmd
 {
-    void CmdForward::cmdForward(Player& player, World& world, const std::string& args)
+    void CmdForward::cmdForward(std::weak_ptr<Player> player, World& world, const std::string& args)
     {
-        const auto currentX = player.getX();
-        const auto currentY = player.getY();
+        const auto lockPlayer = player.lock();
 
-        switch (player.getDirection())
+        const auto currentX = lockPlayer->getX();
+        const auto currentY = lockPlayer->getY();
+
+        world.getTileAt(currentX, currentY).removePlayer(lockPlayer);
+
+        switch (lockPlayer->getDirection())
         {
             case Directions::NORTH:
-                player.setPosition(currentX, currentY + 1);
+                lockPlayer->setPosition(currentX, currentY + 1);
                 break;
             case Directions::EAST:
-                player.setPosition(currentX + 1, currentY);
+                lockPlayer->setPosition(currentX + 1, currentY);
                 break;
             case Directions::SOUTH:
-                player.setPosition(currentX, currentY - 1);
+                lockPlayer->setPosition(currentX, currentY - 1);
                 break;
             case Directions::WEST:
-                player.setPosition(currentX - 1, currentY);
+                lockPlayer->setPosition(currentX - 1, currentY);
                 break;
         }
 
-        std::cout << "[TRACE] Player " << player.ID << " MOVED TO " << player.getX() << ":" << player.getY() << std::endl;
-        world.getMainZappyServer().sendMessageToClient("ok", player.ID);
+        world.getTileAt(lockPlayer->getX(), lockPlayer->getY()).addPlayer(lockPlayer);
+
+        std::cout << "[TRACE] Player " << lockPlayer->ID << " MOVED TO " << lockPlayer->getX() << ":" << lockPlayer->getY() << std::endl;
+        world.getMainZappyServer().sendMessageToClient("ok", lockPlayer->ID);
     }
 }

@@ -4,7 +4,6 @@
 namespace zappy::engine {
 
 namespace {
-    // Helper for comparing weak_ptrs (by their underlying raw pointer address)
     bool weakPtrEquals(const std::weak_ptr<Player>& a, const std::weak_ptr<Player>& b) {
         return !a.owner_before(b) && !b.owner_before(a);
     }
@@ -17,14 +16,12 @@ void Tile::addPlayer(const std::weak_ptr<Player>& player) {
 }
 
 void Tile::removePlayer(const std::weak_ptr<Player>& player) {
-    auto it = std::remove_if(_players.begin(), _players.end(),
-        [&](const std::weak_ptr<Player>& p) { return weakPtrEquals(p, player); });
+    const auto it = std::ranges::remove_if(_players, [&](const std::weak_ptr<Player>& p) { return weakPtrEquals(p, player); }).begin();
     _players.erase(it, _players.end());
 }
 
 bool Tile::hasPlayer(const std::weak_ptr<Player>& player) const {
-    return std::any_of(_players.begin(), _players.end(),
-        [&](const std::weak_ptr<Player>& p) { return weakPtrEquals(p, player); });
+    return std::ranges::any_of(_players, [&](const std::weak_ptr<Player>& p) { return weakPtrEquals(p, player); });
 }
 
 std::vector<std::shared_ptr<Player>> Tile::getPlayers() const {
@@ -49,7 +46,7 @@ void Tile::addResource(ResourceType type, int quantity) {
 }
 
 bool Tile::removeResource(ResourceType type, int quantity) {
-    auto it = _resources.find(type);
+    const auto it = _resources.find(type);
     if (it == _resources.end() || it->second < quantity) {
         return false;
     }
@@ -61,7 +58,7 @@ bool Tile::removeResource(ResourceType type, int quantity) {
 }
 
 int Tile::getResourceQuantity(ResourceType type) const {
-    auto it = _resources.find(type);
+    const auto it = _resources.find(type);
     return (it != _resources.end()) ? it->second : 0;
 }
 

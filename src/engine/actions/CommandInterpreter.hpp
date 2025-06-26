@@ -8,6 +8,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <stdexcept>
 
 namespace zappy::engine {
@@ -49,11 +50,11 @@ namespace zappy::engine
             {
                 Command command;
                 unsigned int duration;
-                void (*handler)(Player& player, World& world, const std::string& args);
+                void (*handler)(std::weak_ptr<Player> player, World& world, const std::string& args);
             };
 
             CommandInterpreter() = delete;
-            static void dummyAction(Player& player, World& world, const std::string& args);
+            static void dummyAction(std::weak_ptr<Player> player, World& world, const std::string& args);
 
             const static std::map<std::string, CommandInfo> COMMANDS;
 

@@ -14,12 +14,13 @@
 
 namespace zappy::engine::cmd
 {
-    void CmdInventory::cmdInventory(Player& player, World& world, const std::string& args)
+    void CmdInventory::cmdInventory(std::weak_ptr<Player> player, World& world, const std::string& args)
     {
+        const auto lockPlayer = player.lock();
         std::string reply = "[ ";
         bool first = true;
 
-        for (const auto& [type, quantity] : player.getInventory())
+        for (const auto& [type, quantity] : lockPlayer->getInventory())
         {
             if (!first)
                 reply.append(", ");
@@ -27,6 +28,6 @@ namespace zappy::engine::cmd
             first = false;
         }
         reply.append(" ]");
-        world.getMainZappyServer().sendMessageToClient(reply, player.ID);
+        world.getMainZappyServer().sendMessageToClient(reply, lockPlayer->ID);
     }
 }
