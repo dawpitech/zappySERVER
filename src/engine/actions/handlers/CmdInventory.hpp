@@ -23,6 +23,6 @@ namespace zappy::engine::cmd
     class CmdInventory
     {
         public:
-            static void cmdInventory(std::weak_ptr<Player> player, World& world, const std::string& args)
+            static void cmdInventory(std::weak_ptr<Player> player, World& world, const std::string& args);
     };
 }
