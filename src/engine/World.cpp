@@ -90,6 +90,7 @@ namespace zappy::engine
                 } catch (std::out_of_range&) {
                     std::cout << "[WARN] Unknown command received from player: " << action << std::endl;
                     player->getCommandsBuffer().pop();
+                    this->getMainZappyServer().sendMessageToClient("ko", player->ID);
                 }
             }
         } while (player->getWaitingCyclesRemaining() <= 0);
