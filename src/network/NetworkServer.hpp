@@ -81,7 +81,7 @@ namespace generic
             ~NetworkServer() = default;
 
             void pollNetworkActivity(zappy::ZappyServer& zappyServer);
-            void writeToClient(const std::string& message, unsigned int clientID);
+            void writeToClient(const std::string& message, unsigned int clientID) const;
 
         private:
             constexpr static size_t QUEUE_SIZE = 8;

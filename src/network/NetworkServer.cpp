@@ -67,7 +67,7 @@ namespace generic
         }
     }
 
-    void NetworkServer::writeToClient(const std::string& message, const unsigned int clientID)
+    void NetworkServer::writeToClient(const std::string& message, const unsigned int clientID) const
     {
         try {
             const auto& client = this->_clients.at(clientID);
@@ -138,7 +138,5 @@ namespace generic
                 this->writeToClient("ko", client->clientID);
             }
         }
-
-        //TODO: add client to player command buffer
     }
 } // generic
