@@ -44,6 +44,7 @@ namespace zappy::engine
             [[nodiscard]] unsigned int getX() const { return this->_currentX; }
             [[nodiscard]] unsigned int getY() const { return this->_currentY; }
             [[nodiscard]] Directions getDirection() const { return this->_facing; }
+            [[nodiscard]] unsigned int getLevel() const { return this->_currentLevel; }
 
             void setPosition(int x, int y);
             void setDirection(const Directions direction) { this->_facing = direction; }

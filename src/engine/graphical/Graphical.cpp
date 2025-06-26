@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <queue>
 #include <sstream>
+#include <algorithm>
 
 unsigned int zappy::engine::GraphicalClient::getID() {
     return this->_ID;
@@ -117,8 +118,10 @@ void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, const zap
 //player's position
 //untested
 void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
-    std::istringstream iss(args);
-    std::string com = "bct ";
+    std::string args2 = args;
+    args2.erase(std::remove(args2.begin(), args2.end(), '#'), args2.end());
+    std::istringstream iss(args2);
+    std::string com = "ppo ";
     int n;
     
     std::cout << "[TRACE][GRAPHIC] sending ppo command to CLIENT : " << graphic.getID() << std::endl;
@@ -136,5 +139,30 @@ void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, const zap
     }
 
     com += std::to_string(n) + " " + std::to_string(player->getX()) + " " + std::to_string(player->getY()) + " " + std::to_string((int)player->getDirection() + 1);
+    world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
+}
+
+void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+    std::string args2 = args;
+    args2.erase(std::remove(args2.begin(), args2.end(), '#'), args2.end());
+    std::istringstream iss(args2);
+    std::string com = "plv ";
+    int n;
+    
+    std::cout << "[TRACE][GRAPHIC] sending plv command to CLIENT : " << graphic.getID() << std::endl;
+    if (!(iss >> n) || n > world.getPlayers().size()) {
+        std::cout << "[TRACE][GRAPHIC] bad plv command from CLIENT : " << graphic.getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        return;
+    }
+
+    auto player = world.getPlayers()[n].get();
+    if (player == nullptr) {
+        std::cout << "[TRACE][GRAPHIC][plv] player was null, CLIENT : " << graphic.getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        return;
+    }
+
+    com += std::to_string(n) + " " + std::to_string(player->getLevel());
     world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
 }
