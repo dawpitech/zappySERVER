@@ -1,9 +1,11 @@
 #include "Graphical.hpp"
 #include "../../ZappyServer.hpp"
 #include <iostream>
+#include <ostream>
 #include <string>
 #include <unistd.h>
 #include <queue>
+#include <sstream>
 
 unsigned int zappy::engine::GraphicalClient::getID() {
     return this->_ID;
@@ -30,6 +32,7 @@ std::queue<std::string>& zappy::engine::GraphicalClient::getCommandsBuffer()
 void zappy::engine::GraphicalClient::sendGreetings(const zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args) {
     this->sendMsz(*this, config, world, args);
     this->sendSgt(*this, config, world, args);
+    this->sendMct(*this, config, world, args);
     this->sendTna(*this, config, world, args);
 }
 
@@ -59,19 +62,54 @@ void zappy::engine::GraphicalClient::sendTna(GraphicalClient& graphic, const zap
         std::string com = "tna " + e;
 
         std::cout << "[TRACE][GRAPHIC] sending tna message to CLIENT : " << graphic.getID() << std::endl;
-	world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
+        world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
     }
 }
 
 //TODO
 // content of the map
-/*
-void zappy::engine::GraphicalClient::sendBct(unsigned int fd, const
-zappy::utils::ZappyConfig &config) {
+void zappy::engine::GraphicalClient::sendMct(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+    std::cout << "[TRACE][GRAPHIC] sending mct command to CLIENT : " << graphic.getID() << std::endl;
+    for (int x = 0; x < world.getWidth(); x++) {
+        for (int y = 0; y < world.getHeight(); y++) {
+            sendBct(graphic, config, world, std::to_string(x) + " " + std::to_string(y));
+        }
+    }
 }
 
 //content of a tile
-void zappy::engine::GraphicalClient::sendMct(unsigned int fd, const
-zappy::utils::ZappyConfig &config) {
+void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+    std::istringstream iss(args);
+    std::string com = "bct ";
+    int x, y;
+
+    std::cout << "[TRACE][GRAPHIC] sending bct command to CLIENT : " << graphic.getID() << std::endl;
+    if (!(iss >> x >> y) || y >= world.getHeight() || x >= world.getWidth()) {
+        std::cout << "[TRACE][GRAPHIC] bad bct command from CLIENT : " << graphic.getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        return;
+    }
+
+    com += std::to_string(x) + " " + std::to_string(y) + " ";
+    int q0 = 0;
+    int q1 = 0;
+    int q2 = 0;
+    int q3 = 0;
+    int q4 = 0;
+    int q5 = 0;
+    int q6 = 0;
+    for (auto r : world.getTileAt(x, y).getAllResources()) {
+        switch (r.first) {
+            case ResourceType::FOOD: q0 = r.second; break;
+            case ResourceType::LINEMATE: q1 = r.second; break;
+            case ResourceType::DERAUMERE: q2 = r.second; break;
+            case ResourceType::SIBUR: q3 = r.second; break;
+            case ResourceType::MENDIANE: q4 = r.second; break;
+            case ResourceType::PHIRAS: q5 = r.second; break;
+            case ResourceType::THYSTAME: q6 = r.second; break;
+        }
+    }
+    com += std::to_string(q0) + " " + std::to_string(q1) + " " + std::to_string(q2) + " " + std::to_string(q3) + " " + std::to_string(q4) + " " + std::to_string(q5) + " " + std::to_string(q6);
+    
+    world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
 }
-*/
