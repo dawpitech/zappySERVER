@@ -42,8 +42,7 @@ namespace zappy::engine
             std::vector<std::shared_ptr<Player>> players;
             std::vector<std::shared_ptr<GraphicalClient>> graphical_clients;
 
-            std::vector<std::vector<Tile
-            >>
+            std::vector<std::vector<Tile>> _map;
 
             std::vector<std::string> teams;
             ZappyServer& _zappyServer;
