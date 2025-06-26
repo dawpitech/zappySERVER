@@ -36,3 +36,9 @@ std::queue<std::string>& zappy::engine::Player::getCommandsBuffer()
 {
     return this->_commandsBuffer;
 }
+
+void zappy::engine::Player::setPosition(const int x, const int y)
+{
+    this->_currentX = x;
+    this->_currentY = y;
+}

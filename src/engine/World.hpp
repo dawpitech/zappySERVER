@@ -11,12 +11,9 @@
 #include <vector>
 
 #include "Player.hpp"
+#include "Tile.hpp"
 #include "../utils/ZappyConfig.hpp"
 #include "graphical/Graphical.hpp"
-
-namespace zappy::engine {
-    class Tile;
-}
 
 namespace zappy {
     class ZappyServer;
@@ -35,6 +32,18 @@ namespace zappy::engine
             std::weak_ptr<GraphicalClient> addGraphicalClient();
 
             ZappyServer& getMainZappyServer() { return this->_zappyServer; }
+
+            Tile& getTileAt(int x, int y);
+            [[nodiscard]] const Tile& getTileAt(int x, int y) const;
+
+            void movePlayer(const std::shared_ptr<Player>& player, int newX, int newY);
+
+            [[nodiscard]] int getWidth() const;
+            [[nodiscard]] int getHeight() const;
+
+            [[nodiscard]] std::pair<int, int> normalizeCoordinates(int x, int y) const;
+
+            void distributeRandomResources();
 
         private:
             void tickPlayer(const std::shared_ptr<Player>& player);

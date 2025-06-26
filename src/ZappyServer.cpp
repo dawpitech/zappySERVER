@@ -17,7 +17,7 @@ zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
     this->_world = std::make_unique<engine::World>(config, *this);
 }
 
-[[noreturn]] void zappy::ZappyServer::launch()
+void zappy::ZappyServer::launch()
 {
     std::cout << "=== Zappy server ===" << std::endl;
     std::cout << "Port:\t\t" << this->_config.listeningPort << std::endl;

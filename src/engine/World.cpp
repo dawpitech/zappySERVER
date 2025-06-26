@@ -5,18 +5,26 @@
 ** World.cpp
 */
 
-#include "World.hpp"
-#include "graphical/Graphical.hpp"
-
 #include <iostream>
 
+#include "World.hpp"
+
+#include <locale>
+
+#include "Tile.hpp"
+#include "../ZappyServer.hpp"
 #include "actions/CommandInterpreter.hpp"
+#include "graphical/Graphical.hpp"
 
 namespace zappy::engine
 {
     World::World(const utils::ZappyConfig& config, ZappyServer& zappyServer)
         : teams(config.teamNames), _zappyServer(zappyServer)
     {
+        _map.resize(config.worldHeight);
+        for (int y = 0; y < config.worldHeight; ++y)
+            _map[y].resize(config.worldHeight);
+        std::srand(static_cast<unsigned int>(std::time(nullptr)));
     }
 
     void World::tick()
@@ -37,7 +45,13 @@ namespace zappy::engine
         }
         if (teamID == -1)
             throw std::runtime_error("Unknown team " + teamName);
-        this->players.emplace_back(std::make_shared<Player>(2, 2, teamID, clientID));
+
+        const auto& config = this->_zappyServer.getConfig();
+        unsigned int randomX = std::rand() % config.worldWidth;
+        unsigned int randomY = std::rand() % config.worldHeight;
+
+        this->players.emplace_back(std::make_shared<Player>(randomX, randomY, teamID, clientID));
+        std::cout << "[TRACE] PLAYER SPAWNED AT " << randomX << ":" << randomY << std::endl;
         return {this->players.back()};
     }
 
@@ -79,5 +93,47 @@ namespace zappy::engine
                 }
             }
         } while (player->getWaitingCyclesRemaining() <= 0);
+    }
+
+    std::pair<int, int> World::normalizeCoordinates(int x, int y) const {
+        const auto width = static_cast<int>(this->_zappyServer.getConfig().worldWidth);
+        const auto height = static_cast<int>(this->_zappyServer.getConfig().worldHeight);
+        x = ((x % width) + width) % width;
+        y = ((y % height) + height) % height;
+        return {x, y};
+    }
+
+    void World::distributeRandomResources()
+    {
+        return;
+    }
+
+    Tile& World::getTileAt(const int x, const int y) {
+        auto [nx, ny] = normalizeCoordinates(x, y);
+        return _map[ny][nx];
+    }
+
+    const Tile& World::getTileAt(const int x, const int y) const {
+        auto [nx, ny] = normalizeCoordinates(x, y);
+        return _map[ny][nx];
+    }
+
+    void World::movePlayer(const std::shared_ptr<Player>& player, const int newX, const int newY) {
+        const auto oldX = static_cast<int>(player->getX());
+        const auto oldY = static_cast<int>(player->getY());
+        getTileAt(oldX, oldY).removePlayer(player);
+        auto [nx, ny] = normalizeCoordinates(newX, newY);
+        player->setPosition(nx, ny);
+        getTileAt(nx, ny).addPlayer(player);
+    }
+
+    int World::getWidth() const
+    {
+        return static_cast<int>(this->_zappyServer.getConfig().worldWidth);
+    }
+
+    int World::getHeight() const
+    {
+        return static_cast<int>(this->_zappyServer.getConfig().worldWidth);
     }
 }

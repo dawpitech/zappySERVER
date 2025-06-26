@@ -5,15 +5,16 @@
 ** CommandInterpreter.cpp
 */
 
-#include "CommandInterpreter.hpp"
-
 #include <iostream>
 
+#include "CommandInterpreter.hpp"
+#include "handlers/CmdForward.hpp"
 #include "handlers/CmdInventory.hpp"
 
 namespace zappy::engine
 {
     const std::map<std::string, CommandInterpreter::CommandInfo> CommandInterpreter::COMMANDS =  {
+        {"Forward", {Command::FORWARD, 7, &cmd::CmdForward::cmdForward}},
         {"Right", {Command::RIGHT, 7, &CommandInterpreter::dummyAction}},
         {"Left", {Command::LEFT, 7, &CommandInterpreter::dummyAction}},
         {"Look", {Command::LOOK, 7, &CommandInterpreter::dummyAction}},

@@ -38,6 +38,11 @@ namespace zappy::engine
             void setWaitingCyclesRemaining(const unsigned int remainingCycles) { this->_waitingCyclesRemaining = remainingCycles; }
 
             [[nodiscard]] const std::map<Ressources, int>& getInventory() { return this->_inventory; }
+            [[nodiscard]] unsigned int getX() const { return this->_currentX; }
+            [[nodiscard]] unsigned int getY() const { return this->_currentY; }
+            [[nodiscard]] Directions getDirection() const { return this->_facing; }
+
+            void setPosition(int x, int y);
 
             const unsigned int ID;
 
