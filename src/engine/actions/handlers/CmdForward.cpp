@@ -19,27 +19,19 @@ namespace zappy::engine::cmd
     {
         const auto lockPlayer = player.lock();
 
-        const auto currentX = lockPlayer->getX();
-        const auto currentY = lockPlayer->getY();
-
-        world.getTileAt(currentX, currentY).removePlayer(lockPlayer);
+        auto playerX = lockPlayer->getX();
+        auto playerY = lockPlayer->getY();
+        world.getTileAt(playerX, playerY).removePlayer(lockPlayer);
 
         switch (lockPlayer->getDirection())
         {
-            case Directions::NORTH:
-                lockPlayer->setPosition(currentX, currentY + 1);
-                break;
-            case Directions::EAST:
-                lockPlayer->setPosition(currentX + 1, currentY);
-                break;
-            case Directions::SOUTH:
-                lockPlayer->setPosition(currentX, currentY - 1);
-                break;
-            case Directions::WEST:
-                lockPlayer->setPosition(currentX - 1, currentY);
-                break;
+            case Directions::NORTH: playerY += 1; break;
+            case Directions::EAST: playerX += 1; break;
+            case Directions::SOUTH: playerY -= 1; break;
+            case Directions::WEST: playerX -= 1; break;
         }
 
+        lockPlayer->setPosition(playerX % world.getWidth(), playerY % world.getHeight());
         world.getTileAt(lockPlayer->getX(), lockPlayer->getY()).addPlayer(lockPlayer);
 
         std::cout << "[TRACE] Player " << lockPlayer->ID << " MOVED TO " << lockPlayer->getX() << ":" << lockPlayer->getY() << std::endl;
