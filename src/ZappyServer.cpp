@@ -17,7 +17,7 @@ zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
     this->_world = std::make_unique<engine::World>(config, *this);
 }
 
-void zappy::ZappyServer::launch()
+[[noreturn]] void zappy::ZappyServer::launch()
 {
     std::cout << "=== Zappy server ===" << std::endl;
     std::cout << "Port:\t\t" << this->_config.listeningPort << std::endl;
@@ -35,9 +35,12 @@ void zappy::ZappyServer::launch()
     }
 }
 
-std::weak_ptr<zappy::engine::Player> zappy::ZappyServer::createNewPlayerInTeam(const std::string& teamName, unsigned int clientID)
+std::weak_ptr<zappy::engine::Player> zappy::ZappyServer::createNewPlayerInTeam(const std::string& teamName, const unsigned int clientID)
 {
-    return this->_world->addPlayer(teamName, clientID);
+    const auto player = this->_world->addPlayer(teamName, clientID);
+    this->sendMessageToClient("?", clientID);
+    this->sendMessageToClient(std::to_string(this->_config.worldWidth) + " " + std::to_string(this->_config.worldHeight), clientID);
+    return player;
 }
 
 std::weak_ptr<zappy::engine::GraphicalClient> zappy::ZappyServer::createNewGraphicalClient() {

@@ -14,6 +14,10 @@
 #include "../utils/ZappyConfig.hpp"
 #include "graphical/Graphical.hpp"
 
+namespace zappy::engine {
+    class Tile;
+}
+
 namespace zappy {
     class ZappyServer;
 }
@@ -37,6 +41,9 @@ namespace zappy::engine
 
             std::vector<std::shared_ptr<Player>> players;
             std::vector<std::shared_ptr<GraphicalClient>> graphical_clients;
+
+            std::vector<std::vector<Tile
+            >>
 
             std::vector<std::string> teams;
             ZappyServer& _zappyServer;
