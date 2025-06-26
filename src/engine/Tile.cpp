@@ -1,4 +1,7 @@
 #include "Tile.hpp"
+
+#include <ranges>
+
 #include "Player.hpp"
 
 namespace zappy::engine {
@@ -35,17 +38,16 @@ std::vector<std::shared_ptr<Player>> Tile::getPlayers() const {
 }
 
 size_t Tile::getPlayerCount() const {
-    return std::count_if(_players.begin(), _players.end(),
-        [](const std::weak_ptr<Player>& wp){ return !wp.expired(); });
+    return std::ranges::count_if(_players, [](const std::weak_ptr<Player>& wp){ return !wp.expired(); });
 }
 
-void Tile::addResource(ResourceType type, int quantity) {
+void Tile::addResource(const ResourceType type, const int quantity) {
     if (quantity > 0) {
         _resources[type] += quantity;
     }
 }
 
-bool Tile::removeResource(ResourceType type, int quantity) {
+bool Tile::removeResource(const ResourceType type, const int quantity) {
     const auto it = _resources.find(type);
     if (it == _resources.end() || it->second < quantity) {
         return false;
@@ -57,7 +59,7 @@ bool Tile::removeResource(ResourceType type, int quantity) {
     return true;
 }
 
-int Tile::getResourceQuantity(ResourceType type) const {
+int Tile::getResourceQuantity(const ResourceType type) const {
     const auto it = _resources.find(type);
     return (it != _resources.end()) ? it->second : 0;
 }
@@ -72,9 +74,8 @@ size_t Tile::getResourceTypeCount() const {
 
 int Tile::getTotalResourceCount() const {
     int total = 0;
-    for (const auto& [type, count] : _resources) {
+    for (const auto& count : _resources | std::views::values)
         total += count;
-    }
     return total;
 }
 

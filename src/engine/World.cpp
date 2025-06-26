@@ -54,6 +54,9 @@ namespace zappy::engine
         unsigned int randomX = std::rand() % config.worldWidth;
         unsigned int randomY = std::rand() % config.worldHeight;
 
+        randomX = 4;
+        randomY = 4;
+
         this->players.emplace_back(std::make_shared<Player>(randomX, randomY, teamID, clientID));
         std::cout << "[TRACE] PLAYER SPAWNED AT " << randomX << ":" << randomY << std::endl;
         return {this->players.back()};

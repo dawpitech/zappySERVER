@@ -12,6 +12,7 @@
 #include "handlers/CmdForward.hpp"
 #include "handlers/CmdInventory.hpp"
 #include "handlers/CmdLeft.hpp"
+#include "handlers/CmdLook.hpp"
 #include "handlers/CmdRight.hpp"
 
 namespace zappy::engine
@@ -33,7 +34,7 @@ namespace zappy::engine
         {"Forward", {Command::FORWARD, 7, &cmd::CmdForward::cmdForward}},
         {"Right", {Command::RIGHT, 7, &cmd::CmdRight::cmdRight}},
         {"Left", {Command::LEFT, 7, &cmd::CmdLeft::cmdLeft}},
-        {"Look", {Command::LOOK, 7, &CommandInterpreter::dummyAction}},
+        {"Look", {Command::LOOK, 7, &cmd::CmdLook::cmdLook}},
         {"Inventory", {Command::INVENTORY, 1, &cmd::CmdInventory::cmdInventory}},
         {"Broadcast", {Command::BROADCAST, 7, &CommandInterpreter::dummyAction}},
         {"Connect_nbr", {Command::CONNECT_NBR, 0, &CommandInterpreter::dummyAction}},
