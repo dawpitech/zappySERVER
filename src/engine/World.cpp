@@ -71,11 +71,19 @@ namespace zappy::engine
         
         std::cout << "[INFO] EXECUTING COMMAND " << graphic->getCommandsBuffer().front() << std::endl;
 
-        std::string fullCommand = graphic->getCommandsBuffer().front();
-        std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
+	std::string fullCommand = graphic->getCommandsBuffer().front();
+	std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
+	std::string args;
 
+	size_t spacePos = fullCommand.find_first_of(' ');
+	if (spacePos != std::string::npos)
+	    args = fullCommand.substr(spacePos + 1);
+	else
+	    args = "";
+
+	args.erase(std::remove(args.begin(), args.end(), '#'), args.end());
 	try {
-        CommandInterpreter::GRAPHIC_COMMANDS.at(action).handler(*graphic, this->_zappyServer.getConfig(), *this, fullCommand);
+        CommandInterpreter::GRAPHIC_COMMANDS.at(action).handler(*graphic, this->_zappyServer.getConfig(), *this, args);
 	} catch (std::out_of_range&) {
 	    std::cout << "[WARN] Unknown command received from graphic client: " << action << std::endl;
 	}

@@ -116,11 +116,8 @@ void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, const zap
 }
 
 //player's position
-//untested
 void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
-    std::string args2 = args;
-    args2.erase(std::remove(args2.begin(), args2.end(), '#'), args2.end());
-    std::istringstream iss(args2);
+    std::istringstream iss(args);
     std::string com = "ppo ";
     int n;
     
@@ -143,11 +140,8 @@ void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, const zap
 }
 
 //player level
-//untested
 void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
-    std::string args2 = args;
-    args2.erase(std::remove(args2.begin(), args2.end(), '#'), args2.end());
-    std::istringstream iss(args2);
+    std::istringstream iss(args);
     std::string com = "plv ";
     int n;
     
@@ -170,11 +164,8 @@ void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, const zap
 }
 
 // player inventory
-//untested
 void zappy::engine::GraphicalClient::sendPin(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
-    std::string args2 = args;
-    args2.erase(std::remove(args2.begin(), args2.end(), '#'), args2.end());
-    std::istringstream iss(args2);
+    std::istringstream iss(args);
     std::string com = "pin ";
     int n;
     
