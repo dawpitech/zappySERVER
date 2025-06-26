@@ -46,6 +46,7 @@ namespace zappy::engine
             [[nodiscard]] Directions getDirection() const { return this->_facing; }
 
             void setPosition(int x, int y);
+            void setDirection(const Directions direction) { this->_facing = direction; }
 
             const unsigned int ID;
 

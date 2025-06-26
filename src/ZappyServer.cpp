@@ -28,6 +28,7 @@ void zappy::ZappyServer::launch()
         std::cout << "   " << name << std::endl;
     std::cout << "Team size:\t" << this->_config.initialTeamSize << std::endl;
     std::cout << "Freq:\t\t" << this->_config.freqValue << std::endl;
+    std::cout << "=== Now running ===" << std::endl;
 
     while (true) {
         this->_networkServer->pollNetworkActivity(*this);

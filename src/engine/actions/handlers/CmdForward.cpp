@@ -5,10 +5,9 @@
 ** CmdForward.cpp
 */
 
-#include "CmdForward.hpp"
-
 #include <iostream>
 
+#include "CmdForward.hpp"
 #include "../../Player.hpp"
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"

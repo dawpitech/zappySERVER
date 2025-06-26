@@ -8,9 +8,11 @@
 #include <iostream>
 
 #include "CommandInterpreter.hpp"
+#include "../graphical/Graphical.hpp"
 #include "handlers/CmdForward.hpp"
 #include "handlers/CmdInventory.hpp"
-#include "../graphical/Graphical.hpp"
+#include "handlers/CmdLeft.hpp"
+#include "handlers/CmdRight.hpp"
 
 namespace zappy::engine
 {
@@ -19,11 +21,11 @@ namespace zappy::engine
         {"sgt", {GraphicCommand::SGT, &zappy::engine::GraphicalClient::sendSgt}},
         {"tna", {GraphicCommand::TNA, &zappy::engine::GraphicalClient::sendTna}},
     };
-	
+
     const std::map<std::string, CommandInterpreter::CommandInfo> CommandInterpreter::COMMANDS =  {
         {"Forward", {Command::FORWARD, 7, &cmd::CmdForward::cmdForward}},
-        {"Right", {Command::RIGHT, 7, &CommandInterpreter::dummyAction}},
-        {"Left", {Command::LEFT, 7, &CommandInterpreter::dummyAction}},
+        {"Right", {Command::RIGHT, 7, &cmd::CmdRight::cmdRight}},
+        {"Left", {Command::LEFT, 7, &cmd::CmdLeft::cmdLeft}},
         {"Look", {Command::LOOK, 7, &CommandInterpreter::dummyAction}},
         {"Inventory", {Command::INVENTORY, 1, &cmd::CmdInventory::cmdInventory}},
         {"Broadcast", {Command::BROADCAST, 7, &CommandInterpreter::dummyAction}},

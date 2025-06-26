@@ -1,0 +1,32 @@
+/*
+** EPITECH PROJECT, 2025
+** zappySERVER
+** File description:
+** CmdRight.cpp
+*/
+
+#include <iostream>
+
+#include "CmdRight.hpp"
+#include "../../Player.hpp"
+#include "../../World.hpp"
+#include "../../../ZappyServer.hpp"
+
+namespace zappy::engine::cmd
+{
+    void CmdRight::cmdRight(std::weak_ptr<Player> player, World& world, const std::string& args)
+    {
+        const auto& lockPlayer = player.lock();
+
+        switch (lockPlayer->getDirection())
+        {
+            case Directions::NORTH: lockPlayer->setDirection(Directions::EAST); break;
+            case Directions::EAST: lockPlayer->setDirection(Directions::SOUTH); break;
+            case Directions::SOUTH: lockPlayer->setDirection(Directions::WEST); break;
+            case Directions::WEST: lockPlayer->setDirection(Directions::NORTH); break;
+        }
+
+        std::cout << "[TRACE] Player " << lockPlayer->ID << " NOW FACING " << directionToString(lockPlayer->getDirection()) << std::endl;
+        world.getMainZappyServer().sendMessageToClient("ok", lockPlayer->ID);
+    }
+}
