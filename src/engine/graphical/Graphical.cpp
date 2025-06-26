@@ -35,6 +35,11 @@ void zappy::engine::GraphicalClient::sendGreetings(zappy::utils::ZappyConfig &co
     this->sendSgt(*this, config, world, args);
     this->sendMct(*this, config, world, args);
     this->sendTna(*this, config, world, args);
+    for (unsigned int i = 0; i < world.getPlayers().size(); i++) {
+	//this->sendPnw
+	this->sendPin(*this, config, world, std::to_string(i));
+	this->sendPlv(*this, config, world, std::to_string(i));
+    }
 }
 
 //map size
