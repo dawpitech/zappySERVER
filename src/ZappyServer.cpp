@@ -44,9 +44,10 @@ std::weak_ptr<zappy::engine::Player> zappy::ZappyServer::createNewPlayerInTeam(c
     return player;
 }
 
-std::weak_ptr<zappy::engine::GraphicalClient> zappy::ZappyServer::createNewGraphicalClient() {
+std::weak_ptr<zappy::engine::GraphicalClient> zappy::ZappyServer::createNewGraphicalClient(unsigned int id) {
     const auto graphic = this->_world->addGraphicalClient();
     auto graphic_ = graphic.lock();
+    graphic_->setID(id);
     graphic_->sendGreetings(this->getConfig(), *(this->_world.get()), "");
     return graphic;
 }

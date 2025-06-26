@@ -129,9 +129,8 @@ namespace generic
             if (client->inputBuffer == "GRAPHIC") {
                 client->managedByGameEngine = true;
                 client->isGraphical = true;
-                client->_gameEngineGraphicalClient = zappyServer.createNewGraphicalClient();
-		auto graphic = client->_gameEngineGraphicalClient.lock();
-		graphic.get()->setID(client->clientID);
+                client->_gameEngineGraphicalClient = zappyServer.createNewGraphicalClient(client->clientID);
+                auto graphic = client->_gameEngineGraphicalClient.lock();
                 std::cout << "[TRACE] CLIENT ID " << client->clientID << " JOINED THE GRAPHIC TEAM" << std::endl;
                 return;
             }
