@@ -142,6 +142,8 @@ void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, const zap
     world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
 }
 
+//player level
+//untested
 void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     std::string args2 = args;
     args2.erase(std::remove(args2.begin(), args2.end(), '#'), args2.end());
@@ -164,5 +166,52 @@ void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, const zap
     }
 
     com += std::to_string(n) + " " + std::to_string(player->getLevel());
+    world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
+}
+
+// player inventory
+//untested
+void zappy::engine::GraphicalClient::sendPin(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+    std::string args2 = args;
+    args2.erase(std::remove(args2.begin(), args2.end(), '#'), args2.end());
+    std::istringstream iss(args2);
+    std::string com = "pin ";
+    int n;
+    
+    std::cout << "[TRACE][GRAPHIC] sending pin command to CLIENT : " << graphic.getID() << std::endl;
+    if (!(iss >> n) || n > world.getPlayers().size()) {
+        std::cout << "[TRACE][GRAPHIC] bad pin command from CLIENT : " << graphic.getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        return;
+    }
+
+    auto player = world.getPlayers()[n].get();
+    if (player == nullptr) {
+        std::cout << "[TRACE][GRAPHIC][pin] player was null, CLIENT : " << graphic.getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        return;
+    }
+
+    com += std::to_string(n) + " " + std::to_string(player->getX()) + " " + std::to_string(player->getY()) + " ";
+
+    int q0 = 0;
+    int q1 = 0;
+    int q2 = 0;
+    int q3 = 0;
+    int q4 = 0;
+    int q5 = 0;
+    int q6 = 0;
+    for (auto o : player->getInventory()) {
+        switch (o.first) {
+            case Ressources::FOOD: q0 = o.second; break;
+            case Ressources::LINEMATE: q1 = o.second; break;
+            case Ressources::DERAUMERE: q2 = o.second; break;
+            case Ressources::SIBUR: q3 = o.second; break;
+            case Ressources::MENDIANE: q4 = o.second; break;
+            case Ressources::PHIRAS: q5 = o.second; break;
+            case Ressources::THYSTAME: q6 = o.second; break;
+        }
+    }
+    com += std::to_string(q0) + " " + std::to_string(q1) + " " + std::to_string(q2) + " " + std::to_string(q3) + " " + std::to_string(q4) + " " + std::to_string(q5) + " " + std::to_string(q6);
     world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
 }

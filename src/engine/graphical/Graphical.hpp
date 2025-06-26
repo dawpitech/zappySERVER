@@ -25,6 +25,7 @@ namespace zappy::engine {
         static void sendBct(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
         static void sendPpo(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
         static void sendPlv(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
+        static void sendPin(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
 
     private:
         std::queue<std::string> _commandsBuffer;

@@ -24,6 +24,7 @@ namespace zappy::engine
         {"bct", {GraphicCommand::BCT, &zappy::engine::GraphicalClient::sendBct}},
         {"ppo", {GraphicCommand::PPO, &zappy::engine::GraphicalClient::sendPpo}},
         {"plv", {GraphicCommand::PLV, &zappy::engine::GraphicalClient::sendPlv}},
+        {"pin", {GraphicCommand::PIN, &zappy::engine::GraphicalClient::sendPin}},
     };
 
     const std::map<std::string, CommandInterpreter::CommandInfo> CommandInterpreter::COMMANDS =  {
