@@ -16,16 +16,17 @@ namespace zappy::engine {
 	unsigned int getID();
 	void setID(unsigned int id);
 
-        void sendGreetings(const zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args);
+        void sendGreetings(zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args);
 
-        static void sendMsz(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args);
-        static void sendSgt(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendTna(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendMct(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendBct(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendPpo(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendPlv(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendPin(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
+        static void sendMsz(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args);
+        static void sendSgt(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
+        static void sendTna(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
+        static void sendMct(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
+        static void sendBct(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
+        static void sendPpo(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
+        static void sendPlv(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
+        static void sendPin(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
+        static void sendSst(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
 
     private:
         std::queue<std::string> _commandsBuffer;

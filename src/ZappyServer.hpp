@@ -29,7 +29,9 @@ namespace zappy
 
             void sendMessageToClient(const std::string& message, unsigned int clientID);
 
-            const utils::ZappyConfig& getConfig();
+            const utils::ZappyConfig& getConfig() const;
+            utils::ZappyConfig& getConfig();
+
         private:
             utils::ZappyConfig _config;
             std::unique_ptr<generic::NetworkServer> _networkServer;

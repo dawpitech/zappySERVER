@@ -90,7 +90,7 @@ namespace zappy::engine
             struct GraphicCommandInfo
             {
                 GraphicCommand command;
-                void (*handler)(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World& world, const std::string& args);
+                void (*handler)(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World& world, const std::string& args);
             };
 
             CommandInterpreter() = delete;

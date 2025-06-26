@@ -30,7 +30,7 @@ std::queue<std::string>& zappy::engine::GraphicalClient::getCommandsBuffer()
     return this->_commandsBuffer;
 }
 
-void zappy::engine::GraphicalClient::sendGreetings(const zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args) {
+void zappy::engine::GraphicalClient::sendGreetings(zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args) {
     this->sendMsz(*this, config, world, args);
     this->sendSgt(*this, config, world, args);
     this->sendMct(*this, config, world, args);
@@ -38,7 +38,7 @@ void zappy::engine::GraphicalClient::sendGreetings(const zappy::utils::ZappyConf
 }
 
 //map size
-void zappy::engine::GraphicalClient::sendMsz(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args) {
+void zappy::engine::GraphicalClient::sendMsz(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args) {
     std::string com = "msz ";
 
     com += std::to_string(config.worldWidth);
@@ -50,7 +50,7 @@ void zappy::engine::GraphicalClient::sendMsz(GraphicalClient& graphic, const zap
 }
 
 //frequence valu
-void zappy::engine::GraphicalClient::sendSgt(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+void zappy::engine::GraphicalClient::sendSgt(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     std::string com = "sgt " + std::to_string((int)(config.freqValue));
 
     std::cout << "[TRACE][GRAPHIC] sending sgt message to CLIENT : " << graphic.getID() << std::endl;
@@ -58,7 +58,7 @@ void zappy::engine::GraphicalClient::sendSgt(GraphicalClient& graphic, const zap
 }
 
 //name of the teams
-void zappy::engine::GraphicalClient::sendTna(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+void zappy::engine::GraphicalClient::sendTna(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     for (auto e : config.teamNames) {
         std::string com = "tna " + e;
 
@@ -67,9 +67,8 @@ void zappy::engine::GraphicalClient::sendTna(GraphicalClient& graphic, const zap
     }
 }
 
-//TODO
 // content of the map
-void zappy::engine::GraphicalClient::sendMct(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+void zappy::engine::GraphicalClient::sendMct(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     std::cout << "[TRACE][GRAPHIC] sending mct command to CLIENT : " << graphic.getID() << std::endl;
     for (int x = 0; x < world.getWidth(); x++) {
         for (int y = 0; y < world.getHeight(); y++) {
@@ -79,7 +78,7 @@ void zappy::engine::GraphicalClient::sendMct(GraphicalClient& graphic, const zap
 }
 
 //content of a tile
-void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     std::istringstream iss(args);
     std::string com = "bct ";
     int x, y;
@@ -116,7 +115,7 @@ void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, const zap
 }
 
 //player's position
-void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     std::istringstream iss(args);
     std::string com = "ppo ";
     int n;
@@ -140,7 +139,7 @@ void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, const zap
 }
 
 //player level
-void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     std::istringstream iss(args);
     std::string com = "plv ";
     int n;
@@ -164,7 +163,7 @@ void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, const zap
 }
 
 // player inventory
-void zappy::engine::GraphicalClient::sendPin(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+void zappy::engine::GraphicalClient::sendPin(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     std::istringstream iss(args);
     std::string com = "pin ";
     int n;
@@ -205,4 +204,19 @@ void zappy::engine::GraphicalClient::sendPin(GraphicalClient& graphic, const zap
     }
     com += std::to_string(q0) + " " + std::to_string(q1) + " " + std::to_string(q2) + " " + std::to_string(q3) + " " + std::to_string(q4) + " " + std::to_string(q5) + " " + std::to_string(q6);
     world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
+}
+
+void zappy::engine::GraphicalClient::sendSst(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+    std::istringstream iss(args);
+    std::string com = "sst ";
+    int t;
+
+    std::cout << "[TRACE][GRAPHIC] sending sst command to CLIENT : " << graphic.getID() << std::endl;
+    if (!(iss >> t)) {
+        std::cout << "[TRACE][GRAPHIC] bad sst command from CLIENT : " << graphic.getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        return;
+    }
+    config.freqValue = (float)t;
+    world.getMainZappyServer().sendMessageToClient("ok", graphic.getID());
 }

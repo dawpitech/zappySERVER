@@ -57,7 +57,12 @@ void zappy::ZappyServer::sendMessageToClient(const std::string& message, const u
     this->_networkServer->writeToClient(message, clientID);
 }
 
-const zappy::utils::ZappyConfig& zappy::ZappyServer::getConfig()
+const zappy::utils::ZappyConfig& zappy::ZappyServer::getConfig() const
+{
+    return this->_config;
+}
+
+zappy::utils::ZappyConfig& zappy::ZappyServer::getConfig()
 {
     return this->_config;
 }
