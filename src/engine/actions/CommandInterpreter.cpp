@@ -10,9 +10,16 @@
 #include "CommandInterpreter.hpp"
 #include "handlers/CmdForward.hpp"
 #include "handlers/CmdInventory.hpp"
+#include "../graphical/Graphical.hpp"
 
 namespace zappy::engine
 {
+    const std::map<std::string, CommandInterpreter::GraphicCommandInfo> CommandInterpreter::GRAPHIC_COMMANDS = {
+        {"msz", {GraphicCommand::MSZ, &zappy::engine::GraphicalClient::sendMsz}},
+        {"sgt", {GraphicCommand::SGT, &zappy::engine::GraphicalClient::sendSgt}},
+        {"tna", {GraphicCommand::TNA, &zappy::engine::GraphicalClient::sendTna}},
+    };
+	
     const std::map<std::string, CommandInterpreter::CommandInfo> CommandInterpreter::COMMANDS =  {
         {"Forward", {Command::FORWARD, 7, &cmd::CmdForward::cmdForward}},
         {"Right", {Command::RIGHT, 7, &CommandInterpreter::dummyAction}},

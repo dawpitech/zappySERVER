@@ -13,7 +13,6 @@
 #include "Player.hpp"
 #include "Tile.hpp"
 #include "../utils/ZappyConfig.hpp"
-#include "graphical/Graphical.hpp"
 
 namespace zappy {
     class ZappyServer;
@@ -21,6 +20,8 @@ namespace zappy {
 
 namespace zappy::engine
 {
+    class GraphicalClient;
+    
     class World
     {
         public:
@@ -47,6 +48,7 @@ namespace zappy::engine
 
         private:
             void tickPlayer(const std::shared_ptr<Player>& player);
+            void tickGraphic(const std::shared_ptr<GraphicalClient>& graphic);
 
             std::vector<std::shared_ptr<Player>> players;
             std::vector<std::shared_ptr<GraphicalClient>> graphical_clients;

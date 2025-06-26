@@ -11,12 +11,17 @@
 #include <memory>
 #include <stdexcept>
 
+namespace zappy::utils {
+    class ZappyConfig;
+}
+
 namespace zappy::engine {
     class World;
 }
 
 namespace zappy::engine {
     class Player;
+    class GraphicalClient;
 }
 
 namespace zappy::engine
@@ -37,6 +42,35 @@ namespace zappy::engine
         INCANTATION,
     };
 
+    enum class GraphicCommand
+    {
+	MSZ,
+	BCT,
+	MCT,
+	TNA,
+	PNW,
+	PPO,
+	PLV,
+	PIN,
+	PEX,
+	PBC,
+	PIC,
+	PIE,
+	PFK,
+	PDR,
+	PGT,
+	PDI,
+	ENW,
+	EBO,
+	EDI,
+	SGT,
+	SST,
+	SEG,
+	SMG,
+	SUC,
+	SBP,
+    };
+
     class CommandInterpreter
     {
         public:
@@ -53,10 +87,17 @@ namespace zappy::engine
                 void (*handler)(std::weak_ptr<Player> player, World& world, const std::string& args);
             };
 
+            struct GraphicCommandInfo
+            {
+                GraphicCommand command;
+                void (*handler)(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World& world, const std::string& args);
+            };
+
             CommandInterpreter() = delete;
             static void dummyAction(std::weak_ptr<Player> player, World& world, const std::string& args);
 
             const static std::map<std::string, CommandInfo> COMMANDS;
+            const static std::map<std::string, GraphicCommandInfo> GRAPHIC_COMMANDS;
 
     };
 }

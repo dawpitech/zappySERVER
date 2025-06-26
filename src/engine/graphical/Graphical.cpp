@@ -1,41 +1,65 @@
 #include "Graphical.hpp"
+#include "../../ZappyServer.hpp"
 #include <iostream>
 #include <string>
 #include <unistd.h>
+#include <queue>
 
-void zappy::engine::GraphicalClient::sendInitData(unsigned int fd, const zappy::utils::ZappyConfig &config) {
-    this->sendMsz(fd, config); 
-    this->sendSgt(fd, config);
-    this->sendTna(fd, config);
+unsigned int zappy::engine::GraphicalClient::getID() {
+    return this->_ID;
+}
+
+void zappy::engine::GraphicalClient::setID(unsigned int id) {
+    this->_ID = id;
+}
+
+void zappy::engine::GraphicalClient::addCommandToBuffer(const std::string& command)
+{
+    if (this->_commandsBuffer.size() >= 10) {
+        std::cout << "[TRACE] Command to player was skipped due to buffer being full" << std::endl;
+        return;
+    }
+    this->_commandsBuffer.emplace(command);
+}
+
+std::queue<std::string>& zappy::engine::GraphicalClient::getCommandsBuffer()
+{
+    return this->_commandsBuffer;
+}
+
+void zappy::engine::GraphicalClient::sendGreetings(const zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args) {
+    this->sendMsz(*this, config, world, args);
+    this->sendSgt(*this, config, world, args);
+    this->sendTna(*this, config, world, args);
 }
 
 //map size
-void zappy::engine::GraphicalClient::sendMsz(unsigned int fd, const zappy::utils::ZappyConfig &config) {
+void zappy::engine::GraphicalClient::sendMsz(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args) {
     std::string com = "msz ";
 
     com += std::to_string(config.worldWidth);
     com += " ";
     com += std::to_string(config.worldHeight);
-    com += "\n";
-    std::cout << "[TRACE][GRAPHIC] sending msz message to FD : " << fd << std::endl;
-    write(fd, com.c_str(), com.length());
+    std::cout << "[TRACE][GRAPHIC] sending msz message to CLIENT : " << graphic.getID() << std::endl;
+
+    world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
 }
 
-//frequence value
-void zappy::engine::GraphicalClient::sendSgt(unsigned int fd, const zappy::utils::ZappyConfig &config) {
-    std::string com = "sgt " + std::to_string((int)(config.freqValue)) + "\n";
+//frequence valu
+void zappy::engine::GraphicalClient::sendSgt(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+    std::string com = "sgt " + std::to_string((int)(config.freqValue));
 
-    std::cout << "[TRACE][GRAPHIC] sending sgt message to FD : " << fd << std::endl;
-    write(fd, com.c_str(), com.length());
+    std::cout << "[TRACE][GRAPHIC] sending sgt message to CLIENT : " << graphic.getID() << std::endl;
+    world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
 }
 
 //name of the teams
-void zappy::engine::GraphicalClient::sendTna(unsigned int fd, const zappy::utils::ZappyConfig &config) {
+void zappy::engine::GraphicalClient::sendTna(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     for (auto e : config.teamNames) {
-	std::string com = "tna " + e + "\n";
+        std::string com = "tna " + e;
 
-	std::cout << "[TRACE][GRAPHIC] sending tna message to FD : " << fd << std::endl;
-	write(fd, com.c_str(), com.length());
+        std::cout << "[TRACE][GRAPHIC] sending tna message to CLIENT : " << graphic.getID() << std::endl;
+	world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
     }
 }
 

@@ -1,16 +1,29 @@
 #pragma once
 #include "../../utils/ZappyConfig.hpp"
+#include "../World.hpp"
+#include <queue>
+#include <string>
 
 namespace zappy::engine {
     class GraphicalClient {
     public:
-	GraphicalClient() = default;
-	~GraphicalClient() = default;
+        GraphicalClient() = default;
+        ~GraphicalClient() = default;
 
-	void sendInitData(unsigned int fd, const zappy::utils::ZappyConfig &config);
+
+        void addCommandToBuffer(const std::string& command);
+        std::queue<std::string>& getCommandsBuffer();
+	unsigned int getID();
+	void setID(unsigned int id);
+
+        void sendGreetings(const zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args);
+
+        static void sendMsz(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args);
+        static void sendSgt(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
+        static void sendTna(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args);
+
     private:
-	void sendMsz(unsigned int fd, const zappy::utils::ZappyConfig &config);
-	void sendSgt(unsigned int fd, const zappy::utils::ZappyConfig &config);
-	void sendTna(unsigned int fd, const zappy::utils::ZappyConfig &config);
+        std::queue<std::string> _commandsBuffer;
+	unsigned int _ID;
     };
 }

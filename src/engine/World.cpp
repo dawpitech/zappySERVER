@@ -10,6 +10,7 @@
 #include "World.hpp"
 
 #include <locale>
+#include <stdexcept>
 
 #include "Tile.hpp"
 #include "../ZappyServer.hpp"
@@ -32,6 +33,9 @@ namespace zappy::engine
         //std::cout << "[TRACE] World ticking" << std::endl;
         for (const auto& player : this->players)
             this->tickPlayer(player);
+
+        for (const auto& graphic : this->graphical_clients)
+            this->tickGraphic(graphic);
     }
 
     std::weak_ptr<Player> World::addPlayer(const std::string& teamName, const unsigned int clientID) {
@@ -60,6 +64,24 @@ namespace zappy::engine
         return {this->graphical_clients.back()};
     }
 
+    void World::tickGraphic(const std::shared_ptr<GraphicalClient>& graphic)
+    {
+        if (graphic->getCommandsBuffer().empty())
+            return;
+        
+        std::cout << "[INFO] EXECUTING COMMAND " << graphic->getCommandsBuffer().front() << std::endl;
+
+        std::string fullCommand = graphic->getCommandsBuffer().front();
+        std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
+
+	try {
+        CommandInterpreter::GRAPHIC_COMMANDS.at(action).handler(*graphic, this->_zappyServer.getConfig(), *this, fullCommand);
+	} catch (std::out_of_range&) {
+	    std::cout << "[WARN] Unknown command received from graphic client: " << action << std::endl;
+	}
+        graphic->getCommandsBuffer().pop();
+    }
+        
     void World::tickPlayer(const std::shared_ptr<Player>& player)
     {
         do {

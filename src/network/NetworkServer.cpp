@@ -118,16 +118,21 @@ namespace generic
         std::cout << "[TRACE] (CLIENT ID" << client->clientID << ") SEND:" << client->inputBuffer << std::endl;
 
         if (client->managedByGameEngine) {
-            const auto player = client->_gameEnginePlayer.lock();
-            player->addCommandToBuffer(client->inputBuffer);
+            if (client->isGraphical) {
+                const auto graphic = client->_gameEngineGraphicalClient.lock();
+                graphic->addCommandToBuffer(client->inputBuffer);
+            } else {
+                const auto player = client->_gameEnginePlayer.lock();
+                player->addCommandToBuffer(client->inputBuffer);
+            }
         } else {
             if (client->inputBuffer == "GRAPHIC") {
                 client->managedByGameEngine = true;
                 client->isGraphical = true;
                 client->_gameEngineGraphicalClient = zappyServer.createNewGraphicalClient();
+		auto graphic = client->_gameEngineGraphicalClient.lock();
+		graphic.get()->setID(client->clientID);
                 std::cout << "[TRACE] CLIENT ID " << client->clientID << " JOINED THE GRAPHIC TEAM" << std::endl;
-                const auto graphic_client_ptr = client->_gameEngineGraphicalClient.lock();
-                graphic_client_ptr->sendInitData(client->connectionFD, zappyServer.getConfig());
                 return;
             }
             try {
