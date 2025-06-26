@@ -25,7 +25,7 @@ zappy::engine::Player::Player(const unsigned int x, const unsigned int y, const 
 
 void zappy::engine::Player::addCommandToBuffer(const std::string& command)
 {
-    if (this->_commandsBuffer.size() > 10) {
+    if (this->_commandsBuffer.size() >= 10) {
         std::cout << "[TRACE] Command to player was skipped due to buffer being full" << std::endl;
         return;
     }
