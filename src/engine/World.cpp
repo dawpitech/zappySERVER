@@ -159,4 +159,9 @@ namespace zappy::engine
     {
         return static_cast<int>(this->_zappyServer.getConfig().worldWidth);
     }
+
+
+    [[nodiscard]] std::vector<std::shared_ptr<Player>> World::getPlayers() const {
+	return this->players;
+    }
 }

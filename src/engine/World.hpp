@@ -45,6 +45,7 @@ namespace zappy::engine
             [[nodiscard]] std::pair<int, int> normalizeCoordinates(int x, int y) const;
 
             void distributeRandomResources();
+	    [[nodiscard]] std::vector<std::shared_ptr<Player>> getPlayers() const;
 
         private:
             void tickPlayer(const std::shared_ptr<Player>& player);

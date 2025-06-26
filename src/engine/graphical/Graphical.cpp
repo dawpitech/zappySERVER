@@ -113,3 +113,28 @@ void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, const zap
     
     world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
 }
+
+//player's position
+//untested
+void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, const zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
+    std::istringstream iss(args);
+    std::string com = "bct ";
+    int n;
+    
+    std::cout << "[TRACE][GRAPHIC] sending ppo command to CLIENT : " << graphic.getID() << std::endl;
+    if (!(iss >> n) || n > world.getPlayers().size()) {
+        std::cout << "[TRACE][GRAPHIC] bad ppo command from CLIENT : " << graphic.getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        return;
+    }
+
+    auto player = world.getPlayers()[n].get();
+    if (player == nullptr) {
+        std::cout << "[TRACE][GRAPHIC][ppo] player was null, CLIENT : " << graphic.getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        return;
+    }
+
+    com += std::to_string(n) + " " + std::to_string(player->getX()) + " " + std::to_string(player->getY()) + " " + std::to_string((int)player->getDirection() + 1);
+    world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
+}
