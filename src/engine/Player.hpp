@@ -25,7 +25,7 @@ namespace zappy::engine
                 WAITING_BEFORE_EXECUTE,
             };
 
-            Player(unsigned int x, unsigned int y, unsigned int teamID);
+            Player(unsigned int x, unsigned int y, unsigned int teamID, unsigned int playerID);
             ~Player() = default;
 
             void addCommandToBuffer(const std::string& command);
@@ -37,12 +37,16 @@ namespace zappy::engine
             [[nodiscard]] unsigned int getWaitingCyclesRemaining() const { return this->_waitingCyclesRemaining; }
             void setWaitingCyclesRemaining(const unsigned int remainingCycles) { this->_waitingCyclesRemaining = remainingCycles; }
 
+            [[nodiscard]] const std::map<Ressources, int>& getInventory() { return this->_inventory; }
+
+            const unsigned int ID;
+
         private:
             unsigned int _currentX;
             unsigned int _currentY;
             unsigned int _teamID;
             unsigned int _currentLevel;
-            std::map<int, Ressources> _inventory;
+            std::map<Ressources, int> _inventory;
             Directions _facing;
 
             Status _status;

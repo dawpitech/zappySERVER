@@ -70,7 +70,7 @@ namespace generic
                     bool managedByGameEngine = false;
                     bool isGraphical = false;
                     std::weak_ptr<zappy::engine::Player> _gameEnginePlayer;
-		    std::weak_ptr<zappy::engine::GraphicalClient> _gameEngineGraphicalClient;
+		            std::weak_ptr<zappy::engine::GraphicalClient> _gameEngineGraphicalClient;
 
                     std::string inputBuffer;
             };
@@ -81,6 +81,7 @@ namespace generic
             ~NetworkServer() = default;
 
             void pollNetworkActivity(zappy::ZappyServer& zappyServer);
+            void writeToClient(const std::string& message, unsigned int clientID);
 
         private:
             constexpr static size_t QUEUE_SIZE = 8;

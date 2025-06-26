@@ -14,8 +14,9 @@
 
 namespace zappy::engine
 {
-    World::World(const utils::ZappyConfig& config) {
-        this->teams = config.teamNames;
+    World::World(const utils::ZappyConfig& config, ZappyServer& zappyServer)
+        : teams(config.teamNames), _zappyServer(zappyServer)
+    {
     }
 
     void World::tick()
@@ -25,7 +26,7 @@ namespace zappy::engine
             this->tickPlayer(player);
     }
 
-    std::weak_ptr<Player> World::addPlayer(const std::string& teamName) {
+    std::weak_ptr<Player> World::addPlayer(const std::string& teamName, const unsigned int clientID) {
         // TODO: random spawn location
         int teamID = -1;
         for (size_t i = 0; i < this->teams.size(); i++) {
@@ -36,7 +37,7 @@ namespace zappy::engine
         }
         if (teamID == -1)
             throw std::runtime_error("Unknown team " + teamName);
-        this->players.emplace_back(std::make_shared<Player>(2, 2, teamID));
+        this->players.emplace_back(std::make_shared<Player>(2, 2, teamID, clientID));
         return {this->players.back()};
     }
 

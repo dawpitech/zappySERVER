@@ -1,0 +1,32 @@
+/*
+** EPITECH PROJECT, 2025
+** zappySERVER
+** File description:
+** CmdInventory.cpp
+*/
+
+#include <iostream>
+
+#include "CmdInventory.hpp"
+#include "../../Player.hpp"
+#include "../../World.hpp"
+#include "../../../ZappyServer.hpp"
+
+namespace zappy::engine::cmd
+{
+    void CmdInventory::cmdInventory(Player& player, World& world, const std::string& args)
+    {
+        std::string reply = "[ ";
+        bool first = true;
+
+        for (const auto& [type, quantity] : player.getInventory())
+        {
+            if (!first)
+                reply.append(", ");
+            reply.append(getRessourceName(type) + " " + std::to_string(quantity));
+            first = false;
+        }
+        reply.append(" ]");
+        world.getMainZappyServer().sendMessageToClient(reply, player.ID);
+    }
+}

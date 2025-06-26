@@ -67,6 +67,21 @@ namespace generic
         }
     }
 
+    void NetworkServer::writeToClient(const std::string& message, const unsigned int clientID)
+    {
+        try {
+            const auto& client = this->_clients.at(clientID);
+
+            auto msg = message;
+            msg.append("\n");
+
+            if (write(client->connectionFD, msg.c_str(), msg.size()) != msg.size())
+                throw NetworkException("Error while writing message");
+        } catch (std::out_of_range&) {
+            throw NetworkException("Unknown client ID");
+        }
+    }
+
     void NetworkServer::acceptNewClient()
     {
         sockaddr_in client_addr{};
@@ -76,7 +91,7 @@ namespace generic
         this->_clients.emplace_back(std::make_unique<Client>(this->clientIDCount++, fd));
         const auto& newClient = this->_clients.back();
 
-        write(newClient->connectionFD, "WELCOME\n", sizeof("WELCOME\n"));
+        this->writeToClient("WELCOME", newClient->clientID);
 
         std::cout << "[INFO] New client connected (ID " << newClient->clientID << ")" << std::endl;
     }
@@ -111,16 +126,16 @@ namespace generic
                 client->isGraphical = true;
                 client->_gameEngineGraphicalClient = zappyServer.createNewGraphicalClient();
                 std::cout << "[TRACE] CLIENT ID " << client->clientID << " JOINED THE GRAPHIC TEAM" << std::endl;
-                auto graphic_client_ptr = client->_gameEngineGraphicalClient.lock();
-                graphic_client_ptr.get()->sendInitData(client->connectionFD, zappyServer.getConfig());
+                const auto graphic_client_ptr = client->_gameEngineGraphicalClient.lock();
+                graphic_client_ptr->sendInitData(client->connectionFD, zappyServer.getConfig());
                 return;
             }
             try {
-                client->_gameEnginePlayer = zappyServer.createNewPlayerInTeam(client->inputBuffer);
+                client->_gameEnginePlayer = zappyServer.createNewPlayerInTeam(client->inputBuffer, clientIdx);
                 client->managedByGameEngine = true;
                 std::cout << "[TRACE] SWITCHING PROCESSING OF CLIENT ID" << client->clientID << " TO GAME ENGINE" << std::endl;
             } catch (std::runtime_error&) {
-                write(client->connectionFD, "ko\n", sizeof("ko\n"));
+                this->writeToClient("ko", client->clientID);
             }
         }
 

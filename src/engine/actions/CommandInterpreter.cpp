@@ -9,13 +9,15 @@
 
 #include <iostream>
 
+#include "handlers/CmdInventory.hpp"
+
 namespace zappy::engine
 {
     const std::map<std::string, CommandInterpreter::CommandInfo> CommandInterpreter::COMMANDS =  {
         {"Right", {Command::RIGHT, 7, &CommandInterpreter::dummyAction}},
         {"Left", {Command::LEFT, 7, &CommandInterpreter::dummyAction}},
         {"Look", {Command::LOOK, 7, &CommandInterpreter::dummyAction}},
-        {"Inventory", {Command::INVENTORY, 1, &CommandInterpreter::dummyAction}},
+        {"Inventory", {Command::INVENTORY, 1, &cmd::CmdInventory::cmdInventory}},
         {"Broadcast", {Command::BROADCAST, 7, &CommandInterpreter::dummyAction}},
         {"Connect_nbr", {Command::CONNECT_NBR, 0, &CommandInterpreter::dummyAction}},
         {"Fork", {Command::FORK, 42, &CommandInterpreter::dummyAction}},
