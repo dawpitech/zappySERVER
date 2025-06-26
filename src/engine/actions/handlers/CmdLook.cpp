@@ -18,65 +18,80 @@ void zappy::engine::cmd::CmdLook::cmdLook(std::weak_ptr<Player> player, World& w
 {
     const auto lockPlayer = player.lock();
     std::string reply = "[ ";
-    bool first = true;
+    bool firstCell = true;
 
-    if (lockPlayer->getDirection() == Directions::NORTH) {
-        for (int ix = 0; ix <= lockPlayer->getLevel() + 1; ix++) {
-            for (int iy = -ix; iy <= ix; iy++) {
-                const auto [tileX, tileY] = world.normalizeCoordinates(static_cast<int>(lockPlayer->getX() - ix), static_cast<int>(lockPlayer->getY() - iy));
-                const auto& tile = world.getTileAt(tileX, tileY);
+    const int playerX = static_cast<int>(lockPlayer->getX());
+    const int playerY = static_cast<int>(lockPlayer->getY());
+    const Directions direction = lockPlayer->getDirection();
+    const int level = lockPlayer->getLevel();
 
-                if (!first)
-                    reply.append(",");
-                first = false;
-                for (int i = 0; i < tile.getPlayerCount(); i++)
-                    reply.append("player ");
-                reply.append("(" + std::to_string(tileX) + ":" + std::to_string(tileY) + ")");
+    int mainAxisDelta = 0;
+    int mainAxis = 0;
+    bool invertOffset = false;
+
+    switch (direction) {
+        case Directions::NORTH:
+            mainAxisDelta = -1;
+            mainAxis = 1;
+            invertOffset = false;
+            break;
+        case Directions::EAST:
+            mainAxisDelta = 1;
+            mainAxis = 0;
+            invertOffset = false;
+            break;
+        case Directions::SOUTH:
+            mainAxisDelta = 1;
+            mainAxis = 1;
+            invertOffset = true;
+            break;
+        case Directions::WEST:
+            mainAxisDelta = -1;
+            mainAxis = 0;
+            invertOffset = true;
+            break;
+    }
+
+    for (int l = 0; l <= level + 1; l++) {
+        for (int offset = -l; offset <= l; offset++) {
+            bool firstElement = true;
+            int tileX = playerX;
+            int tileY = playerY;
+
+            if (mainAxis == 0) {
+                tileX += l * mainAxisDelta;
+                tileY += invertOffset ? -offset : offset;
+            } else {
+                tileX += invertOffset ? -offset : offset;
+                tileY += l * mainAxisDelta;
             }
-        }
-    } else if (lockPlayer->getDirection() == Directions::SOUTH) {
-        for (int ix = 0; ix <= lockPlayer->getLevel() + 1; ix++) {
-            for (int iy = -ix; iy <= ix; iy++) {
-                const auto [tileX, tileY] = world.normalizeCoordinates(static_cast<int>(lockPlayer->getX() + ix), static_cast<int>(lockPlayer->getY() + iy));
-                const auto& tile = world.getTileAt(tileX, tileY);
 
-                if (!first)
-                    reply.append(",");
-                first = false;
-                for (int i = 0; i < tile.getPlayerCount(); i++)
-                    reply.append("player ");
-                reply.append("(" + std::to_string(tileX) + ":" + std::to_string(tileY) + ")");
-            }
-        }
-    } else if (lockPlayer->getDirection() == Directions::EAST) {
-        for (int dy = 0; dy <= lockPlayer->getLevel() + 1; dy++) {
-            for (int dx = -dy; dx <= dy; dx++) {
-                const auto [tileX, tileY] = world.normalizeCoordinates(static_cast<int>(lockPlayer->getX() + dx), static_cast<int>(lockPlayer->getY() + dy));
-                const auto& tile = world.getTileAt(tileX, tileY);
+            const auto [normalizedX, normalizedY] = world.normalizeCoordinates(tileX, tileY);
+            const auto& tile = world.getTileAt(normalizedX, normalizedY);
 
-                if (!first)
-                    reply.append(",");
-                first = false;
-                for (int i = 0; i < tile.getPlayerCount(); i++)
-                    reply.append("player ");
-                reply.append("(" + std::to_string(tileX) + ":" + std::to_string(tileY) + ")");
-            }
-        }
-    } else {
-        for (int dy = 0; dy <= lockPlayer->getLevel() + 1; dy++) {
-            for (int dx = -dy; dx <= dy; dx++) {
-                const auto [tileX, tileY] = world.normalizeCoordinates(static_cast<int>(lockPlayer->getX() - dx), static_cast<int>(lockPlayer->getY() - dy));
-                const auto& tile = world.getTileAt(tileX, tileY);
+            if (!firstCell)
+                reply.append(",");
+            firstCell = false;
 
-                if (!first)
-                    reply.append(",");
-                first = false;
-                for (int i = 0; i < tile.getPlayerCount(); i++)
-                    reply.append("player ");
-                reply.append("(" + std::to_string(tileX) + ":" + std::to_string(tileY) + ")");
+            for (int i = 0; i < tile.getPlayerCount(); i++) {
+                if (!firstElement)
+                    reply.append(" ");
+                firstElement = false;
+                reply.append("player");
             }
+            for (const auto [type, quantity] : tile.getAllResources()) {
+                for (int i = 0; i < quantity; i++) {
+                    if (!firstElement)
+                        reply.append(" ");
+                    firstElement = false;
+                    reply.append(getRessourceName(type));
+                }
+            }
+            //DEBUG: used to print the coords of the looked cells
+            //reply.append("(" + std::to_string(normalizedX) + ":" + std::to_string(normalizedY) + ")");
         }
     }
+
     reply.append(" ]");
     world.getMainZappyServer().sendMessageToClient(reply, lockPlayer->ID);
 }

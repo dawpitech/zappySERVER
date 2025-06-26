@@ -105,13 +105,13 @@ void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, zappy::ut
     int q6 = 0;
     for (auto r : world.getTileAt(x, y).getAllResources()) {
         switch (r.first) {
-            case ResourceType::FOOD: q0 = r.second; break;
-            case ResourceType::LINEMATE: q1 = r.second; break;
-            case ResourceType::DERAUMERE: q2 = r.second; break;
-            case ResourceType::SIBUR: q3 = r.second; break;
-            case ResourceType::MENDIANE: q4 = r.second; break;
-            case ResourceType::PHIRAS: q5 = r.second; break;
-            case ResourceType::THYSTAME: q6 = r.second; break;
+            case Ressources::FOOD: q0 = r.second; break;
+            case Ressources::LINEMATE: q1 = r.second; break;
+            case Ressources::DERAUMERE: q2 = r.second; break;
+            case Ressources::SIBUR: q3 = r.second; break;
+            case Ressources::MENDIANE: q4 = r.second; break;
+            case Ressources::PHIRAS: q5 = r.second; break;
+            case Ressources::THYSTAME: q6 = r.second; break;
         }
     }
     com += std::to_string(q0) + " " + std::to_string(q1) + " " + std::to_string(q2) + " " + std::to_string(q3) + " " + std::to_string(q4) + " " + std::to_string(q5) + " " + std::to_string(q6);

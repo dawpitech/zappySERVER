@@ -5,13 +5,12 @@
 ** World.cpp
 */
 
+#include <algorithm>
 #include <iostream>
-
-#include "World.hpp"
-
 #include <locale>
 #include <stdexcept>
 
+#include "World.hpp"
 #include "Tile.hpp"
 #include "../ZappyServer.hpp"
 #include "actions/CommandInterpreter.hpp"
@@ -54,9 +53,6 @@ namespace zappy::engine
         unsigned int randomX = std::rand() % config.worldWidth;
         unsigned int randomY = std::rand() % config.worldHeight;
 
-        randomX = 4;
-        randomY = 4;
-
         this->players.emplace_back(std::make_shared<Player>(randomX, randomY, teamID, clientID));
         std::cout << "[TRACE] PLAYER SPAWNED AT " << randomX << ":" << randomY << std::endl;
         return {this->players.back()};
@@ -74,22 +70,22 @@ namespace zappy::engine
         
         std::cout << "[INFO] EXECUTING COMMAND " << graphic->getCommandsBuffer().front() << std::endl;
 
-	std::string fullCommand = graphic->getCommandsBuffer().front();
-	std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
-	std::string args;
+	    std::string fullCommand = graphic->getCommandsBuffer().front();
+	    std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
+	    std::string args;
 
-	size_t spacePos = fullCommand.find_first_of(' ');
-	if (spacePos != std::string::npos)
-	    args = fullCommand.substr(spacePos + 1);
-	else
-	    args = "";
+	    size_t spacePos = fullCommand.find_first_of(' ');
+	    if (spacePos != std::string::npos)
+	        args = fullCommand.substr(spacePos + 1);
+	    else
+	        args = "";
 
-	args.erase(std::remove(args.begin(), args.end(), '#'), args.end());
-	try {
-        CommandInterpreter::GRAPHIC_COMMANDS.at(action).handler(*graphic, this->_zappyServer.getConfig(), *this, args);
-	} catch (std::out_of_range&) {
-	    std::cout << "[WARN] Unknown command received from graphic client: " << action << std::endl;
-	}
+        args.erase(std::remove(args.begin(), args.end(), '#'), args.end());
+	    try {
+            CommandInterpreter::GRAPHIC_COMMANDS.at(action).handler(*graphic, this->_zappyServer.getConfig(), *this, args);
+	    } catch (std::out_of_range&) {
+	        std::cout << "[WARN] Unknown command received from graphic client: " << action << std::endl;
+	    }
         graphic->getCommandsBuffer().pop();
     }
         

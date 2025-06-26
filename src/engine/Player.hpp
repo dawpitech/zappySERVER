@@ -49,8 +49,6 @@ namespace zappy::engine
             void setPosition(int x, int y);
             void setDirection(const Directions direction) { this->_facing = direction; }
 
-            [[nodiscard]] unsigned int getLevel() const { return this->_currentLevel; }
-
             const unsigned int ID;
 
         private:

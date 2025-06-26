@@ -1,7 +1,14 @@
-#include "Tile.hpp"
+/*
+** EPITECH PROJECT, 2025
+** zappySERVER
+** File description:
+** Tile.cpp
+*/
 
+#include <algorithm>
 #include <ranges>
 
+#include "Tile.hpp"
 #include "Player.hpp"
 
 namespace zappy::engine {
@@ -41,13 +48,13 @@ size_t Tile::getPlayerCount() const {
     return std::ranges::count_if(_players, [](const std::weak_ptr<Player>& wp){ return !wp.expired(); });
 }
 
-void Tile::addResource(const ResourceType type, const int quantity) {
+void Tile::addResource(const Ressources type, const int quantity) {
     if (quantity > 0) {
         _resources[type] += quantity;
     }
 }
 
-bool Tile::removeResource(const ResourceType type, const int quantity) {
+bool Tile::removeResource(const Ressources type, const int quantity) {
     const auto it = _resources.find(type);
     if (it == _resources.end() || it->second < quantity) {
         return false;
@@ -59,12 +66,12 @@ bool Tile::removeResource(const ResourceType type, const int quantity) {
     return true;
 }
 
-int Tile::getResourceQuantity(const ResourceType type) const {
+int Tile::getResourceQuantity(const Ressources type) const {
     const auto it = _resources.find(type);
     return (it != _resources.end()) ? it->second : 0;
 }
 
-const std::map<ResourceType, int>& Tile::getAllResources() const {
+const std::map<Ressources, int>& Tile::getAllResources() const {
     return _resources;
 }
 
