@@ -92,3 +92,7 @@ zappy::utils::ZappyConfig& zappy::ZappyServer::getConfig()
 {
     return this->_config;
 }
+
+bool zappy::ZappyServer::isClientDead(unsigned int id) const {
+    return this->_networkServer.get()->isClientDead(id);
+}

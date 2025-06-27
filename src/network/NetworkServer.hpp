@@ -6,6 +6,7 @@
 */
 
 #pragma once
+#include <map>
 #include <memory>
 #include <optional>
 #include <stdexcept>
@@ -82,13 +83,14 @@ namespace generic
 
             void pollNetworkActivity(zappy::ZappyServer& zappyServer, int timeoutMs);
             void writeToClient(const std::string& message, unsigned int clientID) const;
+	    bool isClientDead(unsigned int id) const;
 
         private:
             constexpr static size_t QUEUE_SIZE = 8;
 
             int _serverFD;
             unsigned short _port;
-            std::vector<std::unique_ptr<Client>> _clients;
+            std::map<unsigned int, std::unique_ptr<Client>> _clients;
             unsigned int clientIDCount;
 
             void acceptNewClient();

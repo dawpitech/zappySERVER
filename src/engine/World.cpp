@@ -32,8 +32,16 @@ namespace zappy::engine
     void World::tick()
     {
         //std::cout << "[TRACE] World ticking" << std::endl;
-        for (const auto& player : this->players)
-            this->tickPlayer(player);
+        for (auto it = players.begin(); it != players.end();) {
+            if (this->_zappyServer.isClientDead((*it)->ID)) {
+                std::cout << debug::getTS() << "[WARN] PLAYER is dead/disconnected" << std::endl;
+                it = players.erase(it);
+		//TODO kill player
+            } else {
+                this->tickPlayer(*it);
+                ++it;
+            }
+        }
 
         for (const auto& graphic : this->graphical_clients)
             this->tickGraphic(graphic);
@@ -62,7 +70,7 @@ namespace zappy::engine
 
         this->players.emplace_back(std::make_shared<Player>(randomX, randomY, teamID, clientID, this->_tickSinceBigBang));
         std::cout << debug::getTS() <<  "[INFO] PLAYER SPAWNED AT " << randomX << ":" << randomY << std::endl;
-	EventSystem::trigger("player_spawn", this->graphical_clients, this->_zappyServer.getConfig(), *this);
+        EventSystem::trigger("player_spawn", this->graphical_clients, this->_zappyServer.getConfig(), *this);
         return {this->players.back()};
     }
 
@@ -78,23 +86,23 @@ namespace zappy::engine
         
         std::cout << debug::getTS() << "[INFO] EXECUTING COMMAND " << graphic->getCommandsBuffer().front() << std::endl;
 
-	    std::string fullCommand = graphic->getCommandsBuffer().front();
-	    std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
-	    std::string args;
+            std::string fullCommand = graphic->getCommandsBuffer().front();
+            std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
+            std::string args;
 
-	    size_t spacePos = fullCommand.find_first_of(' ');
-	    if (spacePos != std::string::npos)
-	        args = fullCommand.substr(spacePos + 1);
-	    else
-	        args = "";
+            size_t spacePos = fullCommand.find_first_of(' ');
+            if (spacePos != std::string::npos)
+                args = fullCommand.substr(spacePos + 1);
+            else
+                args = "";
 
         args.erase(std::remove(args.begin(), args.end(), '#'), args.end());
-	    try {
+            try {
             CommandInterpreter::GRAPHIC_COMMANDS.at(action).handler(*graphic, this->_zappyServer.getConfig(), *this, args);
-	    } catch (std::out_of_range&) {
-	        std::cout << debug::getTS() << "[WARN] Unknown command received from graphic client: " << action << std::endl;
-		GraphicalClient::sendSuc(graphic->getID(), *this);
-	    }
+            } catch (std::out_of_range&) {
+                std::cout << debug::getTS() << "[WARN] Unknown command received from graphic client: " << action << std::endl;
+                GraphicalClient::sendSuc(graphic->getID(), *this);
+            }
         graphic->getCommandsBuffer().pop();
     }
 
@@ -235,6 +243,6 @@ namespace zappy::engine
 
 
     [[nodiscard]] std::vector<std::shared_ptr<Player>> World::getPlayers() const {
-	return this->players;
+        return this->players;
     }
 }

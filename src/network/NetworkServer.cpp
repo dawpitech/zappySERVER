@@ -47,8 +47,9 @@ namespace generic
         polls.at(0).fd = this->_serverFD;
 
         for (size_t i = 0; i < this->_clients.size(); i++) {
+	    if (this->_clients.at(i) == nullptr) continue;
             polls.at(i + 1).events = POLLIN;
-            polls.at(i + 1).fd = this->_clients.at(i)->connectionFD;
+	    polls.at(i + 1).fd = std::next(this->_clients.begin(), i)->second->connectionFD;
         }
 
         const int pollResult = poll(polls.data(), POLLS_SIZE, timeoutMs);
@@ -70,7 +71,9 @@ namespace generic
     void NetworkServer::writeToClient(const std::string& message, const unsigned int clientID) const
     {
         try {
-            const auto& client = this->_clients.at(clientID);
+
+	    const auto& client = std::next(this->_clients.begin(), clientID)->second;
+	    if (client == nullptr) return;
 
             auto msg = message;
             msg.append("\n");
@@ -88,24 +91,31 @@ namespace generic
         socklen_t client_addr_len = sizeof(client_addr);
         const auto fd = accept(this->_serverFD, reinterpret_cast<sockaddr*>(&client_addr), &client_addr_len);
 
-        this->_clients.emplace_back(std::make_unique<Client>(this->clientIDCount++, fd));
-        const auto& newClient = this->_clients.back();
+	unsigned int clientID = this->clientIDCount++;
+	_clients.emplace(clientID, std::make_unique<Client>(clientID, fd));
 
-        this->writeToClient("WELCOME", newClient->clientID);
+        this->writeToClient("WELCOME", clientID);
 
-        std::cout << debug::getTS() << "[INFO] New client connected (ID " << newClient->clientID << ")" << std::endl;
+        std::cout << debug::getTS() << "[INFO] New client connected (ID " << clientID << ")" << std::endl;
     }
 
     void NetworkServer::parseClientInput(const int clientIdx, zappy::ZappyServer& zappyServer)
     {
-        const auto& client = this->_clients.at(clientIdx);
+
+	const auto& client = std::next(this->_clients.begin(), clientIdx)->second;
+	if (client == nullptr) return;
+
         client->inputBuffer.clear();
         client->inputBuffer.resize(BUFSIZ);
 
         const long readable_bytes = read(client->connectionFD, client->inputBuffer.data(), BUFSIZ);
         if (readable_bytes <= 0) {
             std::cout << debug::getTS() << "[WARN] CLIENT CONNECTION (ID " << client->clientID << ") LOST (NETWORK CLIENT DELETED)" << std::endl;
-            this->_clients.erase(this->_clients.begin() + clientIdx);
+	    auto it = std::next(this->_clients.begin(), clientIdx);
+	    it->second.get()->_gameEnginePlayer.reset();
+	    it->second.get()->_gameEngineGraphicalClient.reset();
+	    it->second.reset();
+	    it->second = nullptr;
             //TODO: notify the game engine of the player death
             return;
         }
@@ -142,5 +152,12 @@ namespace generic
                 this->writeToClient("ko", client->clientID);
             }
         }
+    }
+
+    bool NetworkServer::isClientDead(unsigned int id) const {
+	auto it = _clients.find(id);
+	if (it == _clients.end())
+	    return true;
+	return it->second == nullptr;
     }
 } // generic
