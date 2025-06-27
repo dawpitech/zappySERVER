@@ -14,6 +14,7 @@
 #include "Tile.hpp"
 #include "../ZappyServer.hpp"
 #include "../utils/Debug.hpp"
+#include "../utils/EventSystem.hpp"
 #include "actions/CommandInterpreter.hpp"
 #include "graphical/Graphical.hpp"
 
@@ -61,6 +62,7 @@ namespace zappy::engine
 
         this->players.emplace_back(std::make_shared<Player>(randomX, randomY, teamID, clientID, this->_tickSinceBigBang));
         std::cout << debug::getTS() <<  "[INFO] PLAYER SPAWNED AT " << randomX << ":" << randomY << std::endl;
+	EventSystem::trigger("player_spawn", this->graphical_clients, this->_zappyServer.getConfig(), *this);
         return {this->players.back()};
     }
 

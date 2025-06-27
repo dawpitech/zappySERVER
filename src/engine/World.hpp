@@ -32,7 +32,7 @@ namespace zappy::engine
             std::weak_ptr<Player> addPlayer(const std::string& teamName, unsigned int clientID);
             std::weak_ptr<GraphicalClient> addGraphicalClient();
 
-            ZappyServer& getMainZappyServer() { return this->_zappyServer; }
+            ZappyServer& getMainZappyServer() const { return this->_zappyServer; }
 
             Tile& getTileAt(int x, int y);
             [[nodiscard]] const Tile& getTileAt(int x, int y) const;

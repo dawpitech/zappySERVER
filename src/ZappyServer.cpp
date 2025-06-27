@@ -13,12 +13,15 @@
 
 #include "engine/graphical/Graphical.hpp"
 #include "utils/Debug.hpp"
+#include "utils/EventSystem.hpp"
 
 zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
     : _config(config), _tickDuration(static_cast<int>(1000 / config.freqValue))
 {
     this->_networkServer = std::make_unique<generic::NetworkServer>(config.listeningPort);
     this->_world = std::make_unique<engine::World>(config, *this);
+
+    EventSystem::subscribe("player_spawn", engine::GraphicalClient::sendPnw_proxy);
 }
 
 void zappy::ZappyServer::launch()

@@ -46,6 +46,7 @@ namespace zappy::engine
             [[nodiscard]] Directions getDirection() const { return this->_facing; }
             [[nodiscard]] unsigned int getLevel() const { return this->_currentLevel; }
             [[nodiscard]] unsigned int getTickAtLastMeal() const { return this->_tickAtLastMeal; }
+            [[nodiscard]] unsigned int getTeamId() const { return this->_teamID; }
 
             void setPosition(int x, int y);
             void setDirection(const Directions direction) { this->_facing = direction; }

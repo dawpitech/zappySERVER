@@ -1,11 +1,12 @@
 #pragma once
 #include "../../utils/ZappyConfig.hpp"
 #include "../World.hpp"
+#include <memory>
 #include <queue>
 #include <string>
 
 namespace zappy::engine {
-    class GraphicalClient {
+    class GraphicalClient : public std::enable_shared_from_this<GraphicalClient> {
     public:
         GraphicalClient() = default;
         ~GraphicalClient() = default;
@@ -28,6 +29,8 @@ namespace zappy::engine {
         static void sendPin(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
         static void sendSst(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
 
+        static void sendPnw(std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, bool firsttime);
+        static void sendPnw_proxy(std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world);
     private:
         std::queue<std::string> _commandsBuffer;
 	unsigned int _ID;

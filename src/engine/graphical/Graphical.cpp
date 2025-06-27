@@ -1,12 +1,17 @@
 #include "Graphical.hpp"
 #include "../../ZappyServer.hpp"
+#include "../../utils/Debug.hpp"
 #include <iostream>
+#include <memory>
 #include <ostream>
+#include <stdexcept>
 #include <string>
 #include <unistd.h>
 #include <queue>
 #include <sstream>
+#include <memory>
 #include <algorithm>
+#include <vector>
 
 unsigned int zappy::engine::GraphicalClient::getID() {
     return this->_ID;
@@ -35,10 +40,12 @@ void zappy::engine::GraphicalClient::sendGreetings(zappy::utils::ZappyConfig &co
     this->sendSgt(*this, config, world, args);
     this->sendMct(*this, config, world, args);
     this->sendTna(*this, config, world, args);
+    auto shareptr = this->shared_from_this();//std::shared_ptr<GraphicalClient>(this);
+    std::vector<std::shared_ptr<GraphicalClient>> vec = {shareptr};
+    this->sendPnw(vec, config, world, true);
     for (unsigned int i = 0; i < world.getPlayers().size(); i++) {
-	//this->sendPnw
-	this->sendPin(*this, config, world, std::to_string(i));
-	this->sendPlv(*this, config, world, std::to_string(i));
+        this->sendPin(*this, config, world, std::to_string(i));
+        this->sendPlv(*this, config, world, std::to_string(i));
     }
 }
 
@@ -224,4 +231,31 @@ void zappy::engine::GraphicalClient::sendSst(GraphicalClient& graphic, zappy::ut
     }
     config.freqValue = (float)t;
     world.getMainZappyServer().sendMessageToClient("ok", graphic.getID());
+}
+
+void zappy::engine::GraphicalClient::sendPnw(std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, bool firsttime) {
+    std::vector<std::shared_ptr<Player>> last_player {world.getPlayers().back()};
+    auto players = firsttime ? world.getPlayers() : last_player;
+
+    std::string com = "pnw ";
+    int n;
+
+    for (auto graphic : graphics) {
+        for (auto p : players) {
+            std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending pnw command to CLIENT : " << graphic->getID() << std::endl;
+
+            try {
+                com += std::to_string(p->ID) + " " + std::to_string(p->getX()) + " " + std::to_string(p->getY()) + " " + std::to_string((int)p->getDirection() + 1) + " " + std::to_string(p->getLevel()) + " " + config.teamNames[p->getTeamId()];
+            } catch (std::out_of_range &) {
+                std::cout << debug::getTS() << "[ERROR][GRAPHIC] pnw command failed, CLIENT : " << graphic->getID() << std::endl;
+                continue;
+            }
+            world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
+            com = "pnw ";
+        }
+    }
+}
+
+void zappy::engine::GraphicalClient::sendPnw_proxy(std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world) {
+    sendPnw(graphics, config, world, false);
 }
