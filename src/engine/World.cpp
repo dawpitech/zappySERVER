@@ -43,8 +43,15 @@ namespace zappy::engine
             }
         }
 
-        for (const auto& graphic : this->graphical_clients)
-            this->tickGraphic(graphic);
+        for (auto it = graphical_clients.begin(); it != graphical_clients.end();) {
+            if (this->_zappyServer.isClientDead((*it)->getID())) {
+                std::cout << debug::getTS() << "[WARN] GRAPHICAL client is disconnected" << std::endl;
+                it = graphical_clients.erase(it);
+            } else {
+                this->tickGraphic(*it);
+                ++it;
+            }
+        }
 
         if (this->_tickSinceBigBang == 0 || this->_tickSinceBigBang - this->_tickWhenLastRessourceSpawn >= 20)
             this->distributeRandomResources();
