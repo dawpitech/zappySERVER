@@ -48,8 +48,13 @@ namespace zappy::engine
 	    [[nodiscard]] std::vector<std::shared_ptr<Player>> getPlayers() const;
 
         private:
+            unsigned int _tickSinceBigBang = 0;
+            unsigned int _tickWhenLastRessourceSpawn = 0;
+
             void tickPlayer(const std::shared_ptr<Player>& player);
             void tickGraphic(const std::shared_ptr<GraphicalClient>& graphic);
+
+            std::map<Ressources, int> getCurrentRessourcesPlacedOnMap();
 
             std::vector<std::shared_ptr<Player>> players;
             std::vector<std::shared_ptr<GraphicalClient>> graphical_clients;

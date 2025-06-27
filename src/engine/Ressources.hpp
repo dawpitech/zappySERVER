@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace zappy::engine
 {
     enum class Ressources
@@ -19,6 +21,13 @@ namespace zappy::engine
         PHIRAS,
         THYSTAME,
     };
+
+    class Ressource
+    {
+        public:
+            const static std::map<Ressources, float> RESSOURCE_DENSITY;
+    };
+
 
     inline std::string getRessourceName(const Ressources& ressource)
     {

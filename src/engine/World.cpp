@@ -13,6 +13,7 @@
 #include "World.hpp"
 #include "Tile.hpp"
 #include "../ZappyServer.hpp"
+#include "../utils/Debug.hpp"
 #include "actions/CommandInterpreter.hpp"
 #include "graphical/Graphical.hpp"
 
@@ -35,6 +36,11 @@ namespace zappy::engine
 
         for (const auto& graphic : this->graphical_clients)
             this->tickGraphic(graphic);
+
+        if (this->_tickSinceBigBang == 0 || this->_tickSinceBigBang - this->_tickWhenLastRessourceSpawn >= 20)
+            this->distributeRandomResources();
+
+        this->_tickSinceBigBang++;
     }
 
     std::weak_ptr<Player> World::addPlayer(const std::string& teamName, const unsigned int clientID) {
@@ -54,7 +60,7 @@ namespace zappy::engine
         unsigned int randomY = std::rand() % config.worldHeight;
 
         this->players.emplace_back(std::make_shared<Player>(randomX, randomY, teamID, clientID));
-        std::cout << "[TRACE] PLAYER SPAWNED AT " << randomX << ":" << randomY << std::endl;
+        std::cout << debug::getTS() <<  "[INFO] PLAYER SPAWNED AT " << randomX << ":" << randomY << std::endl;
         return {this->players.back()};
     }
 
@@ -68,7 +74,7 @@ namespace zappy::engine
         if (graphic->getCommandsBuffer().empty())
             return;
         
-        std::cout << "[INFO] EXECUTING COMMAND " << graphic->getCommandsBuffer().front() << std::endl;
+        std::cout << debug::getTS() << "[INFO] EXECUTING COMMAND " << graphic->getCommandsBuffer().front() << std::endl;
 
 	    std::string fullCommand = graphic->getCommandsBuffer().front();
 	    std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
@@ -84,18 +90,40 @@ namespace zappy::engine
 	    try {
             CommandInterpreter::GRAPHIC_COMMANDS.at(action).handler(*graphic, this->_zappyServer.getConfig(), *this, args);
 	    } catch (std::out_of_range&) {
-	        std::cout << "[WARN] Unknown command received from graphic client: " << action << std::endl;
+	        std::cout << debug::getTS() << "[WARN] Unknown command received from graphic client: " << action << std::endl;
 	    }
         graphic->getCommandsBuffer().pop();
     }
-        
+
+    std::map<Ressources, int> World::getCurrentRessourcesPlacedOnMap()
+    {
+        std::map<Ressources, int> RESSOURCES_PRESENT;
+
+        for (int x = 0; x < this->getWidth(); x++) {
+            for (int y = 0; y < this->getHeight(); y++) {
+                for (const auto& [type, quantity] : this->getTileAt(x, y).getAllResources()) {
+                    if (RESSOURCES_PRESENT.contains(type))
+                        RESSOURCES_PRESENT.at(type) += quantity;
+                    else
+                        RESSOURCES_PRESENT.insert(std::make_pair(type, quantity));
+                }
+            }
+        }
+
+        for (const auto rsc : {Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE, Ressources::PHIRAS, Ressources::THYSTAME})
+            if (!RESSOURCES_PRESENT.contains(rsc))
+                RESSOURCES_PRESENT.insert(std::make_pair(rsc, 0));
+
+        return RESSOURCES_PRESENT;
+    }
+
     void World::tickPlayer(const std::shared_ptr<Player>& player)
     {
         do {
             if (player->getStatus() == Player::Status::WAITING_BEFORE_EXECUTE) {
                 player->setWaitingCyclesRemaining(player->getWaitingCyclesRemaining() - 1);
                 if (player->getWaitingCyclesRemaining() <= 0) {
-                    std::cout << "[INFO] EXECUTING COMMAND " << player->getCommandsBuffer().front() << std::endl;
+                    std::cout << debug::getTS() << "[INFO] EXECUTING COMMAND " << player->getCommandsBuffer().front() << std::endl;
 
                     std::string fullCommand = player->getCommandsBuffer().front();
                     std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
@@ -117,7 +145,7 @@ namespace zappy::engine
                     player->setWaitingCyclesRemaining(duration);
                     player->setStatus(Player::Status::WAITING_BEFORE_EXECUTE);
                 } catch (std::out_of_range&) {
-                    std::cout << "[WARN] Unknown command received from player: " << action << std::endl;
+                    std::cout << debug::getTS() << "[WARN] Unknown command received from player: " << action << std::endl;
                     player->getCommandsBuffer().pop();
                     this->getMainZappyServer().sendMessageToClient("ko", player->ID);
                 }
@@ -135,7 +163,39 @@ namespace zappy::engine
 
     void World::distributeRandomResources()
     {
-        return;
+        std::cout << debug::getTS() << "[TRACE] TICK RESSOURCES RANDOM GENERATOR" << std::endl;
+        this->_tickWhenLastRessourceSpawn = this->_tickSinceBigBang;
+
+        const auto mapArea = this->getHeight() * this->getWidth();
+        const auto RESSOURCES_ALREADY_PLACED = this->getCurrentRessourcesPlacedOnMap();
+        std::map<Ressources, int> RESSOURCES_TO_BE_PLACED;
+
+        for (const auto& rsc : {Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE, Ressources::PHIRAS, Ressources::THYSTAME})
+            RESSOURCES_TO_BE_PLACED.insert(std::make_pair(rsc, static_cast<int>(Ressource::RESSOURCE_DENSITY.at(rsc) * static_cast<float>(mapArea))));
+
+        //DEBUG: Used to print ressource generation density
+        //std::cout << "TO BE PLACED (WITHOUT CURRENT RESSOURCE TAKEN INTO ACCOUNT)" << std::endl;
+        //for (const auto& [type, quantity] : RESSOURCES_TO_BE_PLACED)
+        //    std::cout << "\t" << getRessourceName(type) << " x" << quantity << std::endl;
+
+        for (const auto& rsc : {Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE, Ressources::PHIRAS, Ressources::THYSTAME})
+            RESSOURCES_TO_BE_PLACED.at(rsc) -= RESSOURCES_ALREADY_PLACED.at(rsc);
+
+        // Should NEVER be the case but its one of the rules of the ressource generation sustem
+        for (const auto& rsc : {Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE, Ressources::PHIRAS, Ressources::THYSTAME})
+            if (RESSOURCES_TO_BE_PLACED.at(rsc) <= 0)
+                RESSOURCES_TO_BE_PLACED.at(rsc) = 1;
+
+        for (const auto& [type, quantity] : RESSOURCES_TO_BE_PLACED) {
+            for (int i = 0; i < quantity; i++) {
+                const int randomX = std::rand() % this->getMainZappyServer().getConfig().worldWidth;
+                const int randomY = std::rand() % this->getMainZappyServer().getConfig().worldHeight;
+
+                this->getTileAt(randomX, randomY).addResource(type);
+                //DEBUG: Used to print actual spawned ressources
+                //std::cout << "[TRACE] SPAWN RESSOURCE " << getRessourceName(type) << " AT " << randomX << ":" << randomY << std::endl;
+            }
+        }
     }
 
     Tile& World::getTileAt(const int x, const int y) {

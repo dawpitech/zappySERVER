@@ -5,28 +5,25 @@
 ** Player.cpp
 */
 
-#include "Player.hpp"
-
 #include <iostream>
+
+#include "Player.hpp"
+#include "../utils/Debug.hpp"
 
 zappy::engine::Player::Player(const unsigned int x, const unsigned int y, const unsigned int teamID, const unsigned int playerID)
     : ID(playerID), _currentX(x), _currentY(y), _teamID(teamID), _currentLevel(0),
       _facing(Directions::NORTH), _status(Status::WAITING_FOR_COMMAND), _waitingCyclesRemaining(0)
 {
     this->_inventory.insert({Ressources::FOOD, 10});
-    this->_inventory.insert({Ressources::LINEMATE, 0});
-    this->_inventory.insert({Ressources::DERAUMERE, 0});
-    this->_inventory.insert({Ressources::SIBUR, 0});
-    this->_inventory.insert({Ressources::MENDIANE, 0});
-    this->_inventory.insert({Ressources::PHIRAS, 0});
-    this->_inventory.insert({Ressources::THYSTAME, 0});
-    std::cout << "PLAYER CREATED AT " << x << ":" << y << std::endl;
+    for (const auto rsc : {Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE, Ressources::PHIRAS, Ressources::THYSTAME})
+        this->_inventory.insert({rsc, 0});
+    std::cout << debug::getTS() << "PLAYER CREATED AT " << x << ":" << y << std::endl;
 }
 
 void zappy::engine::Player::addCommandToBuffer(const std::string& command)
 {
     if (this->_commandsBuffer.size() >= 10) {
-        std::cout << "[TRACE] Command to player was skipped due to buffer being full" << std::endl;
+        std::cout << debug::getTS() << "[TRACE] Command to player was skipped due to buffer being full" << std::endl;
         return;
     }
     this->_commandsBuffer.emplace(command);

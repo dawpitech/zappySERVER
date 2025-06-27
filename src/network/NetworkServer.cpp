@@ -5,15 +5,15 @@
 ** NetworkServer.cpp
 */
 
-#include "NetworkServer.hpp"
-
 #include <iostream>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
 
+#include "NetworkServer.hpp"
 #include "../ZappyServer.hpp"
+#include "../utils/Debug.hpp"
 
 namespace generic
 {
@@ -35,7 +35,7 @@ namespace generic
             throw NetworkException("Cannot bind socket to given port");
         if (listen(this->_serverFD, QUEUE_SIZE) == -1)
             throw NetworkException("Cannot listen on socket");
-        std::cout << "[INFO] Listening on 0.0.0.0:" << port << std::endl;
+        std::cout << debug::getTS() << "[INFO] Listening on 0.0.0.0:" << port << std::endl;
     }
 
     void NetworkServer::pollNetworkActivity(zappy::ZappyServer& zappyServer)
@@ -93,7 +93,7 @@ namespace generic
 
         this->writeToClient("WELCOME", newClient->clientID);
 
-        std::cout << "[INFO] New client connected (ID " << newClient->clientID << ")" << std::endl;
+        std::cout << debug::getTS() << "[INFO] New client connected (ID " << newClient->clientID << ")" << std::endl;
     }
 
     void NetworkServer::parseClientInput(const int clientIdx, zappy::ZappyServer& zappyServer)
@@ -104,7 +104,7 @@ namespace generic
 
         const long readable_bytes = read(client->connectionFD, client->inputBuffer.data(), BUFSIZ);
         if (readable_bytes <= 0) {
-            std::cout << "[WARN] CLIENT CONNECTION (ID " << client->clientID << ") LOST (NETWORK CLIENT DELETED)" << std::endl;
+            std::cout << debug::getTS() << "[WARN] CLIENT CONNECTION (ID " << client->clientID << ") LOST (NETWORK CLIENT DELETED)" << std::endl;
             this->_clients.erase(this->_clients.begin() + clientIdx);
             //TODO: notify the game engine of the player death
             return;
@@ -115,7 +115,7 @@ namespace generic
         // TODO: remove the bellow line, end of line char should be handle in the buffer management system
         while (!client->inputBuffer.empty() && (client->inputBuffer.back() == '\n' || client->inputBuffer.back() == '\r'))
             client->inputBuffer.pop_back();
-        std::cout << "[TRACE] (CLIENT ID" << client->clientID << ") SEND:" << client->inputBuffer << std::endl;
+        std::cout << debug::getTS() << "[TRACE] (CLIENT ID" << client->clientID << ") SEND:" << client->inputBuffer << std::endl;
 
         if (client->managedByGameEngine) {
             if (client->isGraphical) {
@@ -131,13 +131,13 @@ namespace generic
                 client->isGraphical = true;
                 client->_gameEngineGraphicalClient = zappyServer.createNewGraphicalClient(client->clientID);
                 auto graphic = client->_gameEngineGraphicalClient.lock();
-                std::cout << "[TRACE] CLIENT ID " << client->clientID << " JOINED THE GRAPHIC TEAM" << std::endl;
+                std::cout << debug::getTS() << "[TRACE] CLIENT ID " << client->clientID << " JOINED THE GRAPHIC TEAM" << std::endl;
                 return;
             }
             try {
                 client->_gameEnginePlayer = zappyServer.createNewPlayerInTeam(client->inputBuffer, clientIdx);
                 client->managedByGameEngine = true;
-                std::cout << "[TRACE] SWITCHING PROCESSING OF CLIENT ID" << client->clientID << " TO GAME ENGINE" << std::endl;
+                std::cout << debug::getTS() << "[TRACE] SWITCHING PROCESSING OF CLIENT ID" << client->clientID << " TO GAME ENGINE" << std::endl;
             } catch (std::runtime_error&) {
                 this->writeToClient("ko", client->clientID);
             }
