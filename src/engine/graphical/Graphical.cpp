@@ -24,7 +24,7 @@ void zappy::engine::GraphicalClient::setID(unsigned int id) {
 void zappy::engine::GraphicalClient::addCommandToBuffer(const std::string& command)
 {
     if (this->_commandsBuffer.size() >= 10) {
-        std::cout << "[TRACE] Command to player was skipped due to buffer being full" << std::endl;
+        std::cout << debug::getTS() << "[TRACE] Command to player was skipped due to buffer being full" << std::endl;
         return;
     }
     this->_commandsBuffer.emplace(command);
@@ -56,7 +56,7 @@ void zappy::engine::GraphicalClient::sendMsz(GraphicalClient& graphic, zappy::ut
     com += std::to_string(config.worldWidth);
     com += " ";
     com += std::to_string(config.worldHeight);
-    std::cout << "[TRACE][GRAPHIC] sending msz message to CLIENT : " << graphic.getID() << std::endl;
+    std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending msz message to CLIENT : " << graphic.getID() << std::endl;
 
     world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
 }
@@ -65,7 +65,7 @@ void zappy::engine::GraphicalClient::sendMsz(GraphicalClient& graphic, zappy::ut
 void zappy::engine::GraphicalClient::sendSgt(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     std::string com = "sgt " + std::to_string((int)(config.freqValue));
 
-    std::cout << "[TRACE][GRAPHIC] sending sgt message to CLIENT : " << graphic.getID() << std::endl;
+    std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending sgt message to CLIENT : " << graphic.getID() << std::endl;
     world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
 }
 
@@ -74,14 +74,14 @@ void zappy::engine::GraphicalClient::sendTna(GraphicalClient& graphic, zappy::ut
     for (auto e : config.teamNames) {
         std::string com = "tna " + e;
 
-        std::cout << "[TRACE][GRAPHIC] sending tna message to CLIENT : " << graphic.getID() << std::endl;
+        std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending tna message to CLIENT : " << graphic.getID() << std::endl;
         world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
     }
 }
 
 // content of the map
 void zappy::engine::GraphicalClient::sendMct(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
-    std::cout << "[TRACE][GRAPHIC] sending mct command to CLIENT : " << graphic.getID() << std::endl;
+    std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending mct command to CLIENT : " << graphic.getID() << std::endl;
     for (int x = 0; x < world.getWidth(); x++) {
         for (int y = 0; y < world.getHeight(); y++) {
             sendBct(graphic, config, world, std::to_string(x) + " " + std::to_string(y));
@@ -95,9 +95,9 @@ void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, zappy::ut
     std::string com = "bct ";
     int x, y;
 
-    std::cout << "[TRACE][GRAPHIC] sending bct command to CLIENT : " << graphic.getID() << std::endl;
+    std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending bct command to CLIENT : " << graphic.getID() << std::endl;
     if (!(iss >> x >> y) || y >= world.getHeight() || x >= world.getWidth()) {
-        std::cout << "[TRACE][GRAPHIC] bad bct command from CLIENT : " << graphic.getID() << std::endl;
+        std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad bct command from CLIENT : " << graphic.getID() << std::endl;
         world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
         return;
     }
@@ -129,19 +129,19 @@ void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, zappy::ut
 //player's position
 void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     std::istringstream iss(args);
-    std::string com = "ppo ";
+    std::string com = "ppo #";
     int n;
     
-    std::cout << "[TRACE][GRAPHIC] sending ppo command to CLIENT : " << graphic.getID() << std::endl;
+    std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending ppo command to CLIENT : " << graphic.getID() << std::endl;
     if (!(iss >> n) || n > world.getPlayers().size()) {
-        std::cout << "[TRACE][GRAPHIC] bad ppo command from CLIENT : " << graphic.getID() << std::endl;
+        std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad ppo command from CLIENT : " << graphic.getID() << std::endl;
         world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
         return;
     }
 
     auto player = world.getPlayers()[n].get();
     if (player == nullptr) {
-        std::cout << "[TRACE][GRAPHIC][ppo] player was null, CLIENT : " << graphic.getID() << std::endl;
+        std::cout << debug::getTS() << "[TRACE][GRAPHIC][ppo] player was null, CLIENT : " << graphic.getID() << std::endl;
         world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
         return;
     }
@@ -153,19 +153,19 @@ void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, zappy::ut
 //player level
 void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     std::istringstream iss(args);
-    std::string com = "plv ";
+    std::string com = "plv #";
     int n;
     
-    std::cout << "[TRACE][GRAPHIC] sending plv command to CLIENT : " << graphic.getID() << std::endl;
+    std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending plv command to CLIENT : " << graphic.getID() << std::endl;
     if (!(iss >> n) || n > world.getPlayers().size()) {
-        std::cout << "[TRACE][GRAPHIC] bad plv command from CLIENT : " << graphic.getID() << std::endl;
+        std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad plv command from CLIENT : " << graphic.getID() << std::endl;
         world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
         return;
     }
 
     auto player = world.getPlayers()[n].get();
     if (player == nullptr) {
-        std::cout << "[TRACE][GRAPHIC][plv] player was null, CLIENT : " << graphic.getID() << std::endl;
+        std::cout << debug::getTS() << "[TRACE][GRAPHIC][plv] player was null, CLIENT : " << graphic.getID() << std::endl;
         world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
         return;
     }
@@ -177,19 +177,19 @@ void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, zappy::ut
 // player inventory
 void zappy::engine::GraphicalClient::sendPin(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args) {
     std::istringstream iss(args);
-    std::string com = "pin ";
+    std::string com = "pin #";
     int n;
     
-    std::cout << "[TRACE][GRAPHIC] sending pin command to CLIENT : " << graphic.getID() << std::endl;
+    std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending pin command to CLIENT : " << graphic.getID() << std::endl;
     if (!(iss >> n) || n > world.getPlayers().size()) {
-        std::cout << "[TRACE][GRAPHIC] bad pin command from CLIENT : " << graphic.getID() << std::endl;
+        std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad pin command from CLIENT : " << graphic.getID() << std::endl;
         world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
         return;
     }
 
     auto player = world.getPlayers()[n].get();
     if (player == nullptr) {
-        std::cout << "[TRACE][GRAPHIC][pin] player was null, CLIENT : " << graphic.getID() << std::endl;
+        std::cout << debug::getTS() << "[TRACE][GRAPHIC][pin] player was null, CLIENT : " << graphic.getID() << std::endl;
         world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
         return;
     }
@@ -223,9 +223,9 @@ void zappy::engine::GraphicalClient::sendSst(GraphicalClient& graphic, zappy::ut
     std::string com = "sst ";
     int t;
 
-    std::cout << "[TRACE][GRAPHIC] sending sst command to CLIENT : " << graphic.getID() << std::endl;
+    std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending sst command to CLIENT : " << graphic.getID() << std::endl;
     if (!(iss >> t)) {
-        std::cout << "[TRACE][GRAPHIC] bad sst command from CLIENT : " << graphic.getID() << std::endl;
+        std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad sst command from CLIENT : " << graphic.getID() << std::endl;
         world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
         return;
     }
@@ -233,11 +233,12 @@ void zappy::engine::GraphicalClient::sendSst(GraphicalClient& graphic, zappy::ut
     world.getMainZappyServer().sendMessageToClient("ok", graphic.getID());
 }
 
-void zappy::engine::GraphicalClient::sendPnw(std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, bool firsttime) {
+void zappy::engine::GraphicalClient::sendPnw(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, bool firsttime) {
+    if (world.getPlayers().empty()) return;
     std::vector<std::shared_ptr<Player>> last_player {world.getPlayers().back()};
     auto players = firsttime ? world.getPlayers() : last_player;
 
-    std::string com = "pnw ";
+    std::string com = "pnw #";
     int n;
 
     for (auto graphic : graphics) {
@@ -251,11 +252,21 @@ void zappy::engine::GraphicalClient::sendPnw(std::vector<std::shared_ptr<Graphic
                 continue;
             }
             world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
-            com = "pnw ";
+            com = "pnw #";
         }
     }
 }
 
-void zappy::engine::GraphicalClient::sendPnw_proxy(std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world) {
+void zappy::engine::GraphicalClient::sendPnw_proxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world) {
     sendPnw(graphics, config, world, false);
+}
+
+void zappy::engine::GraphicalClient::sendPdr(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int res_id, unsigned int pl_id) {
+    std::string com = "pdr ";
+    com += "#" + std::to_string(pl_id) + " " + std::to_string(res_id);
+
+    for (auto graphic : graphics) {
+        std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending pdr command to CLIENT : " << graphic->getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
+    }
 }

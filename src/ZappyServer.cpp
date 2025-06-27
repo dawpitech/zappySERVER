@@ -21,7 +21,8 @@ zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
     this->_networkServer = std::make_unique<generic::NetworkServer>(config.listeningPort);
     this->_world = std::make_unique<engine::World>(config, *this);
 
-    EventSystem::subscribe("player_spawn", engine::GraphicalClient::sendPnw_proxy);
+    EventSystem::subscribe("player_spawn", std::function(engine::GraphicalClient::sendPnw_proxy));
+    EventSystem::subscribe<unsigned int, unsigned int>("player_set", std::function(engine::GraphicalClient::sendPdr));
 }
 
 void zappy::ZappyServer::launch()

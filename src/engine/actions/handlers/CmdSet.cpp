@@ -13,6 +13,7 @@
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
 #include "../../../utils/Debug.hpp"
+#include "../../../utils/EventSystem.hpp"
 
 void zappy::engine::cmd::CmdSet::cmdSet(std::weak_ptr<Player> player, World& world, const std::string& args)
 {
@@ -43,5 +44,6 @@ void zappy::engine::cmd::CmdSet::cmdSet(std::weak_ptr<Player> player, World& wor
         getRessourceName(safeType) << " DOWN AT " << lockPlayer->getX() << ":"
         << lockPlayer->getY() << std::endl;
 
+    EventSystem::trigger("player_set", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, (unsigned int)safeType, lockPlayer->ID);
     world.getMainZappyServer().sendMessageToClient("ok", lockPlayer->ID);
 }
