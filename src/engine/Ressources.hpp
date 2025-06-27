@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <algorithm>
+#include <optional>
 #include <string>
 
 namespace zappy::engine
@@ -42,5 +44,20 @@ namespace zappy::engine
             case Ressources::THYSTAME: return "thystame";
         }
         return "????";
+    }
+
+    inline std::optional<Ressources> getRessourceFromName(const std::string& name)
+    {
+        std::string lowerName = name;
+        std::ranges::transform(lowerName, lowerName.begin(), ::tolower);
+
+        if (lowerName == "food") return Ressources::FOOD;
+        if (lowerName == "linemate") return Ressources::LINEMATE;
+        if (lowerName == "deraumere") return Ressources::DERAUMERE;
+        if (lowerName == "sibur") return Ressources::SIBUR;
+        if (lowerName == "mendiane") return Ressources::MENDIANE;
+        if (lowerName == "phiras") return Ressources::PHIRAS;
+        if (lowerName == "thystame") return Ressources::THYSTAME;
+        return std::nullopt;
     }
 }

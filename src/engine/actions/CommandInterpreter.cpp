@@ -14,6 +14,7 @@
 #include "handlers/CmdLeft.hpp"
 #include "handlers/CmdLook.hpp"
 #include "handlers/CmdRight.hpp"
+#include "handlers/CmdSet.hpp"
 
 namespace zappy::engine
 {
@@ -41,7 +42,7 @@ namespace zappy::engine
         {"Fork", {Command::FORK, 42, &CommandInterpreter::dummyAction}},
         {"Eject", {Command::EJECT, 7, &CommandInterpreter::dummyAction}},
         {"Take", {Command::TAKE, 7, &CommandInterpreter::dummyAction}},
-        {"Set", {Command::SET, 7, &CommandInterpreter::dummyAction}},
+        {"Set", {Command::SET, 7, &cmd::CmdSet::cmdSet}},
         {"Incantation", {Command::INCANTATION, 300, &CommandInterpreter::dummyAction}},
     };
 
