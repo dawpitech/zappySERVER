@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <memory>
 
 #include "engine/Player.hpp"
@@ -36,5 +37,8 @@ namespace zappy
             utils::ZappyConfig _config;
             std::unique_ptr<generic::NetworkServer> _networkServer;
             std::unique_ptr<engine::World> _world;
+
+            std::chrono::time_point<std::chrono::steady_clock> _lastTickTime;
+            std::chrono::milliseconds _tickDuration;
     };
 }

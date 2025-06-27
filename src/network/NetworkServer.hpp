@@ -80,7 +80,7 @@ namespace generic
             explicit NetworkServer(unsigned short port);
             ~NetworkServer() = default;
 
-            void pollNetworkActivity(zappy::ZappyServer& zappyServer);
+            void pollNetworkActivity(zappy::ZappyServer& zappyServer, int timeoutMs);
             void writeToClient(const std::string& message, unsigned int clientID) const;
 
         private:

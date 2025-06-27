@@ -38,7 +38,7 @@ namespace generic
         std::cout << debug::getTS() << "[INFO] Listening on 0.0.0.0:" << port << std::endl;
     }
 
-    void NetworkServer::pollNetworkActivity(zappy::ZappyServer& zappyServer)
+    void NetworkServer::pollNetworkActivity(zappy::ZappyServer& zappyServer, int timeoutMs)
     {
         const size_t POLLS_SIZE = this->_clients.size() + 1;
         std::vector<pollfd> polls(POLLS_SIZE);
@@ -51,7 +51,7 @@ namespace generic
             polls.at(i + 1).fd = this->_clients.at(i)->connectionFD;
         }
 
-        const int pollResult = poll(polls.data(), POLLS_SIZE, static_cast<int>(1000 / zappyServer.getConfig().freqValue));
+        const int pollResult = poll(polls.data(), POLLS_SIZE, timeoutMs);
 
         if (pollResult == 0)
             return;

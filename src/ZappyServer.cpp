@@ -8,10 +8,14 @@
 #include <iostream>
 
 #include "ZappyServer.hpp"
+
+#include <thread>
+
 #include "engine/graphical/Graphical.hpp"
+#include "utils/Debug.hpp"
 
 zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
-    : _config(config)
+    : _config(config), _tickDuration(static_cast<int>(1000 / config.freqValue))
 {
     this->_networkServer = std::make_unique<generic::NetworkServer>(config.listeningPort);
     this->_world = std::make_unique<engine::World>(config, *this);
@@ -30,9 +34,23 @@ void zappy::ZappyServer::launch()
     std::cout << "Freq:\t\t" << this->_config.freqValue << std::endl;
     std::cout << "=== Now running ===" << std::endl;
 
+    _lastTickTime = std::chrono::steady_clock::now();
+
     while (true) {
-        this->_networkServer->pollNetworkActivity(*this);
-        this->_world->tick();
+        this->_networkServer->pollNetworkActivity(*this, 5);
+
+        const auto currentTime = std::chrono::steady_clock::now();
+        const auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - _lastTickTime);
+
+        if (elapsedTime >= _tickDuration) {
+            this->_world->tick();
+            _lastTickTime = currentTime;
+
+            if (elapsedTime > _tickDuration * 1.5)
+                std::cout << debug::getTS() << "[WARN] Server running slow, elapsed: " << elapsedTime.count() << "ms, expected: " << _tickDuration.count() << "ms" << std::endl;
+        } else {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
     }
 }
 
