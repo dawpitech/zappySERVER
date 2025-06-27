@@ -25,7 +25,7 @@ namespace zappy::engine
                 WAITING_BEFORE_EXECUTE,
             };
 
-            Player(unsigned int x, unsigned int y, unsigned int teamID, unsigned int playerID);
+            Player(unsigned int x, unsigned int y, unsigned int teamID, unsigned int playerID, unsigned int tickAtSpawn);
             ~Player() = default;
 
             void addCommandToBuffer(const std::string& command);
@@ -45,13 +45,17 @@ namespace zappy::engine
             [[nodiscard]] unsigned int getY() const { return this->_currentY; }
             [[nodiscard]] Directions getDirection() const { return this->_facing; }
             [[nodiscard]] unsigned int getLevel() const { return this->_currentLevel; }
+            [[nodiscard]] unsigned int getTickAtLastMeal() const { return this->_tickAtLastMeal; }
 
             void setPosition(int x, int y);
             void setDirection(const Directions direction) { this->_facing = direction; }
 
+            void eat(unsigned int tick);
+
             const unsigned int ID;
 
         private:
+            unsigned int _tickAtLastMeal;
             unsigned int _currentX;
             unsigned int _currentY;
             unsigned int _teamID;

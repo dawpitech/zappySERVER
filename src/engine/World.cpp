@@ -59,7 +59,7 @@ namespace zappy::engine
         unsigned int randomX = std::rand() % config.worldWidth;
         unsigned int randomY = std::rand() % config.worldHeight;
 
-        this->players.emplace_back(std::make_shared<Player>(randomX, randomY, teamID, clientID));
+        this->players.emplace_back(std::make_shared<Player>(randomX, randomY, teamID, clientID, this->_tickSinceBigBang));
         std::cout << debug::getTS() <<  "[INFO] PLAYER SPAWNED AT " << randomX << ":" << randomY << std::endl;
         return {this->players.back()};
     }
@@ -119,6 +119,9 @@ namespace zappy::engine
 
     void World::tickPlayer(const std::shared_ptr<Player>& player)
     {
+        if (this->_tickSinceBigBang - player->getTickAtLastMeal() >= 126)
+            player->eat(this->_tickSinceBigBang);
+
         do {
             if (player->getStatus() == Player::Status::WAITING_BEFORE_EXECUTE) {
                 player->setWaitingCyclesRemaining(player->getWaitingCyclesRemaining() - 1);
