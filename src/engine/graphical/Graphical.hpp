@@ -19,6 +19,8 @@ namespace zappy::engine {
 
         void sendGreetings(zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args);
 
+        static void sendSuc(unsigned int graphic_id, zappy::engine::World &world);
+	
         static void sendMsz(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args);
         static void sendSgt(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
         static void sendTna(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);

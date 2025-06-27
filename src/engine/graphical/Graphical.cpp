@@ -49,6 +49,12 @@ void zappy::engine::GraphicalClient::sendGreetings(zappy::utils::ZappyConfig &co
     }
 }
 
+//bad command
+void zappy::engine::GraphicalClient::sendSuc(unsigned int graphic_id, zappy::engine::World &world) {
+    std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending suc message to CLIENT : " << graphic_id << std::endl;
+    world.getMainZappyServer().sendMessageToClient("suc", graphic_id);
+}
+
 //map size
 void zappy::engine::GraphicalClient::sendMsz(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args) {
     std::string com = "msz ";
@@ -98,7 +104,7 @@ void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, zappy::ut
     std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending bct command to CLIENT : " << graphic.getID() << std::endl;
     if (!(iss >> x >> y) || y >= world.getHeight() || x >= world.getWidth()) {
         std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad bct command from CLIENT : " << graphic.getID() << std::endl;
-        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        world.getMainZappyServer().sendMessageToClient("sbp", graphic.getID());
         return;
     }
 
@@ -135,14 +141,14 @@ void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, zappy::ut
     std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending ppo command to CLIENT : " << graphic.getID() << std::endl;
     if (!(iss >> n) || n > world.getPlayers().size()) {
         std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad ppo command from CLIENT : " << graphic.getID() << std::endl;
-        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        world.getMainZappyServer().sendMessageToClient("sbp", graphic.getID());
         return;
     }
 
     auto player = world.getPlayers()[n].get();
     if (player == nullptr) {
         std::cout << debug::getTS() << "[TRACE][GRAPHIC][ppo] player was null, CLIENT : " << graphic.getID() << std::endl;
-        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        world.getMainZappyServer().sendMessageToClient("sbp", graphic.getID());
         return;
     }
 
@@ -159,14 +165,14 @@ void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, zappy::ut
     std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending plv command to CLIENT : " << graphic.getID() << std::endl;
     if (!(iss >> n) || n > world.getPlayers().size()) {
         std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad plv command from CLIENT : " << graphic.getID() << std::endl;
-        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        world.getMainZappyServer().sendMessageToClient("sbp", graphic.getID());
         return;
     }
 
     auto player = world.getPlayers()[n].get();
     if (player == nullptr) {
         std::cout << debug::getTS() << "[TRACE][GRAPHIC][plv] player was null, CLIENT : " << graphic.getID() << std::endl;
-        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        world.getMainZappyServer().sendMessageToClient("sbp", graphic.getID());
         return;
     }
 
@@ -183,14 +189,14 @@ void zappy::engine::GraphicalClient::sendPin(GraphicalClient& graphic, zappy::ut
     std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending pin command to CLIENT : " << graphic.getID() << std::endl;
     if (!(iss >> n) || n > world.getPlayers().size()) {
         std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad pin command from CLIENT : " << graphic.getID() << std::endl;
-        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        world.getMainZappyServer().sendMessageToClient("sbp", graphic.getID());
         return;
     }
 
     auto player = world.getPlayers()[n].get();
     if (player == nullptr) {
         std::cout << debug::getTS() << "[TRACE][GRAPHIC][pin] player was null, CLIENT : " << graphic.getID() << std::endl;
-        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        world.getMainZappyServer().sendMessageToClient("sbp", graphic.getID());
         return;
     }
 
@@ -226,11 +232,11 @@ void zappy::engine::GraphicalClient::sendSst(GraphicalClient& graphic, zappy::ut
     std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending sst command to CLIENT : " << graphic.getID() << std::endl;
     if (!(iss >> t)) {
         std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad sst command from CLIENT : " << graphic.getID() << std::endl;
-        world.getMainZappyServer().sendMessageToClient("ko", graphic.getID());
+        world.getMainZappyServer().sendMessageToClient("sbp", graphic.getID());
         return;
     }
     config.freqValue = (float)t;
-    world.getMainZappyServer().sendMessageToClient("ok", graphic.getID());
+    world.getMainZappyServer().sendMessageToClient("sbp", graphic.getID());
 }
 
 void zappy::engine::GraphicalClient::sendPnw(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, bool firsttime) {

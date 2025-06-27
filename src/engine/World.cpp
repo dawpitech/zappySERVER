@@ -93,6 +93,7 @@ namespace zappy::engine
             CommandInterpreter::GRAPHIC_COMMANDS.at(action).handler(*graphic, this->_zappyServer.getConfig(), *this, args);
 	    } catch (std::out_of_range&) {
 	        std::cout << debug::getTS() << "[WARN] Unknown command received from graphic client: " << action << std::endl;
+		GraphicalClient::sendSuc(graphic->getID(), *this);
 	    }
         graphic->getCommandsBuffer().pop();
     }
