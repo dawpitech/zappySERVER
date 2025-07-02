@@ -78,6 +78,7 @@ namespace zappy::engine
             const auto egg = this->eggs.at(eggIdx);
 
             this->eggs.erase(this->eggs.begin() + eggIdx);
+            this->getTileAt(static_cast<int>(egg->getX()), static_cast<int>(egg->getY())).removeEgg(egg);
             this->players.emplace_back(std::make_shared<Player>(egg->getX(), egg->getY(), teamID, clientID, this->_tickSinceBigBang));
 
             std::cout << debug::getTS() << "[INFO] EGG " << egg->ID << " OF TEAM "
@@ -101,6 +102,7 @@ namespace zappy::engine
         unsigned int randomY = std::rand() % config.worldHeight;
 
         this->eggs.emplace_back(std::make_shared<entities::Egg>(randomX, randomY, teamID, ++this->_eggIDCount));
+        this->getTileAt(static_cast<int>(randomX), static_cast<int>(randomY)).addEgg(this->eggs.back());
         std::cout << debug::getTS() << "[INFO] EGG " << this->_eggIDCount << " OF TEAM " << this->teams.at(teamID) << " SPAWNED AT " << randomX << ":" << randomY << std::endl;
     }
 
@@ -113,20 +115,20 @@ namespace zappy::engine
     {
         if (graphic->getCommandsBuffer().empty())
             return;
-        
+
         std::cout << debug::getTS() << "[INFO] EXECUTING COMMAND " << graphic->getCommandsBuffer().front() << std::endl;
 
-            std::string fullCommand = graphic->getCommandsBuffer().front();
-            std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
+            const std::string fullCommand = graphic->getCommandsBuffer().front();
+            const std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
             std::string args;
 
-            size_t spacePos = fullCommand.find_first_of(' ');
+            const size_t spacePos = fullCommand.find_first_of(' ');
             if (spacePos != std::string::npos)
                 args = fullCommand.substr(spacePos + 1);
             else
                 args = "";
 
-        args.erase(std::remove(args.begin(), args.end(), '#'), args.end());
+            std::erase(args, '#');
             try {
             CommandInterpreter::GRAPHIC_COMMANDS.at(action).handler(*graphic, this->_zappyServer.getConfig(), *this, args);
             } catch (std::out_of_range&) {

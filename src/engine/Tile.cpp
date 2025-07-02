@@ -11,79 +11,117 @@
 #include "Tile.hpp"
 #include "Player.hpp"
 
-namespace zappy::engine {
+namespace zappy::engine
+{
 
-namespace {
-    bool weakPtrEquals(const std::weak_ptr<Player>& a, const std::weak_ptr<Player>& b) {
-        return !a.owner_before(b) && !b.owner_before(a);
-    }
-}
+    namespace {
+        bool weakPtrEquals(const std::weak_ptr<Player>& a, const std::weak_ptr<Player>& b) {
+            return !a.owner_before(b) && !b.owner_before(a);
+        }
 
-void Tile::addPlayer(const std::weak_ptr<Player>& player) {
-    if (!hasPlayer(player)) {
-        _players.push_back(player);
-    }
-}
-
-void Tile::removePlayer(const std::weak_ptr<Player>& player) {
-    const auto it = std::ranges::remove_if(_players, [&](const std::weak_ptr<Player>& p) { return weakPtrEquals(p, player); }).begin();
-    _players.erase(it, _players.end());
-}
-
-bool Tile::hasPlayer(const std::weak_ptr<Player>& player) const {
-    return std::ranges::any_of(_players, [&](const std::weak_ptr<Player>& p) { return weakPtrEquals(p, player); });
-}
-
-std::vector<std::shared_ptr<Player>> Tile::getPlayers() const {
-    std::vector<std::shared_ptr<Player>> result;
-    for (const auto& wp : _players) {
-        if (auto sp = wp.lock()) {
-            result.push_back(sp);
+        bool weakPtrEquals(const std::weak_ptr<entities::Egg>& a, const std::weak_ptr<entities::Egg>& b) {
+            return !a.owner_before(b) && !b.owner_before(a);
         }
     }
-    return result;
-}
 
-size_t Tile::getPlayerCount() const {
-    return std::ranges::count_if(_players, [](const std::weak_ptr<Player>& wp){ return !wp.expired(); });
-}
-
-void Tile::addResource(const Ressources type, const int quantity) {
-    if (quantity > 0) {
-        _resources[type] += quantity;
+    void Tile::addPlayer(const std::weak_ptr<Player>& player) {
+        if (!hasPlayer(player)) {
+            this->_players.push_back(player);
+        }
     }
-}
 
-bool Tile::removeResource(const Ressources type, const int quantity) {
-    const auto it = _resources.find(type);
-    if (it == _resources.end() || it->second < quantity) {
-        return false;
+    void Tile::removePlayer(const std::weak_ptr<Player>& player) {
+        const auto it = std::ranges::remove_if(this->_players, [&](const std::weak_ptr<Player>& p) { return weakPtrEquals(p, player); }).begin();
+        this->_players.erase(it, this->_players.end());
     }
-    it->second -= quantity;
-    if (it->second == 0) {
-        _resources.erase(it);
+
+    bool Tile::hasPlayer(const std::weak_ptr<Player>& player) const {
+        return std::ranges::any_of(this->_players, [&](const std::weak_ptr<Player>& p) { return weakPtrEquals(p, player); });
     }
-    return true;
-}
 
-int Tile::getResourceQuantity(const Ressources type) const {
-    const auto it = _resources.find(type);
-    return (it != _resources.end()) ? it->second : 0;
-}
+    std::vector<std::shared_ptr<Player>> Tile::getPlayers() const {
+        std::vector<std::shared_ptr<Player>> result;
+        for (const auto& wp : this->_players) {
+            if (auto sp = wp.lock()) {
+                result.push_back(sp);
+            }
+        }
+        return result;
+    }
 
-const std::map<Ressources, int>& Tile::getAllResources() const {
-    return _resources;
-}
+    size_t Tile::getPlayerCount() const {
+        return std::ranges::count_if(this->_players, [](const std::weak_ptr<Player>& wp){ return !wp.expired(); });
+    }
 
-size_t Tile::getResourceTypeCount() const {
-    return _resources.size();
-}
+    void Tile::addEgg(const std::weak_ptr<entities::Egg>& egg)
+    {
+        if (!this->hasEgg(egg))
+            this->_eggs.push_back(egg);
+    }
 
-int Tile::getTotalResourceCount() const {
-    int total = 0;
-    for (const auto& count : _resources | std::views::values)
-        total += count;
-    return total;
-}
+    void Tile::removeEgg(const std::weak_ptr<entities::Egg>& egg)
+    {
+        const auto it = std::ranges::remove_if(this->_eggs, [&](const std::weak_ptr<entities::Egg>& p) { return weakPtrEquals(p, egg); }).begin();
+        this->_eggs.erase(it, this->_eggs.end());
+    }
 
-} // namespace zappy::engine
+    bool Tile::hasEgg(const std::weak_ptr<entities::Egg>& egg) const
+    {
+        return std::ranges::any_of(this->_eggs, [&](const std::weak_ptr<entities::Egg>& p) { return weakPtrEquals(p, egg); });
+    }
+
+    std::vector<std::shared_ptr<entities::Egg>> Tile::getEggs() const
+    {
+        std::vector<std::shared_ptr<entities::Egg>> result;
+        for (const auto& wp : this->_eggs) {
+            if (auto sp = wp.lock()) {
+                result.push_back(sp);
+            }
+        }
+        return result;
+    }
+
+    size_t Tile::getEggsCount() const
+    {
+        return std::ranges::count_if(this->_eggs, [](const std::weak_ptr<entities::Egg>& wp){ return !wp.expired(); });
+    }
+
+    void Tile::addResource(const Ressources type, const int quantity) {
+        if (quantity > 0) {
+            this->_resources[type] += quantity;
+        }
+    }
+
+    bool Tile::removeResource(const Ressources type, const int quantity) {
+        const auto it = this->_resources.find(type);
+        if (it == this->_resources.end() || it->second < quantity) {
+            return false;
+        }
+        it->second -= quantity;
+        if (it->second == 0) {
+            this->_resources.erase(it);
+        }
+        return true;
+    }
+
+    int Tile::getResourceQuantity(const Ressources type) const {
+        const auto it = this->_resources.find(type);
+        return (it != this->_resources.end()) ? it->second : 0;
+    }
+
+    const std::map<Ressources, int>& Tile::getAllResources() const {
+        return this->_resources;
+    }
+
+    size_t Tile::getResourceTypeCount() const {
+        return this->_resources.size();
+    }
+
+    int Tile::getTotalResourceCount() const {
+        int total = 0;
+        for (const auto& count : this->_resources | std::views::values)
+            total += count;
+        return total;
+    }
+
+}
