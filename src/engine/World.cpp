@@ -203,6 +203,7 @@ namespace zappy::engine
                     const unsigned int duration = CommandInterpreter::COMMANDS.at(action).duration;
                     player->setWaitingCyclesRemaining(duration);
                     player->setStatus(Player::Status::WAITING_BEFORE_EXECUTE);
+                    CommandInterpreter::COMMANDS.at(action).preHandler(player, *this, fullCommand);
                 } catch (std::out_of_range&) {
                     std::cout << debug::getTS() << "[WARN] Unknown command received from player: " << action << std::endl;
                     player->getCommandsBuffer().pop();

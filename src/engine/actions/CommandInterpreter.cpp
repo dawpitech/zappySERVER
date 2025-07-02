@@ -36,22 +36,27 @@ namespace zappy::engine
     };
 
     const std::map<std::string, CommandInterpreter::CommandInfo> CommandInterpreter::COMMANDS =  {
-        {"Forward", {Command::FORWARD, 7, &cmd::CmdForward::cmdForward}},
-        {"Right", {Command::RIGHT, 7, &cmd::CmdRight::cmdRight}},
-        {"Left", {Command::LEFT, 7, &cmd::CmdLeft::cmdLeft}},
-        {"Look", {Command::LOOK, 7, &cmd::CmdLook::cmdLook}},
-        {"Inventory", {Command::INVENTORY, 1, &cmd::CmdInventory::cmdInventory}},
-        {"Broadcast", {Command::BROADCAST, 7, &CommandInterpreter::dummyAction}},
-        {"Connect_nbr", {Command::CONNECT_NBR, 0, &cmd::CmdConNbr::cmdConNbr}},
-        {"Fork", {Command::FORK, 42, &cmd::CmdFork::cmdFork}},
-        {"Eject", {Command::EJECT, 7, &cmd::CmdEject::cmdEject}},
-        {"Take", {Command::TAKE, 7, &cmd::CmdTake::cmdTake}},
-        {"Set", {Command::SET, 7, &cmd::CmdSet::cmdSet}},
-        {"Incantation", {Command::INCANTATION, 300, &CommandInterpreter::dummyAction}},
+        {"Forward", {Command::FORWARD, 7, &cmd::CmdForward::cmdForward, &CommandInterpreter::silenceDummyAction}},
+        {"Right", {Command::RIGHT, 7, &cmd::CmdRight::cmdRight, &CommandInterpreter::silenceDummyAction}},
+        {"Left", {Command::LEFT, 7, &cmd::CmdLeft::cmdLeft, &CommandInterpreter::silenceDummyAction}},
+        {"Look", {Command::LOOK, 7, &cmd::CmdLook::cmdLook, &CommandInterpreter::silenceDummyAction}},
+        {"Inventory", {Command::INVENTORY, 1, &cmd::CmdInventory::cmdInventory, &CommandInterpreter::silenceDummyAction}},
+        {"Broadcast", {Command::BROADCAST, 7, &CommandInterpreter::dummyAction, &CommandInterpreter::silenceDummyAction}},
+        {"Connect_nbr", {Command::CONNECT_NBR, 0, &cmd::CmdConNbr::cmdConNbr, &CommandInterpreter::silenceDummyAction}},
+        {"Fork", {Command::FORK, 42, &cmd::CmdFork::cmdFork, &CommandInterpreter::silenceDummyAction}},
+        {"Eject", {Command::EJECT, 7, &cmd::CmdEject::cmdEject, &CommandInterpreter::silenceDummyAction}},
+        {"Take", {Command::TAKE, 7, &cmd::CmdTake::cmdTake, &CommandInterpreter::silenceDummyAction}},
+        {"Set", {Command::SET, 7, &cmd::CmdSet::cmdSet, &CommandInterpreter::silenceDummyAction}},
+        {"Incantation", {Command::INCANTATION, 300, &CommandInterpreter::dummyAction, &CommandInterpreter::silenceDummyAction}},
     };
 
     void CommandInterpreter::dummyAction(std::weak_ptr<Player> player, World& world, const std::string& args)
     {
         std::cout << "Dummy action due to request: " << args << std::endl;
+    }
+
+    void CommandInterpreter::silenceDummyAction([[maybe_unused]] std::weak_ptr<Player>
+        player, [[maybe_unused]] World& world, [[maybe_unused]] const std::string& args)
+    {
     }
 }
