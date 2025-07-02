@@ -17,7 +17,7 @@ zappy::engine::Player::Player(const unsigned int x, const unsigned int y, const 
     this->_inventory.insert({Ressources::FOOD, 10});
     for (const auto rsc : {Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE, Ressources::PHIRAS, Ressources::THYSTAME})
         this->_inventory.insert({rsc, 0});
-    std::cout << debug::getTS() << "PLAYER CREATED AT " << x << ":" << y << std::endl;
+    std::cout << debug::getTS() << "[TRACE] PLAYER CREATED AT " << x << ":" << y << std::endl;
 }
 
 void zappy::engine::Player::addCommandToBuffer(const std::string& command)

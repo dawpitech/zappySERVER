@@ -27,6 +27,10 @@ namespace zappy::engine
         for (int y = 0; y < config.worldHeight; ++y)
             _map[y].resize(config.worldHeight);
         std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+        for (const auto& team : teams)
+            for (int i = 0; i < config.initialTeamSize; i++)
+                this->addPlayerEgg(team);
     }
 
     void World::tick()
@@ -59,26 +63,45 @@ namespace zappy::engine
         this->_tickSinceBigBang++;
     }
 
-    std::weak_ptr<Player> World::addPlayer(const std::string& teamName, const unsigned int clientID) {
-        // TODO: random spawn location
-        int teamID = -1;
-        for (size_t i = 0; i < this->teams.size(); i++) {
-            if (this->teams.at(i) != teamName)
-                continue;
-            teamID = static_cast<int>(i);
-            break;
-        }
-        if (teamID == -1)
-            throw std::runtime_error("Unknown team " + teamName);
+    std::weak_ptr<Player> World::connectPlayer(const std::string& teamName, const unsigned int clientID) {
+        int teamID = this->getTeamID(teamName);
 
+        int eggIdx = -1;
+        for (int i = 0; i < this->eggs.size(); i++)
+            if (this->eggs.at(i)->getTeamID() == teamID)
+                eggIdx = i;
+
+        if (eggIdx == -1)
+            throw std::runtime_error("No slot available in corresponding team");
+
+        {
+            const auto egg = this->eggs.at(eggIdx);
+
+            this->eggs.erase(this->eggs.begin() + eggIdx);
+            this->players.emplace_back(std::make_shared<Player>(egg->getX(), egg->getY(), teamID, clientID, this->_tickSinceBigBang));
+
+            std::cout << debug::getTS() << "[INFO] EGG " << egg->ID << " OF TEAM "
+                << teamName << " HAS HATCHED INTO PLAYER " << clientID << " AT "
+                << egg->getX() << ":" << egg->getY() << std::endl;
+        }
+
+        EventSystem::trigger("player_spawn", this->graphical_clients, this->_zappyServer.getConfig(), *this);
+        return {this->players.back()};
+    }
+
+    void World::addPlayerEgg(const std::string& teamName)
+    {
+        this->addPlayerEgg(this->getTeamID(teamName));
+    }
+
+    void World::addPlayerEgg(unsigned int teamID)
+    {
         const auto& config = this->_zappyServer.getConfig();
         unsigned int randomX = std::rand() % config.worldWidth;
         unsigned int randomY = std::rand() % config.worldHeight;
 
-        this->players.emplace_back(std::make_shared<Player>(randomX, randomY, teamID, clientID, this->_tickSinceBigBang));
-        std::cout << debug::getTS() <<  "[INFO] PLAYER SPAWNED AT " << randomX << ":" << randomY << std::endl;
-        EventSystem::trigger("player_spawn", this->graphical_clients, this->_zappyServer.getConfig(), *this);
-        return {this->players.back()};
+        this->eggs.emplace_back(std::make_shared<entities::Egg>(randomX, randomY, teamID, ++this->_eggIDCount));
+        std::cout << debug::getTS() << "[INFO] EGG " << this->_eggIDCount << " OF TEAM " << this->teams.at(teamID) << " SPAWNED AT " << randomX << ":" << randomY << std::endl;
     }
 
     std::weak_ptr<GraphicalClient> World::addGraphicalClient() {
@@ -111,6 +134,16 @@ namespace zappy::engine
                 GraphicalClient::sendSuc(graphic->getID(), *this);
             }
         graphic->getCommandsBuffer().pop();
+    }
+
+    int World::getTeamID(const std::string& teamName) const
+    {
+        for (size_t i = 0; i < this->teams.size(); i++) {
+            if (this->teams.at(i) != teamName)
+                continue;
+            return static_cast<int>(i);
+        }
+        throw std::runtime_error("Unknown team " + teamName);
     }
 
     std::map<Ressources, int> World::getCurrentRessourcesPlacedOnMap()
@@ -251,5 +284,15 @@ namespace zappy::engine
 
     [[nodiscard]] std::vector<std::shared_ptr<Player>> World::getPlayers() const {
         return this->players;
+    }
+
+    unsigned int World::getEggCount(const std::string& teamName) const
+    {
+        int eggCount = 0;
+        const int teamID = this->getTeamID(teamName);
+        for (const auto& egg : this->eggs)
+            if (egg->getTeamID() == teamID)
+                eggCount++;
+        return eggCount;
     }
 }

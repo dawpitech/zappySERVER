@@ -60,12 +60,12 @@ void zappy::ZappyServer::launch()
 
 std::weak_ptr<zappy::engine::Player> zappy::ZappyServer::createNewPlayerInTeam(const std::string& teamName, const unsigned int clientID)
 {
-    const auto player = this->_world->addPlayer(teamName, clientID);
+    const auto player = this->_world->connectPlayer(teamName, clientID);
     {
         const auto lockPlayer = player.lock();
         this->_world->getTileAt(lockPlayer->getX(), lockPlayer->getY()).addPlayer(lockPlayer);
     }
-    this->sendMessageToClient("?", clientID);
+    this->sendMessageToClient(std::to_string(this->_world->getEggCount(teamName)), clientID);
     this->sendMessageToClient(std::to_string(this->_config.worldWidth) + " " + std::to_string(this->_config.worldHeight), clientID);
     return player;
 }
