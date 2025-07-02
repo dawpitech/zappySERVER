@@ -23,3 +23,8 @@ void zappy::engine::cmd::CmdFork::cmdFork(std::weak_ptr<Player> player, World& w
     world.getTileAt(lockPlayer->getX(), lockPlayer->getY()).addEgg(egg);
     world.getMainZappyServer().sendMessageToClient("ok", lockPlayer->ID);
 }
+
+void zappy::engine::cmd::CmdFork::cmdPreFork(std::weak_ptr<Player> player, World& world, const std::string& args)
+{
+    //TODO
+}

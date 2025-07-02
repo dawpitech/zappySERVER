@@ -43,7 +43,7 @@ namespace zappy::engine
         {"Inventory", {Command::INVENTORY, 1, &cmd::CmdInventory::cmdInventory, &CommandInterpreter::silenceDummyAction}},
         {"Broadcast", {Command::BROADCAST, 7, &CommandInterpreter::dummyAction, &CommandInterpreter::silenceDummyAction}},
         {"Connect_nbr", {Command::CONNECT_NBR, 0, &cmd::CmdConNbr::cmdConNbr, &CommandInterpreter::silenceDummyAction}},
-        {"Fork", {Command::FORK, 42, &cmd::CmdFork::cmdFork, &CommandInterpreter::silenceDummyAction}},
+        {"Fork", {Command::FORK, 42, &cmd::CmdFork::cmdFork, &cmd::CmdFork::cmdPreFork}},
         {"Eject", {Command::EJECT, 7, &cmd::CmdEject::cmdEject, &CommandInterpreter::silenceDummyAction}},
         {"Take", {Command::TAKE, 7, &cmd::CmdTake::cmdTake, &CommandInterpreter::silenceDummyAction}},
         {"Set", {Command::SET, 7, &cmd::CmdSet::cmdSet, &CommandInterpreter::silenceDummyAction}},
