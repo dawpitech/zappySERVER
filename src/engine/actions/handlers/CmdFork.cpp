@@ -17,8 +17,9 @@ void zappy::engine::cmd::CmdFork::cmdFork(std::weak_ptr<Player> player, World& w
 {
     const auto lockPlayer = player.lock();
 
-    world.addPlayerEgg(lockPlayer->getTeamId());
     std::cout << debug::getTS() << "[INFO] PLAYER " << lockPlayer->ID << " LAID AN EGG" << std::endl;
 
+    const auto egg = world.addPlayerEgg(lockPlayer->getTeamId());
+    world.getTileAt(lockPlayer->getX(), lockPlayer->getY()).addEgg(egg);
     world.getMainZappyServer().sendMessageToClient("ok", lockPlayer->ID);
 }

@@ -60,6 +60,7 @@ namespace zappy::engine
         if (this->_tickSinceBigBang == 0 || this->_tickSinceBigBang - this->_tickWhenLastRessourceSpawn >= 20)
             this->distributeRandomResources();
 
+        this->doEggCleanup();
         this->_tickSinceBigBang++;
     }
 
@@ -68,7 +69,7 @@ namespace zappy::engine
 
         int eggIdx = -1;
         for (int i = 0; i < this->eggs.size(); i++)
-            if (this->eggs.at(i)->getTeamID() == teamID)
+            if (this->eggs.at(i)->getTeamID() == teamID && !this->eggs.at(i)->isDead())
                 eggIdx = i;
 
         if (eggIdx == -1)
@@ -90,12 +91,12 @@ namespace zappy::engine
         return {this->players.back()};
     }
 
-    void World::addPlayerEgg(const std::string& teamName)
+    std::weak_ptr<entities::Egg> World::addPlayerEgg(const std::string& teamName)
     {
-        this->addPlayerEgg(this->getTeamID(teamName));
+        return this->addPlayerEgg(this->getTeamID(teamName));
     }
 
-    void World::addPlayerEgg(unsigned int teamID)
+    std::weak_ptr<entities::Egg> World::addPlayerEgg(unsigned int teamID)
     {
         const auto& config = this->_zappyServer.getConfig();
         unsigned int randomX = std::rand() % config.worldWidth;
@@ -104,6 +105,7 @@ namespace zappy::engine
         this->eggs.emplace_back(std::make_shared<entities::Egg>(randomX, randomY, teamID, ++this->_eggIDCount));
         this->getTileAt(static_cast<int>(randomX), static_cast<int>(randomY)).addEgg(this->eggs.back());
         std::cout << debug::getTS() << "[INFO] EGG " << this->_eggIDCount << " OF TEAM " << this->teams.at(teamID) << " SPAWNED AT " << randomX << ":" << randomY << std::endl;
+        return this->eggs.back();
     }
 
     std::weak_ptr<GraphicalClient> World::addGraphicalClient() {
@@ -298,8 +300,26 @@ namespace zappy::engine
     {
         int eggCount = 0;
         for (const auto& egg : this->eggs)
-            if (egg->getTeamID() == teamID)
+            if (egg->getTeamID() == teamID && !egg->isDead())
                 eggCount++;
         return eggCount;
+    }
+
+    std::string World::getTeamName(const unsigned int teamID) const
+    {
+        return this->teams.at(teamID);
+    }
+
+    void World::doEggCleanup()
+    {
+        for (int i = 0; i < this->eggs.size(); i++)
+        {
+            const auto egg = this->eggs.at(i);
+            if (!egg->isDead())
+                continue;
+            this->getTileAt(static_cast<int>(egg->getX()), static_cast<int>(egg->getY())).removeEgg(egg);
+            this->eggs.erase(this->eggs.begin() + i);
+
+        }
     }
 }

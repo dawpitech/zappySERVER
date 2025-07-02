@@ -21,7 +21,11 @@ namespace zappy::engine::entities
             unsigned int getX() const { return this->_x; }
             unsigned int getY() const { return this->_y; }
 
+            void crush() { this->alive = false; }
+            bool isDead() const { return !this->alive; }
+
         private:
+            bool alive = true;
             unsigned int _x;
             unsigned int _y;
             unsigned int _teamID;

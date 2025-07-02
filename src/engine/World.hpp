@@ -31,8 +31,8 @@ namespace zappy::engine
             void tick();
 
             std::weak_ptr<Player> connectPlayer(const std::string& teamName, unsigned int clientID);
-            void addPlayerEgg(const std::string& teamName);
-            void addPlayerEgg(unsigned int teamID);
+            std::weak_ptr<entities::Egg> addPlayerEgg(const std::string& teamName);
+            std::weak_ptr<entities::Egg> addPlayerEgg(unsigned int teamID);
             std::weak_ptr<GraphicalClient> addGraphicalClient();
 
             ZappyServer& getMainZappyServer() const { return this->_zappyServer; }
@@ -53,6 +53,10 @@ namespace zappy::engine
 
             [[nodiscard]] unsigned int getEggCount(const std::string& teamName) const;
             [[nodiscard]] unsigned int getEggCount(unsigned int teamID) const;
+
+            [[nodiscard]] std::string getTeamName(unsigned int teamID) const;
+
+            void doEggCleanup();
 
         private:
             unsigned int _tickSinceBigBang = 0;
