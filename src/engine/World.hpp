@@ -52,6 +52,7 @@ namespace zappy::engine
 	        [[nodiscard]] std::vector<std::shared_ptr<Player>> getPlayers() const;
 
             [[nodiscard]] unsigned int getEggCount(const std::string& teamName) const;
+            [[nodiscard]] unsigned int getEggCount(unsigned int teamID) const;
 
         private:
             unsigned int _tickSinceBigBang = 0;

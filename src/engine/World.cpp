@@ -175,7 +175,8 @@ namespace zappy::engine
 
         do {
             if (player->getStatus() == Player::Status::WAITING_BEFORE_EXECUTE) {
-                player->setWaitingCyclesRemaining(player->getWaitingCyclesRemaining() - 1);
+                if (player->getWaitingCyclesRemaining() > 0)
+                    player->setWaitingCyclesRemaining(player->getWaitingCyclesRemaining() - 1);
                 if (player->getWaitingCyclesRemaining() <= 0) {
                     std::cout << debug::getTS() << "[INFO] EXECUTING COMMAND " << player->getCommandsBuffer().front() << std::endl;
 
@@ -288,8 +289,12 @@ namespace zappy::engine
 
     unsigned int World::getEggCount(const std::string& teamName) const
     {
+        return this->getEggCount(this->getTeamID(teamName));
+    }
+
+    unsigned int World::getEggCount(const unsigned int teamID) const
+    {
         int eggCount = 0;
-        const int teamID = this->getTeamID(teamName);
         for (const auto& egg : this->eggs)
             if (egg->getTeamID() == teamID)
                 eggCount++;

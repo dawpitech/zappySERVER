@@ -9,6 +9,7 @@
 
 #include "CommandInterpreter.hpp"
 #include "../graphical/Graphical.hpp"
+#include "handlers/CmdConNbr.hpp"
 #include "handlers/CmdFork.hpp"
 #include "handlers/CmdForward.hpp"
 #include "handlers/CmdInventory.hpp"
@@ -40,7 +41,7 @@ namespace zappy::engine
         {"Look", {Command::LOOK, 7, &cmd::CmdLook::cmdLook}},
         {"Inventory", {Command::INVENTORY, 1, &cmd::CmdInventory::cmdInventory}},
         {"Broadcast", {Command::BROADCAST, 7, &CommandInterpreter::dummyAction}},
-        {"Connect_nbr", {Command::CONNECT_NBR, 0, &CommandInterpreter::dummyAction}},
+        {"Connect_nbr", {Command::CONNECT_NBR, 0, &cmd::CmdConNbr::cmdConNbr}},
         {"Fork", {Command::FORK, 42, &cmd::CmdFork::cmdFork}},
         {"Eject", {Command::EJECT, 7, &CommandInterpreter::dummyAction}},
         {"Take", {Command::TAKE, 7, &cmd::CmdTake::cmdTake}},
