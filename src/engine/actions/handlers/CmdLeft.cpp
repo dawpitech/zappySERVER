@@ -11,6 +11,7 @@
 #include "../../Player.hpp"
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
+#include "../../../utils/Debug.hpp"
 
 namespace zappy::engine::cmd
 {
@@ -26,7 +27,7 @@ namespace zappy::engine::cmd
             case Directions::WEST: lockPlayer->setDirection(Directions::SOUTH); break;
         }
 
-        std::cout << "[TRACE] Player " << lockPlayer->ID << " NOW FACING " << directionToString(lockPlayer->getDirection()) << std::endl;
+        std::cout << debug::getTS() << "[TRACE] Player " << lockPlayer->ID << " NOW FACING " << directionToString(lockPlayer->getDirection()) << std::endl;
         world.getMainZappyServer().sendMessageToClient("ok", lockPlayer->ID);
     }
 }
