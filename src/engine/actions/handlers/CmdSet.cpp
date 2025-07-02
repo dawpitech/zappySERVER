@@ -25,16 +25,20 @@ void zappy::engine::cmd::CmdSet::cmdSet(std::weak_ptr<Player> player, World& wor
     ss >> firstWorld >> secondWord;
     if (secondWord.empty()) {
         world.getMainZappyServer().sendMessageToClient("ko", lockPlayer->ID);
+        std::cout << debug::getTS() << "[TRACE] PLAYER " << lockPlayer->ID << " SENT SET COMMAND WITH INCORRECT SYNTAX" << std::endl;
         return;
     }
     const auto type = getRessourceFromName(secondWord);
     if (type == std::nullopt) {
         world.getMainZappyServer().sendMessageToClient("ko", lockPlayer->ID);
+        std::cout << debug::getTS() << "[TRACE] PLAYER " << lockPlayer->ID << " SENT SET COMMAND WITH UNKNOWN TYPE" << std::endl;
         return;
     }
     const auto safeType = type.value();
     if (lockPlayer->getInventory().at(safeType) == 0) {
         world.getMainZappyServer().sendMessageToClient("ko", lockPlayer->ID);
+        std::cout << debug::getTS() << "[TRACE] PLAYER " << lockPlayer->ID <<
+            " TRY TO SET ON A CELL WITHOUT HAVING SPECIFIED RESSOURCE IN INVENTORY" << std::endl;
         return;
     }
     lockPlayer->removeRessource(safeType, 1);

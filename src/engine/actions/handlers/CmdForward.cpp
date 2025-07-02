@@ -11,6 +11,7 @@
 #include "../../Player.hpp"
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
+#include "../../../utils/Debug.hpp"
 
 namespace zappy::engine::cmd
 {
@@ -34,7 +35,7 @@ namespace zappy::engine::cmd
         lockPlayer->setPosition(newX, newY);
         world.getTileAt(lockPlayer->getX(), lockPlayer->getY()).addPlayer(lockPlayer);
 
-        std::cout << "[TRACE] Player " << lockPlayer->ID << " MOVED TO " << lockPlayer->getX() << ":" << lockPlayer->getY() << std::endl;
+        std::cout << debug::getTS() << "[TRACE] Player " << lockPlayer->ID << " MOVED TO " << lockPlayer->getX() << ":" << lockPlayer->getY() << std::endl;
         world.getMainZappyServer().sendMessageToClient("ok", lockPlayer->ID);
     }
 }
