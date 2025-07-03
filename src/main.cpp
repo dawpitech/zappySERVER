@@ -5,6 +5,8 @@
 ** main.cpp
 */
 
+#include <iostream>
+
 #include "ZappyServer.hpp"
 #include "utils/ZappyErrors.hpp"
 
@@ -21,7 +23,12 @@ int main(const int argc, const char** argv)
     {
         zappy::utils::ZappyConfig::printHelp();
         return 84;
-    } catch (zappy::errors::EarlyExit&)
+    }
+    catch (generic::NetworkServer::NetworkException&)
+    {
+        std::cerr << "[ERROR]: Couldn't bind the given port, is the port available? have you the necessary permissions?" << std::endl;
+    }
+    catch (zappy::errors::EarlyExit&)
     {
         return 0;
     }
