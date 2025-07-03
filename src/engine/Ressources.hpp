@@ -49,7 +49,7 @@ namespace zappy::engine
     inline std::optional<Ressources> getRessourceFromName(const std::string& name)
     {
         std::string lowerName = name;
-        std::ranges::transform(lowerName, lowerName.begin(), ::tolower);
+        std::ranges::transform(lowerName, lowerName.begin(), tolower);
 
         if (lowerName == "food") return Ressources::FOOD;
         if (lowerName == "linemate") return Ressources::LINEMATE;

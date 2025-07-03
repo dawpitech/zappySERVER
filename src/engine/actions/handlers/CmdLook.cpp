@@ -6,15 +6,12 @@
 */
 
 #include "CmdLook.hpp"
-
-#include <iostream>
-
-#include "../../entities/Player.hpp"
 #include "../../Tile.hpp"
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
+#include "../../entities/Player.hpp"
 
-void zappy::engine::cmd::CmdLook::cmdLook(std::weak_ptr<entities::Player> player, World& world, const std::string& args) // NOLINT(*-unnecessary-value-param)
+void zappy::engine::cmd::CmdLook::cmdLook(std::weak_ptr<entities::Player> player, World& world, [[maybe_unused]] const std::string& args) // NOLINT(*-unnecessary-value-param)
 {
     const auto lockPlayer = player.lock();
     std::string reply = "[ ";
@@ -23,7 +20,7 @@ void zappy::engine::cmd::CmdLook::cmdLook(std::weak_ptr<entities::Player> player
     const int playerX = static_cast<int>(lockPlayer->getX());
     const int playerY = static_cast<int>(lockPlayer->getY());
     const Directions direction = lockPlayer->getDirection();
-    const int level = lockPlayer->getLevel();
+    const int level = static_cast<int>(lockPlayer->getLevel());
 
     int mainAxisDelta = 0;
     int mainAxis = 0;

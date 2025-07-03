@@ -13,7 +13,7 @@
 #include "../../entities/Player.hpp"
 
 void zappy::engine::cmd::CmdConNbr::cmdConNbr(std::weak_ptr<entities::Player> player, World& world,
-                                              const std::string& args)
+                                              [[maybe_unused]] const std::string& args)
 {
     const auto lockPlayer = player.lock();
 

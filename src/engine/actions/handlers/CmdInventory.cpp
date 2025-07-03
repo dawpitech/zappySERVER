@@ -5,16 +5,14 @@
 ** CmdInventory.cpp
 */
 
-#include <iostream>
-
 #include "CmdInventory.hpp"
-#include "../../entities/Player.hpp"
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
+#include "../../entities/Player.hpp"
 
 namespace zappy::engine::cmd
 {
-    void CmdInventory::cmdInventory(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
+    void CmdInventory::cmdInventory(std::weak_ptr<entities::Player> player, World& world, [[maybe_unused]] const std::string& args)
     {
         const auto lockPlayer = player.lock();
         std::string reply = "[ ";

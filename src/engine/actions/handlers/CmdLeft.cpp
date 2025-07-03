@@ -8,15 +8,15 @@
 #include <iostream>
 
 #include "CmdLeft.hpp"
-#include "../../entities/Player.hpp"
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
 #include "../../../utils/Debug.hpp"
 #include "../../../utils/EventSystem.hpp"
+#include "../../entities/Player.hpp"
 
 namespace zappy::engine::cmd
 {
-    void CmdLeft::cmdLeft(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
+    void CmdLeft::cmdLeft(std::weak_ptr<entities::Player> player, World& world, [[maybe_unused]] const std::string& args)
     {
         const auto& lockPlayer = player.lock();
 

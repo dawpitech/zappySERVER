@@ -40,11 +40,11 @@ void zappy::engine::cmd::CmdBroadcast::cmdBroadcast(std::weak_ptr<entities::Play
             continue;
         world.getMainZappyServer().sendMessageToClient("message " +
                                                        std::to_string(utils::getRelativeDirection(
-                                                           target->getX(),
-                                                           target->getY(),
+                                                           static_cast<int>(target->getX()),
+                                                           static_cast<int>(target->getY()),
                                                            target->getDirection(),
-                                                           sender->getX(),
-                                                           sender->getY(),
+                                                           static_cast<int>(sender->getX()),
+                                                           static_cast<int>(sender->getY()),
                                                            world.getWidth(),
                                                            world.getHeight(),
                                                            true)) + ", " + messageContent,

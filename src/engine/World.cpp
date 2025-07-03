@@ -256,8 +256,8 @@ namespace zappy::engine
     {
         const auto width = static_cast<int>(this->_zappyServer.getConfig().worldWidth);
         const auto height = static_cast<int>(this->_zappyServer.getConfig().worldHeight);
-        x = ((x % width) + width) % width;
-        y = ((y % height) + height) % height;
+        x = (x % width + width) % width;
+        y = (y % height + height) % height;
         return {x, y};
     }
 

@@ -14,7 +14,7 @@
 #include "../../../utils/Debug.hpp"
 #include "../../../utils/EventSystem.hpp"
 
-void zappy::engine::cmd::CmdFork::cmdFork(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
+void zappy::engine::cmd::CmdFork::cmdFork(std::weak_ptr<entities::Player> player, World& world, [[maybe_unused]] const std::string& args)
 {
     const auto lockPlayer = player.lock();
 
@@ -29,7 +29,7 @@ void zappy::engine::cmd::CmdFork::cmdFork(std::weak_ptr<entities::Player> player
 }
 
 bool zappy::engine::cmd::CmdFork::cmdPreFork(std::weak_ptr<entities::Player> player, World& world,
-                                             const std::string& args)
+                                             [[maybe_unused]] const std::string& args)
 {
     EventSystem::trigger("pre_fork", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world,
                          player.lock()->ID);

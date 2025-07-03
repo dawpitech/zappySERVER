@@ -16,7 +16,7 @@
 #include "../../entities/Player.hpp"
 
 void zappy::engine::cmd::CmdEject::cmdEject(std::weak_ptr<entities::Player> player, World& world,
-                                            const std::string& args)
+                                            [[maybe_unused]] const std::string& args)
 {
     const auto pusher = player.lock();
     const auto& tile = world.getTileAt(static_cast<int>(pusher->getX()), static_cast<int>(pusher->getY()));

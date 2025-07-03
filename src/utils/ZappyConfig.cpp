@@ -14,6 +14,7 @@ zappy::utils::ZappyConfig::ZappyConfig(const int argc, const char** argv)
 {
     auto status = ParseStatus::UNKNOWN;
 
+    // ReSharper disable once CppDFANullDereference
     if (argc == 2 && (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help"))
     {
         printHelp();

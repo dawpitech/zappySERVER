@@ -43,34 +43,34 @@ std::queue<std::string>& zappy::engine::GraphicalClient::getCommandsBuffer()
     return this->_commandsBuffer;
 }
 
-void zappy::engine::GraphicalClient::sendGreetings(zappy::utils::ZappyConfig& config, const zappy::engine::World& world,
+void zappy::engine::GraphicalClient::sendGreetings(utils::ZappyConfig& config, const World& world,
                                                    const std::string& args)
 {
-    zappy::engine::GraphicalClient::sendMsz(*this, config, world, args);
-    zappy::engine::GraphicalClient::sendSgt(*this, config, world, args);
-    zappy::engine::GraphicalClient::sendMct(*this, config, world, args);
-    zappy::engine::GraphicalClient::sendTna(*this, config, world, args);
+    sendMsz(*this, config, world, args);
+    sendSgt(*this, config, world, args);
+    sendMct(*this, config, world, args);
+    sendTna(*this, config, world, args);
     const auto shareptr = this->shared_from_this(); //std::shared_ptr<GraphicalClient>(this);
-    const std::vector<std::shared_ptr<GraphicalClient>> vec = {shareptr};
-    zappy::engine::GraphicalClient::sendPnw(vec, config, world, true);
+    const std::vector vec = {shareptr};
+    sendPnw(vec, config, world, true);
     for (const auto& player : world.getPlayers())
     {
-        zappy::engine::GraphicalClient::sendPin(*this, config, world, std::to_string(player->ID));
-        zappy::engine::GraphicalClient::sendPlv(*this, config, world, std::to_string(player->ID));
+        sendPin(*this, config, world, std::to_string(player->ID));
+        sendPlv(*this, config, world, std::to_string(player->ID));
     }
-    zappy::engine::GraphicalClient::sendEnw(*this, config, world);
+    sendEnw(*this, config, world);
 }
 
 //bad command
-void zappy::engine::GraphicalClient::sendSuc(const unsigned int graphic_id, const zappy::engine::World& world)
+void zappy::engine::GraphicalClient::sendSuc(const unsigned int graphic_id, const World& world)
 {
     std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending suc message to CLIENT : " << graphic_id << std::endl;
     world.getMainZappyServer().sendMessageToClient("suc", graphic_id);
 }
 
 //map size
-void zappy::engine::GraphicalClient::sendMsz(GraphicalClient& graphic, zappy::utils::ZappyConfig& config,
-                                             const zappy::engine::World& world, const std::string& args)
+void zappy::engine::GraphicalClient::sendMsz(GraphicalClient& graphic, utils::ZappyConfig& config,
+                                             const World& world, [[maybe_unused]] const std::string& args)
 {
     std::string com = "msz ";
 
@@ -83,8 +83,8 @@ void zappy::engine::GraphicalClient::sendMsz(GraphicalClient& graphic, zappy::ut
 }
 
 //frequency value
-void zappy::engine::GraphicalClient::sendSgt(GraphicalClient& graphic, zappy::utils::ZappyConfig& config,
-                                             const World& world, const std::string& args)
+void zappy::engine::GraphicalClient::sendSgt(GraphicalClient& graphic, utils::ZappyConfig& config,
+                                             const World& world, [[maybe_unused]] const std::string& args)
 {
     const std::string com = "sgt " + std::to_string(static_cast<int>(config.freqValue));
 
@@ -93,8 +93,8 @@ void zappy::engine::GraphicalClient::sendSgt(GraphicalClient& graphic, zappy::ut
 }
 
 //name of the teams
-void zappy::engine::GraphicalClient::sendTna(GraphicalClient& graphic, zappy::utils::ZappyConfig& config,
-                                             const World& world, const std::string& args)
+void zappy::engine::GraphicalClient::sendTna(GraphicalClient& graphic, utils::ZappyConfig& config,
+                                             const World& world, [[maybe_unused]] const std::string& args)
 {
     for (const auto& e : config.teamNames)
     {
@@ -107,7 +107,7 @@ void zappy::engine::GraphicalClient::sendTna(GraphicalClient& graphic, zappy::ut
 }
 
 void zappy::engine::GraphicalClient::sendMctProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                                  zappy::utils::ZappyConfig& config, const World& world)
+                                                  utils::ZappyConfig& config, const World& world)
 {
     for (const auto& graphic : graphics)
     {
@@ -116,8 +116,8 @@ void zappy::engine::GraphicalClient::sendMctProxy(const std::vector<std::shared_
 }
 
 // content of the map
-void zappy::engine::GraphicalClient::sendMct(GraphicalClient& graphic, zappy::utils::ZappyConfig& config,
-                                             const World& world, const std::string& args)
+void zappy::engine::GraphicalClient::sendMct(GraphicalClient& graphic, utils::ZappyConfig& config,
+                                             const World& world, [[maybe_unused]] const std::string& args)
 {
     std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending mct command to CLIENT : " << graphic.getID() << std::endl;
     for (int x = 0; x < world.getWidth(); x++)
@@ -130,8 +130,8 @@ void zappy::engine::GraphicalClient::sendMct(GraphicalClient& graphic, zappy::ut
 }
 
 void zappy::engine::GraphicalClient::sendEnwProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                                  zappy::utils::ZappyConfig& config, const World& world,
-                                                  std::weak_ptr<engine::entities::Egg> egg)
+                                                  [[maybe_unused]] utils::ZappyConfig& config, const World& world,
+                                                  std::weak_ptr<entities::Egg> egg)
 {
     const auto eggLock = egg.lock();
     for (const auto& graphic : graphics)
@@ -145,7 +145,7 @@ void zappy::engine::GraphicalClient::sendEnwProxy(const std::vector<std::shared_
     }
 }
 
-void zappy::engine::GraphicalClient::sendEnw(GraphicalClient& graphic, zappy::utils::ZappyConfig& config,
+void zappy::engine::GraphicalClient::sendEnw(GraphicalClient& graphic, [[maybe_unused]] utils::ZappyConfig& config,
                                              const World& world)
 {
     for (const auto& egg : world.getEggs())
@@ -160,7 +160,7 @@ void zappy::engine::GraphicalClient::sendEnw(GraphicalClient& graphic, zappy::ut
 }
 
 //content of a tile
-void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, zappy::utils::ZappyConfig& config,
+void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, [[maybe_unused]] utils::ZappyConfig& config,
                                              const World& world, const std::string& args)
 {
     std::istringstream iss(args);
@@ -211,7 +211,7 @@ void zappy::engine::GraphicalClient::sendBct(GraphicalClient& graphic, zappy::ut
 }
 
 void zappy::engine::GraphicalClient::sendPpoProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                                  zappy::utils::ZappyConfig& config, const World& world,
+                                                  utils::ZappyConfig& config, const World& world,
                                                   const unsigned int pl_id)
 {
     for (const auto& graphic : graphics)
@@ -221,7 +221,7 @@ void zappy::engine::GraphicalClient::sendPpoProxy(const std::vector<std::shared_
 }
 
 //player's position
-void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, zappy::utils::ZappyConfig& config,
+void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, [[maybe_unused]] utils::ZappyConfig& config,
                                              const World& world, const std::string& args)
 {
     std::istringstream iss(args);
@@ -256,7 +256,7 @@ void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, zappy::ut
 }
 
 //player level
-void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, zappy::utils::ZappyConfig& config,
+void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, [[maybe_unused]] utils::ZappyConfig& config,
                                              const World& world, const std::string& args)
 {
     std::istringstream iss(args);
@@ -290,8 +290,8 @@ void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, zappy::ut
 }
 
 void zappy::engine::GraphicalClient::sendPinProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                                  zappy::utils::ZappyConfig& config, const World& world,
-                                                  unsigned int unused, const unsigned int pl_id)
+                                                  utils::ZappyConfig& config, const World& world,
+                                                  [[maybe_unused]] unsigned int unused, const unsigned int pl_id)
 {
     for (const auto& graphic : graphics)
     {
@@ -300,7 +300,7 @@ void zappy::engine::GraphicalClient::sendPinProxy(const std::vector<std::shared_
 }
 
 // player inventory
-void zappy::engine::GraphicalClient::sendPin(GraphicalClient& graphic, zappy::utils::ZappyConfig& config,
+void zappy::engine::GraphicalClient::sendPin(GraphicalClient& graphic, [[maybe_unused]] utils::ZappyConfig& config,
                                              const World& world, const std::string& args)
 {
     std::istringstream iss(args);
@@ -363,7 +363,7 @@ void zappy::engine::GraphicalClient::sendPin(GraphicalClient& graphic, zappy::ut
     world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
 }
 
-void zappy::engine::GraphicalClient::sendSst(GraphicalClient& graphic, zappy::utils::ZappyConfig& config,
+void zappy::engine::GraphicalClient::sendSst(GraphicalClient& graphic, utils::ZappyConfig& config,
                                              const World& world, const std::string& args)
 {
     std::istringstream iss(args);
@@ -382,7 +382,8 @@ void zappy::engine::GraphicalClient::sendSst(GraphicalClient& graphic, zappy::ut
 }
 
 void zappy::engine::GraphicalClient::sendPnw(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                             zappy::utils::ZappyConfig& config, const World& world, bool firsttime)
+                                             // ReSharper disable once CppParameterMayBeConst
+                                             utils::ZappyConfig& config, const World& world, bool firsttime)
 {
     if (world.getPlayers().empty()) return;
     const std::vector last_player{world.getPlayers().back()};
@@ -416,13 +417,13 @@ void zappy::engine::GraphicalClient::sendPnw(const std::vector<std::shared_ptr<G
 }
 
 void zappy::engine::GraphicalClient::sendPnw_proxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                                   zappy::utils::ZappyConfig& config, const World& world)
+                                                   utils::ZappyConfig& config, const World& world)
 {
     sendPnw(graphics, config, world, false);
 }
 
 void zappy::engine::GraphicalClient::sendPdr(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                             zappy::utils::ZappyConfig& config, const World& world,
+                                             [[maybe_unused]] utils::ZappyConfig& config, const World& world,
                                              const unsigned int res_id, const unsigned int pl_id)
 {
     std::string com = "pdr ";
@@ -437,7 +438,7 @@ void zappy::engine::GraphicalClient::sendPdr(const std::vector<std::shared_ptr<G
 }
 
 void zappy::engine::GraphicalClient::sendPex(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                             zappy::utils::ZappyConfig& config, const World& world,
+                                             [[maybe_unused]] utils::ZappyConfig& config, const World& world,
                                              const unsigned int pl_id)
 {
     for (const auto& graphic : graphics)
@@ -451,7 +452,8 @@ void zappy::engine::GraphicalClient::sendPex(const std::vector<std::shared_ptr<G
 }
 
 void zappy::engine::GraphicalClient::sendPbc(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                             zappy::utils::ZappyConfig& config, const World& world, unsigned int pl_id,
+                                             // ReSharper disable once CppParameterMayBeConst
+                                             [[maybe_unused]] utils::ZappyConfig& config, const World& world, unsigned int pl_id,
                                              std::string msg)
 {
     for (const auto& graphic : graphics)
@@ -464,7 +466,7 @@ void zappy::engine::GraphicalClient::sendPbc(const std::vector<std::shared_ptr<G
 }
 
 void zappy::engine::GraphicalClient::sendPfk(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                             zappy::utils::ZappyConfig& config, const World& world,
+                                             [[maybe_unused]] utils::ZappyConfig& config, const World& world,
                                              const unsigned int pl_id)
 {
     for (const auto& graphic : graphics)
@@ -477,7 +479,7 @@ void zappy::engine::GraphicalClient::sendPfk(const std::vector<std::shared_ptr<G
 }
 
 void zappy::engine::GraphicalClient::sendEbo(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                             zappy::utils::ZappyConfig& config, const World& world,
+                                             [[maybe_unused]] utils::ZappyConfig& config, const World& world,
                                              const unsigned int egg_id)
 {
     for (const auto& graphic : graphics)
@@ -490,7 +492,7 @@ void zappy::engine::GraphicalClient::sendEbo(const std::vector<std::shared_ptr<G
 }
 
 void zappy::engine::GraphicalClient::sendEdi(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                             zappy::utils::ZappyConfig& config, const World& world,
+                                             [[maybe_unused]] utils::ZappyConfig& config, const World& world,
                                              const unsigned int egg_id)
 {
     for (const auto& graphic : graphics)
@@ -503,7 +505,7 @@ void zappy::engine::GraphicalClient::sendEdi(const std::vector<std::shared_ptr<G
 }
 
 void zappy::engine::GraphicalClient::sendPdi(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                             zappy::utils::ZappyConfig& config, const World& world,
+                                             [[maybe_unused]] utils::ZappyConfig& config, const World& world,
                                              const unsigned int pl_id)
 {
     for (const auto& graphic : graphics)
@@ -516,7 +518,7 @@ void zappy::engine::GraphicalClient::sendPdi(const std::vector<std::shared_ptr<G
 }
 
 void zappy::engine::GraphicalClient::sendSmg(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                             zappy::utils::ZappyConfig& config, const World& world,
+                                             [[maybe_unused]] utils::ZappyConfig& config, const World& world,
                                              const std::string& message)
 {
     for (const auto& graphic : graphics)
@@ -529,7 +531,7 @@ void zappy::engine::GraphicalClient::sendSmg(const std::vector<std::shared_ptr<G
 }
 
 void zappy::engine::GraphicalClient::sendPgt(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                             zappy::utils::ZappyConfig& config, const World& world,
+                                             [[maybe_unused]] utils::ZappyConfig& config, const World& world,
                                              const unsigned int res_id, const unsigned int pl_id)
 {
     const std::string com = "pgt #" + std::to_string(pl_id) + " " + std::to_string(res_id);
@@ -542,8 +544,8 @@ void zappy::engine::GraphicalClient::sendPgt(const std::vector<std::shared_ptr<G
 }
 
 void zappy::engine::GraphicalClient::sendPic(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                             zappy::utils::ZappyConfig& config, const World& world,
-                                             std::vector<std::weak_ptr<engine::entities::Player>> players)
+                                             [[maybe_unused]] utils::ZappyConfig& config, const World& world,
+                                             std::vector<std::weak_ptr<entities::Player>> players)
 {
     std::string com = "pic " + std::to_string(players[0].lock()->getX()) + " " +
         std::to_string(players[0].lock()->getY()) + " " + std::to_string(players[0].lock()->getLevel());
@@ -559,8 +561,9 @@ void zappy::engine::GraphicalClient::sendPic(const std::vector<std::shared_ptr<G
 }
 
 void zappy::engine::GraphicalClient::sendPie(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
-                                             zappy::utils::ZappyConfig& config, const World& world,
-                                             std::weak_ptr<engine::entities::Player> player, int success)
+                                             [[maybe_unused]] utils::ZappyConfig& config, const World& world,
+                                             // ReSharper disable once CppParameterMayBeConst
+                                             std::weak_ptr<entities::Player> player, int success)
 {
     const std::string com = "pie " + std::to_string(player.lock()->getX()) + " " + std::to_string(player.lock()->getY())
         + " " + std::to_string(success);

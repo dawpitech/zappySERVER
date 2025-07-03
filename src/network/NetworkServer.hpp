@@ -57,7 +57,8 @@ namespace generic
                     {
                         if (this != &o)
                         {
-                            if (connectionFD >= 0) ::close(connectionFD);
+                            if (connectionFD >= 0)
+                                close(connectionFD);
                             clientID = o.clientID;
                             connectionFD = o.connectionFD;
                             inputBuffer = std::move(o.inputBuffer);

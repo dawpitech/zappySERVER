@@ -64,7 +64,7 @@ namespace zappy::engine
         },
     };
 
-    void CommandInterpreter::dummyAction([[maybe_unused]] std::weak_ptr<entities::Player> player, World& world, const std::string& args) // NOLINT(*-unnecessary-value-param)
+    void CommandInterpreter::dummyAction([[maybe_unused]] std::weak_ptr<entities::Player> player, [[maybe_unused]] World& world, const std::string& args) // NOLINT(*-unnecessary-value-param)
     {
         std::cout << "Dummy action due to request: " << args << std::endl;
     }

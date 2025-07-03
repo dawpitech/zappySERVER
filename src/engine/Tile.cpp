@@ -139,7 +139,7 @@ namespace zappy::engine
     int Tile::getResourceQuantity(const Ressources type) const
     {
         const auto it = this->_resources.find(type);
-        return (it != this->_resources.end()) ? it->second : 0;
+        return it != this->_resources.end() ? it->second : 0;
     }
 
     const std::map<Ressources, int>& Tile::getAllResources() const

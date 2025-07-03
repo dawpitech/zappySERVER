@@ -9,11 +9,11 @@
 
 #include <iostream>
 
-#include "../../entities/Player.hpp"
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
 #include "../../../utils/Debug.hpp"
 #include "../../../utils/EventSystem.hpp"
+#include "../../entities/Player.hpp"
 
 void zappy::engine::cmd::CmdSet::cmdSet(std::weak_ptr<entities::Player> player, World& world, const std::string& args) // NOLINT(*-unnecessary-value-param)
 {
@@ -47,14 +47,14 @@ void zappy::engine::cmd::CmdSet::cmdSet(std::weak_ptr<entities::Player> player, 
         return;
     }
     lockPlayer->removeRessource(safeType, 1);
-    world.getTileAt(lockPlayer->getX(), lockPlayer->getY()).addResource(safeType);
+    world.getTileAt(static_cast<int>(lockPlayer->getX()), static_cast<int>(lockPlayer->getY())).addResource(safeType);
 
     std::cout << debug::getTS() << "[TRACE] PLAYER " << lockPlayer->ID << " SET " <<
         getRessourceName(safeType) << " DOWN AT " << lockPlayer->getX() << ":"
         << lockPlayer->getY() << std::endl;
 
     EventSystem::trigger("player_set", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world,
-                         (unsigned int)safeType, lockPlayer->ID);
+                         static_cast<unsigned int>(safeType), lockPlayer->ID);
     EventSystem::trigger("map_refill", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world);
     world.getMainZappyServer().sendMessageToClient("ok", lockPlayer->ID);
 }

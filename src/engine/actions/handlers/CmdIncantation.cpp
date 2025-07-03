@@ -86,7 +86,7 @@ zappy::engine::cmd::CmdIncantation::ELEVATION_101 = {
 };
 
 void zappy::engine::cmd::CmdIncantation::cmdIncantation(std::weak_ptr<entities::Player> player, World& world,
-                                                        const std::string& args)
+                                                        [[maybe_unused]] const std::string& args)
 {
     const auto lockPlayer = player.lock();
     const auto& [_, requiredRessources] = ELEVATION_101.at(lockPlayer->getLevel() + 1);
@@ -110,11 +110,11 @@ void zappy::engine::cmd::CmdIncantation::cmdIncantation(std::weak_ptr<entities::
 }
 
 bool zappy::engine::cmd::CmdIncantation::cmdPreIncantation(std::weak_ptr<entities::Player> player, World& world,
-                                                           const std::string& args)
+                                                           [[maybe_unused]] const std::string& args)
 {
     const auto lockPlayer = player.lock();
     const auto& tile = world.getTileAt(static_cast<int>(lockPlayer->getX()), static_cast<int>(lockPlayer->getY()));
-    std::vector<std::weak_ptr<engine::entities::Player>> players;
+    std::vector<std::weak_ptr<entities::Player>> players;
 
     if (!canIncantationBeDone(*lockPlayer, world))
     {
