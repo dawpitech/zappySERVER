@@ -49,6 +49,9 @@ namespace zappy::engine {
 	static void sendEdi(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int egg_id);
 	static void sendPdi(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id);
 
+
+	static void sendSmg(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, std::string message);
+
     private:
 	bool alive = true;
         std::queue<std::string> _commandsBuffer;

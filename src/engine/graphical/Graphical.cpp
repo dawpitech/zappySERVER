@@ -369,3 +369,11 @@ void zappy::engine::GraphicalClient::sendPdi(const std::vector<std::shared_ptr<G
         world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
     }
 }
+
+void zappy::engine::GraphicalClient::sendSmg(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, std::string message) {
+    for (auto graphic: graphics) {
+	std::string com = "smg " + message;
+	std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending smg command to CLIENT : " << graphic->getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
+    }
+}
