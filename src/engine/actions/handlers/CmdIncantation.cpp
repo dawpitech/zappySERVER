@@ -72,6 +72,7 @@ void zappy::engine::cmd::CmdIncantation::cmdIncantation(std::weak_ptr<Player> pl
         tile.removeResource(element, quantity);
     lockPlayer->upLevel();
     EventSystem::trigger("end_incantation", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, player, 1);
+    EventSystem::trigger("map_refill", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world);
     world.getMainZappyServer().sendMessageToClient("Current level: " + std::to_string(lockPlayer->getLevel()), lockPlayer->ID);
 }
 
