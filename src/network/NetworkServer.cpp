@@ -156,21 +156,45 @@ namespace generic
 
         client->inputBuffer.resize(readable_bytes);
 
-        // TODO: remove the bellow line, end of line char should be handle in the buffer management system
-        while (!client->inputBuffer.empty() && (client->inputBuffer.back() == '\n' || client->inputBuffer.back() == '\r'))
-            client->inputBuffer.pop_back();
-        std::cout << debug::getTS() << "[TRACE] (CLIENT ID" << client->clientID << ") SEND:" << client->inputBuffer << std::endl;
+        // Append new data to the persistent message buffer
+        client->messageBuffer.append(client->inputBuffer);
 
+        // Process complete commands (ending with '\n')
+        size_t pos = 0;
+        while ((pos = client->messageBuffer.find('\n')) != std::string::npos) {
+            std::string command = client->messageBuffer.substr(0, pos);
+            
+            // Remove the processed command (including '\n') from the buffer
+            client->messageBuffer.erase(0, pos + 1);
+            
+            // Remove trailing carriage return if present
+            if (!command.empty() && command.back() == '\r') {
+                command.pop_back();
+            }
+            
+            // Skip empty commands
+            if (command.empty()) {
+                continue;
+            }
+            
+            std::cout << debug::getTS() << "[TRACE] (CLIENT ID" << client->clientID << ") SEND:" << command << std::endl;
+            
+            // Process the complete command
+            this->processCompleteCommand(command, client, zappyServer);
+        }
+    }
+
+    void NetworkServer::processCompleteCommand(const std::string& command, const std::unique_ptr<Client>& client, zappy::ZappyServer& zappyServer) {
         if (client->managedByGameEngine) {
             if (client->isGraphical) {
                 const auto graphic = client->_gameEngineGraphicalClient.lock();
-                graphic->addCommandToBuffer(client->inputBuffer);
+                graphic->addCommandToBuffer(command);
             } else {
                 const auto player = client->_gameEnginePlayer.lock();
-                player->addCommandToBuffer(client->inputBuffer);
+                player->addCommandToBuffer(command);
             }
         } else {
-            if (client->inputBuffer == "GRAPHIC") {
+            if (command == "GRAPHIC") {
                 client->managedByGameEngine = true;
                 client->isGraphical = true;
                 client->_gameEngineGraphicalClient = zappyServer.createNewGraphicalClient(client->clientID);
@@ -179,7 +203,7 @@ namespace generic
                 return;
             }
             try {
-                client->_gameEnginePlayer = zappyServer.createNewPlayerInTeam(client->inputBuffer, clientID);
+                client->_gameEnginePlayer = zappyServer.createNewPlayerInTeam(command, client->clientID);
                 client->managedByGameEngine = true;
                 std::cout << debug::getTS() << "[TRACE] SWITCHING PROCESSING OF CLIENT ID" << client->clientID << " TO GAME ENGINE" << std::endl;
             } catch (std::runtime_error&) {

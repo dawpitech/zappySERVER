@@ -50,6 +50,7 @@ namespace generic
                       : clientID(o.clientID)
                       , connectionFD(o.connectionFD)
                       , inputBuffer(std::move(o.inputBuffer))
+                      , messageBuffer(std::move(o.messageBuffer))
                     {
                         o.connectionFD = -1;
                     }
@@ -60,6 +61,7 @@ namespace generic
                             clientID = o.clientID;
                             connectionFD = o.connectionFD;
                             inputBuffer = std::move(o.inputBuffer);
+                            messageBuffer = std::move(o.messageBuffer);
                             o.connectionFD = -1;
                         }
                         return *this;
@@ -75,6 +77,7 @@ namespace generic
                     std::weak_ptr<zappy::engine::GraphicalClient> _gameEngineGraphicalClient;
 
                     std::string inputBuffer;
+                    std::string messageBuffer;  // Persistent buffer for accumulating incoming data
             };
             class NetworkException final : public std::runtime_error
                 { public: explicit NetworkException(const std::string& what) : std::runtime_error(what) {} };
@@ -96,5 +99,6 @@ namespace generic
 
             void acceptNewClient();
             void parseClientInput(unsigned int clientID, zappy::ZappyServer& zappyServer);
+            void processCompleteCommand(const std::string& command, const std::unique_ptr<Client>& client, zappy::ZappyServer& zappyServer);
     };
 } // generic
