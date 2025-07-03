@@ -36,25 +36,18 @@ namespace zappy::engine
     void World::tick()
     {
         //std::cout << "[TRACE] World ticking" << std::endl;
-        for (auto it = players.begin(); it != players.end();) {
-            if (this->_zappyServer.isClientDead((*it)->ID)) {
-                std::cout << debug::getTS() << "[WARN] PLAYER is dead/disconnected" << std::endl;
-                it = players.erase(it);
-		//TODO kill player
-            } else {
-                this->tickPlayer(*it);
-                ++it;
-            }
+        for (const auto& player : this->players) {
+            if (player->isDead())
+                std::cout << debug::getTS() << "[WARN] PLAYER " << player->ID << " was disconnected" << std::endl;
+            else
+                this->tickPlayer(player);
         }
 
-        for (auto it = graphical_clients.begin(); it != graphical_clients.end();) {
-            if (this->_zappyServer.isClientDead((*it)->getID())) {
-                std::cout << debug::getTS() << "[WARN] GRAPHICAL client is disconnected" << std::endl;
-                it = graphical_clients.erase(it);
-            } else {
-                this->tickGraphic(*it);
-                ++it;
-            }
+        for (const auto& graphical : this->graphicalClients) {
+            if (graphical->isDead())
+                std::cout << debug::getTS() << "[WARN] GUI CLIENT " << graphical->getID() << " was disconnected" << std::endl;
+            else
+                this->tickGraphic(graphical);
         }
 
         if (this->_tickSinceBigBang == 0 || this->_tickSinceBigBang - this->_tickWhenLastRessourceSpawn >= 20)
@@ -62,6 +55,7 @@ namespace zappy::engine
 
         this->doEggCleanup();
         this->doPlayerCleanup();
+        this->doGraphicalCleanup();
         this->_tickSinceBigBang++;
     }
 
@@ -88,7 +82,7 @@ namespace zappy::engine
                 << egg->getX() << ":" << egg->getY() << std::endl;
         }
 
-        EventSystem::trigger("player_spawn", this->graphical_clients, this->_zappyServer.getConfig(), *this);
+        EventSystem::trigger("player_spawn", this->graphicalClients, this->_zappyServer.getConfig(), *this);
         return {this->players.back()};
     }
 
@@ -110,8 +104,8 @@ namespace zappy::engine
     }
 
     std::weak_ptr<GraphicalClient> World::addGraphicalClient() {
-        this->graphical_clients.emplace_back(std::make_shared<GraphicalClient>());
-        return {this->graphical_clients.back()};
+        this->graphicalClients.emplace_back(std::make_shared<GraphicalClient>());
+        return {this->graphicalClients.back()};
     }
 
     void World::tickGraphic(const std::shared_ptr<GraphicalClient>& graphic)
@@ -327,15 +321,28 @@ namespace zappy::engine
 
     void World::doPlayerCleanup()
     {
-        for (int i = 0; i < this->players.size(); i++) {
+        for (int i = static_cast<int>(this->players.size()) - 1; i >= 0; --i) {
             const auto player = this->players.at(i);
             if (!player->isDead())
                 continue;
-            this->getMainZappyServer().sendMessageToClient("dead", player->ID);
+            try {
+                this->getMainZappyServer().sendMessageToClient("dead", player->ID);
+            } catch (std::runtime_error&) {}
             this->getMainZappyServer().markClientAsDead(player->ID);
             this->getTileAt(static_cast<int>(player->getX()),static_cast<int>(player->getY()))
                 .removePlayer(player);
             this->players.erase(this->players.begin() + i);
+        }
+    }
+
+    void World::doGraphicalCleanup()
+    {
+        for (int i = static_cast<int>(this->graphicalClients.size()) - 1; i >= 0; --i) {
+            const auto graphical = this->graphicalClients.at(i);
+            if (!graphical->isDead())
+                continue;
+            this->getMainZappyServer().markClientAsDead(graphical->getID());
+            this->graphicalClients.erase(this->graphicalClients.begin() + i);
         }
     }
 }

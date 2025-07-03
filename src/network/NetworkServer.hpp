@@ -85,7 +85,6 @@ namespace generic
             void pollNetworkActivity(zappy::ZappyServer& zappyServer, int timeoutMs);
             void writeToClient(const std::string& message, unsigned int clientID) const;
             void markConnectionAsDead(unsigned int clientID) const;
-	        [[nodiscard]] bool isClientDead(unsigned int id) const;
 
         private:
             constexpr static size_t QUEUE_SIZE = 8;
@@ -96,6 +95,6 @@ namespace generic
             unsigned int clientIDCount;
 
             void acceptNewClient();
-            void parseClientInput(int clientIdx, zappy::ZappyServer& zappyServer);
+            void parseClientInput(unsigned int clientID, zappy::ZappyServer& zappyServer);
     };
 } // generic

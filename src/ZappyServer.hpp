@@ -33,7 +33,6 @@ namespace zappy
 
             [[nodiscard]] const utils::ZappyConfig& getConfig() const;
             utils::ZappyConfig& getConfig();
-            [[nodiscard]] bool isClientDead(unsigned int id) const;
 
         private:
             utils::ZappyConfig _config;

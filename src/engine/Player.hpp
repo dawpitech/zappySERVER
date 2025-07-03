@@ -54,6 +54,7 @@ namespace zappy::engine
             void eat(unsigned int tick);
 
             [[nodiscard]] bool isDead() const { return !this->alive; }
+            void markAsDead() { this->alive = false; }
 
             const unsigned int ID;
 

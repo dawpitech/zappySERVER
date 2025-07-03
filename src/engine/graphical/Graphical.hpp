@@ -20,7 +20,7 @@ namespace zappy::engine {
         void sendGreetings(zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args);
 
         static void sendSuc(unsigned int graphic_id, zappy::engine::World &world);
-	
+
         static void sendMsz(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args);
         static void sendSgt(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
         static void sendTna(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
@@ -33,10 +33,15 @@ namespace zappy::engine {
 
         static void sendPnw(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, bool firsttime);
         static void sendPnw_proxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world);
-	static void sendPdr(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int res_id, unsigned int pl_id);
+		static void sendPdr(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int res_id, unsigned int pl_id);
+
+    	[[nodiscard]] bool isDead() const { return !this->alive; }
+    	void markAsDead() { this->alive = false; }
 
     private:
+		bool alive = true;
+
         std::queue<std::string> _commandsBuffer;
-	unsigned int _ID;
+		unsigned int _ID;
     };
 }
