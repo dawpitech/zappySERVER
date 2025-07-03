@@ -22,6 +22,7 @@
             valgrind
             mold
             cmake
+            just
           ] ++ deps;
         };
 
