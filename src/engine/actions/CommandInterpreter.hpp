@@ -85,7 +85,7 @@ namespace zappy::engine
                 Command command;
                 unsigned int duration;
                 void (*handler)(std::weak_ptr<Player> player, World& world, const std::string& args);
-                void (*preHandler)(std::weak_ptr<Player> player, World& world, const std::string& args);
+                bool (*preHandler)(std::weak_ptr<Player> player, World& world, const std::string& args);
             };
 
             struct GraphicCommandInfo
@@ -96,10 +96,10 @@ namespace zappy::engine
 
             CommandInterpreter() = delete;
             static void dummyAction(std::weak_ptr<Player> player, World& world, const std::string& args);
-                static void silenceDummyAction(std::weak_ptr<Player> player, World& world, const std::string& args);
+            static bool silenceDummyPreAction(std::weak_ptr<Player> player, World& world, const std::string& args);
 
-            const static std::map<std::string, CommandInfo> COMMANDS;
-            const static std::map<std::string, GraphicCommandInfo> GRAPHIC_COMMANDS;
+            static const std::map<std::string, CommandInfo> COMMANDS;
+            static const std::map<std::string, GraphicCommandInfo> GRAPHIC_COMMANDS;
 
     };
 }

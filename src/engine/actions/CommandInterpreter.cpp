@@ -14,6 +14,7 @@
 #include "handlers/CmdEject.hpp"
 #include "handlers/CmdFork.hpp"
 #include "handlers/CmdForward.hpp"
+#include "handlers/CmdIncantation.hpp"
 #include "handlers/CmdInventory.hpp"
 #include "handlers/CmdLeft.hpp"
 #include "handlers/CmdLook.hpp"
@@ -24,31 +25,31 @@
 namespace zappy::engine
 {
     const std::map<std::string, CommandInterpreter::GraphicCommandInfo> CommandInterpreter::GRAPHIC_COMMANDS = {
-        {"msz", {GraphicCommand::MSZ, &zappy::engine::GraphicalClient::sendMsz}},
-        {"sgt", {GraphicCommand::SGT, &zappy::engine::GraphicalClient::sendSgt}},
-        {"tna", {GraphicCommand::TNA, &zappy::engine::GraphicalClient::sendTna}},
-        {"mct", {GraphicCommand::MCT, &zappy::engine::GraphicalClient::sendMct}},
-        {"bct", {GraphicCommand::BCT, &zappy::engine::GraphicalClient::sendBct}},
-        {"ppo", {GraphicCommand::PPO, &zappy::engine::GraphicalClient::sendPpo}},
-        {"plv", {GraphicCommand::PLV, &zappy::engine::GraphicalClient::sendPlv}},
-        {"pin", {GraphicCommand::PIN, &zappy::engine::GraphicalClient::sendPin}},
-        {"sgt", {GraphicCommand::SGT, &zappy::engine::GraphicalClient::sendSgt}},
-        {"sst", {GraphicCommand::SST, &zappy::engine::GraphicalClient::sendSst}},
+        {"msz", {GraphicCommand::MSZ, &GraphicalClient::sendMsz}},
+        {"sgt", {GraphicCommand::SGT, &GraphicalClient::sendSgt}},
+        {"tna", {GraphicCommand::TNA, &GraphicalClient::sendTna}},
+        {"mct", {GraphicCommand::MCT, &GraphicalClient::sendMct}},
+        {"bct", {GraphicCommand::BCT, &GraphicalClient::sendBct}},
+        {"ppo", {GraphicCommand::PPO, &GraphicalClient::sendPpo}},
+        {"plv", {GraphicCommand::PLV, &GraphicalClient::sendPlv}},
+        {"pin", {GraphicCommand::PIN, &GraphicalClient::sendPin}},
+        {"sgt", {GraphicCommand::SGT, &GraphicalClient::sendSgt}},
+        {"sst", {GraphicCommand::SST, &GraphicalClient::sendSst}},
     };
 
     const std::map<std::string, CommandInterpreter::CommandInfo> CommandInterpreter::COMMANDS =  {
-        {"Forward", {Command::FORWARD, 7, &cmd::CmdForward::cmdForward, &CommandInterpreter::silenceDummyAction}},
-        {"Right", {Command::RIGHT, 7, &cmd::CmdRight::cmdRight, &CommandInterpreter::silenceDummyAction}},
-        {"Left", {Command::LEFT, 7, &cmd::CmdLeft::cmdLeft, &CommandInterpreter::silenceDummyAction}},
-        {"Look", {Command::LOOK, 7, &cmd::CmdLook::cmdLook, &CommandInterpreter::silenceDummyAction}},
-        {"Inventory", {Command::INVENTORY, 1, &cmd::CmdInventory::cmdInventory, &CommandInterpreter::silenceDummyAction}},
-        {"Broadcast", {Command::BROADCAST, 7, &cmd::CmdBroadcast::cmdBroadcast, &CommandInterpreter::silenceDummyAction}},
-        {"Connect_nbr", {Command::CONNECT_NBR, 0, &cmd::CmdConNbr::cmdConNbr, &CommandInterpreter::silenceDummyAction}},
+        {"Forward", {Command::FORWARD, 7, &cmd::CmdForward::cmdForward, &CommandInterpreter::silenceDummyPreAction}},
+        {"Right", {Command::RIGHT, 7, &cmd::CmdRight::cmdRight, &CommandInterpreter::silenceDummyPreAction}},
+        {"Left", {Command::LEFT, 7, &cmd::CmdLeft::cmdLeft, &CommandInterpreter::silenceDummyPreAction}},
+        {"Look", {Command::LOOK, 7, &cmd::CmdLook::cmdLook, &CommandInterpreter::silenceDummyPreAction}},
+        {"Inventory", {Command::INVENTORY, 1, &cmd::CmdInventory::cmdInventory, &CommandInterpreter::silenceDummyPreAction}},
+        {"Broadcast", {Command::BROADCAST, 7, &cmd::CmdBroadcast::cmdBroadcast, &CommandInterpreter::silenceDummyPreAction}},
+        {"Connect_nbr", {Command::CONNECT_NBR, 0, &cmd::CmdConNbr::cmdConNbr, &CommandInterpreter::silenceDummyPreAction}},
         {"Fork", {Command::FORK, 42, &cmd::CmdFork::cmdFork, &cmd::CmdFork::cmdPreFork}},
-        {"Eject", {Command::EJECT, 7, &cmd::CmdEject::cmdEject, &CommandInterpreter::silenceDummyAction}},
-        {"Take", {Command::TAKE, 7, &cmd::CmdTake::cmdTake, &CommandInterpreter::silenceDummyAction}},
-        {"Set", {Command::SET, 7, &cmd::CmdSet::cmdSet, &CommandInterpreter::silenceDummyAction}},
-        {"Incantation", {Command::INCANTATION, 300, &CommandInterpreter::dummyAction, &CommandInterpreter::silenceDummyAction}},
+        {"Eject", {Command::EJECT, 7, &cmd::CmdEject::cmdEject, &CommandInterpreter::silenceDummyPreAction}},
+        {"Take", {Command::TAKE, 7, &cmd::CmdTake::cmdTake, &CommandInterpreter::silenceDummyPreAction}},
+        {"Set", {Command::SET, 7, &cmd::CmdSet::cmdSet, &CommandInterpreter::silenceDummyPreAction}},
+        {"Incantation", {Command::INCANTATION, 300, &cmd::CmdIncantation::cmdIncantation, &cmd::CmdIncantation::cmdPreIncantation}},
     };
 
     void CommandInterpreter::dummyAction(std::weak_ptr<Player> player, World& world, const std::string& args)
@@ -56,8 +57,9 @@ namespace zappy::engine
         std::cout << "Dummy action due to request: " << args << std::endl;
     }
 
-    void CommandInterpreter::silenceDummyAction([[maybe_unused]] std::weak_ptr<Player>
+    bool CommandInterpreter::silenceDummyPreAction([[maybe_unused]] std::weak_ptr<Player>
         player, [[maybe_unused]] World& world, [[maybe_unused]] const std::string& args)
     {
+        return true;
     }
 }

@@ -24,6 +24,6 @@ namespace zappy::engine::cmd
     {
         public:
             static void cmdFork(std::weak_ptr<Player> player, World& world, const std::string& args);
-            static void cmdPreFork(std::weak_ptr<Player> player, World& world, const std::string& args);
+            static bool cmdPreFork(std::weak_ptr<Player> player, World& world, const std::string& args);
     };
 }

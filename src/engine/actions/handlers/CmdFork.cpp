@@ -28,7 +28,8 @@ void zappy::engine::cmd::CmdFork::cmdFork(std::weak_ptr<Player> player, World& w
     world.getMainZappyServer().sendMessageToClient("ok", lockPlayer->ID);
 }
 
-void zappy::engine::cmd::CmdFork::cmdPreFork(std::weak_ptr<Player> player, World& world, const std::string& args)
+bool zappy::engine::cmd::CmdFork::cmdPreFork(std::weak_ptr<Player> player, World& world, const std::string& args)
 {
     EventSystem::trigger("pre_fork", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, player.lock()->ID);
+    return true;
 }

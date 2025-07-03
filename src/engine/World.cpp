@@ -12,12 +12,27 @@
 #include <stdexcept>
 
 #include "World.hpp"
+
+#include <cstring>
+
 #include "Tile.hpp"
 #include "../ZappyServer.hpp"
 #include "../utils/Debug.hpp"
 #include "../utils/EventSystem.hpp"
 #include "actions/CommandInterpreter.hpp"
 #include "graphical/Graphical.hpp"
+
+namespace
+{
+    // Helper trim function
+    inline std::string trim(const std::string& s) {
+        size_t start = s.find_first_not_of(" \t\r\n");
+        size_t end = s.find_last_not_of(" \t\r\n");
+        if (start == std::string::npos)
+            return "";
+        return s.substr(start, end - start + 1);
+    }
+}
 
 namespace zappy::engine
 {
@@ -202,7 +217,10 @@ namespace zappy::engine
                     const unsigned int duration = CommandInterpreter::COMMANDS.at(action).duration;
                     player->setWaitingCyclesRemaining(duration);
                     player->setStatus(Player::Status::WAITING_BEFORE_EXECUTE);
-                    CommandInterpreter::COMMANDS.at(action).preHandler(player, *this, fullCommand);
+                    if (!CommandInterpreter::COMMANDS.at(action).preHandler(player, *this, fullCommand)) {
+                        player->getCommandsBuffer().pop();
+                        player->setStatus(Player::Status::WAITING_FOR_COMMAND);
+                    }
                 } catch (std::out_of_range&) {
                     std::cout << debug::getTS() << "[WARN] Unknown command received from player: " << action << std::endl;
                     player->getCommandsBuffer().pop();

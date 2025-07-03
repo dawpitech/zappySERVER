@@ -56,6 +56,8 @@ namespace zappy::engine
             [[nodiscard]] bool isDead() const { return !this->alive; }
             void markAsDead() { this->alive = false; }
 
+            void upLevel() { this->_currentLevel++; }
+
             const unsigned int ID;
 
         private:
