@@ -71,9 +71,8 @@ namespace generic
     void NetworkServer::writeToClient(const std::string& message, const unsigned int clientID) const
     {
         try {
-
-	    const auto& client = std::next(this->_clients.begin(), clientID)->second;
-	    if (client == nullptr) return;
+	        const auto& client = std::next(this->_clients.begin(), clientID)->second;
+	        if (client == nullptr) return;
 
             auto msg = message;
             msg.append("\n");
@@ -85,25 +84,39 @@ namespace generic
         }
     }
 
-    void NetworkServer::acceptNewClient()
+    void NetworkServer::markConnectionAsDead(const unsigned int clientID) const
     {
+        try {
+            const auto& client = std::next(this->_clients.begin(), clientID)->second;
+            if (client == nullptr) return;
+
+            client->alive = false;
+        } catch (std::out_of_range&) {
+            throw NetworkException("Unknown client ID");
+        }
+    }
+
+    void NetworkServer::acceptNewClient() {
         sockaddr_in client_addr{};
         socklen_t client_addr_len = sizeof(client_addr);
         const auto fd = accept(this->_serverFD, reinterpret_cast<sockaddr*>(&client_addr), &client_addr_len);
 
-	unsigned int clientID = this->clientIDCount++;
-	_clients.emplace(clientID, std::make_unique<Client>(clientID, fd));
+	    unsigned int clientID = this->clientIDCount++;
+	    this->_clients.emplace(clientID, std::make_unique<Client>(clientID, fd));
 
         this->writeToClient("WELCOME", clientID);
 
         std::cout << debug::getTS() << "[INFO] New client connected (ID " << clientID << ")" << std::endl;
     }
 
-    void NetworkServer::parseClientInput(const int clientIdx, zappy::ZappyServer& zappyServer)
-    {
+    void NetworkServer::parseClientInput(const int clientIdx, zappy::ZappyServer& zappyServer) {
+	    const auto& client = std::next(this->_clients.begin(), clientIdx)->second;
+	    if (client == nullptr) return;
 
-	const auto& client = std::next(this->_clients.begin(), clientIdx)->second;
-	if (client == nullptr) return;
+        if (!client->alive) {
+            close (client->connectionFD);
+            return;
+        }
 
         client->inputBuffer.clear();
         client->inputBuffer.resize(BUFSIZ);
@@ -111,11 +124,11 @@ namespace generic
         const long readable_bytes = read(client->connectionFD, client->inputBuffer.data(), BUFSIZ);
         if (readable_bytes <= 0) {
             std::cout << debug::getTS() << "[WARN] CLIENT CONNECTION (ID " << client->clientID << ") LOST (NETWORK CLIENT DELETED)" << std::endl;
-	    auto it = std::next(this->_clients.begin(), clientIdx);
-	    it->second.get()->_gameEnginePlayer.reset();
-	    it->second.get()->_gameEngineGraphicalClient.reset();
-	    it->second.reset();
-	    it->second = nullptr;
+	        auto it = std::next(this->_clients.begin(), clientIdx);
+	        it->second.get()->_gameEnginePlayer.reset();
+	        it->second.get()->_gameEngineGraphicalClient.reset();
+	        it->second.reset();
+	        it->second = nullptr;
             //TODO: notify the game engine of the player death
             return;
         }
@@ -155,9 +168,9 @@ namespace generic
     }
 
     bool NetworkServer::isClientDead(unsigned int id) const {
-	auto it = _clients.find(id);
-	if (it == _clients.end())
-	    return true;
-	return it->second == nullptr;
+	    auto it = _clients.find(id);
+	    if (it == _clients.end())
+	        return true;
+	    return it->second == nullptr;
     }
-} // generic
+}

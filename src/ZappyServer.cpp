@@ -78,9 +78,14 @@ std::weak_ptr<zappy::engine::GraphicalClient> zappy::ZappyServer::createNewGraph
     return graphic;
 }
 
-void zappy::ZappyServer::sendMessageToClient(const std::string& message, const unsigned int clientID)
+void zappy::ZappyServer::sendMessageToClient(const std::string& message, const unsigned int clientID) const
 {
     this->_networkServer->writeToClient(message, clientID);
+}
+
+void zappy::ZappyServer::markClientAsDead(const unsigned int clientID) const
+{
+    this->_networkServer->markConnectionAsDead(clientID);
 }
 
 const zappy::utils::ZappyConfig& zappy::ZappyServer::getConfig() const

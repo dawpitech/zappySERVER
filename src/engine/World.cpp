@@ -61,6 +61,7 @@ namespace zappy::engine
             this->distributeRandomResources();
 
         this->doEggCleanup();
+        this->doPlayerCleanup();
         this->_tickSinceBigBang++;
     }
 
@@ -313,14 +314,28 @@ namespace zappy::engine
 
     void World::doEggCleanup()
     {
-        for (int i = 0; i < this->eggs.size(); i++)
-        {
+        for (int i = 0; i < this->eggs.size(); i++) {
             const auto egg = this->eggs.at(i);
             if (!egg->isDead())
                 continue;
-            this->getTileAt(static_cast<int>(egg->getX()), static_cast<int>(egg->getY())).removeEgg(egg);
+            this->getTileAt(static_cast<int>(egg->getX()), static_cast<int>(egg->getY()))
+                .removeEgg(egg);
             this->eggs.erase(this->eggs.begin() + i);
 
+        }
+    }
+
+    void World::doPlayerCleanup()
+    {
+        for (int i = 0; i < this->players.size(); i++) {
+            const auto player = this->players.at(i);
+            if (!player->isDead())
+                continue;
+            this->getMainZappyServer().sendMessageToClient("dead", player->ID);
+            this->getMainZappyServer().markClientAsDead(player->ID);
+            this->getTileAt(static_cast<int>(player->getX()),static_cast<int>(player->getY()))
+                .removePlayer(player);
+            this->players.erase(this->players.begin() + i);
         }
     }
 }

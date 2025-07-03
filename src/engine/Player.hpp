@@ -53,6 +53,8 @@ namespace zappy::engine
 
             void eat(unsigned int tick);
 
+            [[nodiscard]] bool isDead() const { return !this->alive; }
+
             const unsigned int ID;
 
         private:
@@ -63,6 +65,8 @@ namespace zappy::engine
             unsigned int _currentLevel;
             std::map<Ressources, int> _inventory;
             Directions _facing;
+
+            bool alive;
 
             Status _status;
             unsigned int _waitingCyclesRemaining;

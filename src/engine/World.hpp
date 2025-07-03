@@ -35,8 +35,8 @@ namespace zappy::engine
             std::weak_ptr<entities::Egg> addPlayerEgg(unsigned int teamID);
             std::weak_ptr<GraphicalClient> addGraphicalClient();
 
-            ZappyServer& getMainZappyServer() const { return this->_zappyServer; }
-            const std::vector<std::shared_ptr<GraphicalClient>> &getGraphicalClients() const { return this->graphical_clients; }
+            [[nodiscard]] ZappyServer& getMainZappyServer() const { return this->_zappyServer; }
+            [[nodiscard]] const std::vector<std::shared_ptr<GraphicalClient>> &getGraphicalClients() const { return this->graphical_clients; }
 
             Tile& getTileAt(int x, int y);
             [[nodiscard]] const Tile& getTileAt(int x, int y) const;
@@ -57,6 +57,7 @@ namespace zappy::engine
             [[nodiscard]] std::string getTeamName(unsigned int teamID) const;
 
             void doEggCleanup();
+            void doPlayerCleanup();
 
         private:
             unsigned int _tickSinceBigBang = 0;

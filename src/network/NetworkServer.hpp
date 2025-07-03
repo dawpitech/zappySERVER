@@ -70,6 +70,7 @@ namespace generic
 
                     bool managedByGameEngine = false;
                     bool isGraphical = false;
+                    bool alive = true;
                     std::weak_ptr<zappy::engine::Player> _gameEnginePlayer;
                     std::weak_ptr<zappy::engine::GraphicalClient> _gameEngineGraphicalClient;
 
@@ -83,7 +84,8 @@ namespace generic
 
             void pollNetworkActivity(zappy::ZappyServer& zappyServer, int timeoutMs);
             void writeToClient(const std::string& message, unsigned int clientID) const;
-	    bool isClientDead(unsigned int id) const;
+            void markConnectionAsDead(unsigned int clientID) const;
+	        [[nodiscard]] bool isClientDead(unsigned int id) const;
 
         private:
             constexpr static size_t QUEUE_SIZE = 8;

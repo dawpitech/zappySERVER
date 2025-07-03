@@ -28,11 +28,12 @@ namespace zappy
             std::weak_ptr<engine::Player> createNewPlayerInTeam(const std::string& teamName, unsigned int clientID);
 	        std::weak_ptr<engine::GraphicalClient> createNewGraphicalClient(unsigned int id);
 
-            void sendMessageToClient(const std::string& message, unsigned int clientID);
+            void sendMessageToClient(const std::string& message, unsigned int clientID) const;
+            void markClientAsDead(unsigned int clientID) const;
 
-            const utils::ZappyConfig& getConfig() const;
+            [[nodiscard]] const utils::ZappyConfig& getConfig() const;
             utils::ZappyConfig& getConfig();
-	    bool isClientDead(unsigned int id) const;
+            [[nodiscard]] bool isClientDead(unsigned int id) const;
 
         private:
             utils::ZappyConfig _config;
