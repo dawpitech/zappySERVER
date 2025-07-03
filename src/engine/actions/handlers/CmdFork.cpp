@@ -12,6 +12,7 @@
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
 #include "../../../utils/Debug.hpp"
+#include "../../../utils/EventSystem.hpp"
 
 void zappy::engine::cmd::CmdFork::cmdFork(std::weak_ptr<Player> player, World& world, const std::string& args)
 {
@@ -26,5 +27,5 @@ void zappy::engine::cmd::CmdFork::cmdFork(std::weak_ptr<Player> player, World& w
 
 void zappy::engine::cmd::CmdFork::cmdPreFork(std::weak_ptr<Player> player, World& world, const std::string& args)
 {
-    //TODO
+    EventSystem::trigger("pre_fork", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, player.lock()->ID);
 }

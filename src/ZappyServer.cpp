@@ -31,6 +31,8 @@ zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
     EventSystem::subscribe<unsigned int>("player_eject", std::function(engine::GraphicalClient::sendPpoProxy));
     EventSystem::subscribe<unsigned int>("player_eject", std::function(engine::GraphicalClient::sendPex));
     EventSystem::subscribe<unsigned int, std::string>("player_broadcast", std::function(engine::GraphicalClient::sendPbc));
+    EventSystem::subscribe<unsigned int>("pre_fork", std::function(engine::GraphicalClient::sendPfk));
+    EventSystem::subscribe("map_refill", std::function(engine::GraphicalClient::sendMctProxy));
 }
 
 void zappy::ZappyServer::launch()

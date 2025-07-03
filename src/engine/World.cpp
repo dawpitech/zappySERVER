@@ -254,6 +254,7 @@ namespace zappy::engine
                 //std::cout << "[TRACE] SPAWN RESSOURCE " << getRessourceName(type) << " AT " << randomX << ":" << randomY << std::endl;
             }
         }
+        EventSystem::trigger("map_refill", this->graphicalClients, this->_zappyServer.getConfig(), *this);
     }
 
     Tile& World::getTileAt(const int x, const int y) {

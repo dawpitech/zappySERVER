@@ -86,6 +86,12 @@ void zappy::engine::GraphicalClient::sendTna(GraphicalClient& graphic, zappy::ut
     }
 }
 
+void zappy::engine::GraphicalClient::sendMctProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world) {
+    for (auto graphic: graphics) {
+        sendMct(*graphic, config, world, "");
+    }
+}
+
 // content of the map
 void zappy::engine::GraphicalClient::sendMct(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world, const std::string& args) {
     std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending mct command to CLIENT : " << graphic.getID() << std::endl;
@@ -308,6 +314,14 @@ void zappy::engine::GraphicalClient::sendPbc(const std::vector<std::shared_ptr<G
     for (auto graphic: graphics) {
 	std::string com = "pbc #" + std::to_string(pl_id) + " " + msg;
 	std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending pbc command to CLIENT : " << graphic->getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
+    }
+}
+
+void zappy::engine::GraphicalClient::sendPfk(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id) {
+    for (auto graphic: graphics) {
+	std::string com = "pfk #" + std::to_string(pl_id);
+	std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending pfk command to CLIENT : " << graphic->getID() << std::endl;
         world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
     }
 }
