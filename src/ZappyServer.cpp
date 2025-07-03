@@ -36,6 +36,9 @@ zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
 
     signal(SIGINT, signalHandler);
 
+
+    EventSystem::subscribe<std::weak_ptr<engine::Player>, int>("end_incantation", std::function(engine::GraphicalClient::sendPie));
+    EventSystem::subscribe<std::vector<std::weak_ptr<engine::Player>>>("start_incantation", std::function(engine::GraphicalClient::sendPic));
     EventSystem::subscribe("player_spawn", std::function(engine::GraphicalClient::sendPnw_proxy));
     EventSystem::subscribe<unsigned int>("player_egg_spawn", std::function(engine::GraphicalClient::sendEbo));
     EventSystem::subscribe<unsigned int>("player_egg_died", std::function(engine::GraphicalClient::sendEdi));

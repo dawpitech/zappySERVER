@@ -6,12 +6,14 @@
 */
 
 #include <iostream>
+#include <memory>
 
 #include "CmdIncantation.hpp"
 #include "../../Player.hpp"
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
 #include "../../../utils/Debug.hpp"
+#include "../../../utils/EventSystem.hpp"
 
 const std::map<unsigned int, zappy::engine::cmd::CmdIncantation::LevelInfo> zappy::engine::cmd::CmdIncantation::ELEVATION_101 = {
     {2, {1, {
@@ -63,20 +65,33 @@ void zappy::engine::cmd::CmdIncantation::cmdIncantation(std::weak_ptr<Player> pl
 
     if (!canIncantationBeDone(*player.lock(), world)) {
         world.getMainZappyServer().sendMessageToClient("ko", lockPlayer->ID);
+	EventSystem::trigger("end_incantation", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, player, 0);
         return;
     }
     for (const auto& [element, quantity] : requiredRessources)
         tile.removeResource(element, quantity);
     lockPlayer->upLevel();
+    EventSystem::trigger("end_incantation", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, player, 1);
     world.getMainZappyServer().sendMessageToClient("Current level: " + std::to_string(lockPlayer->getLevel()), lockPlayer->ID);
 }
 
 bool zappy::engine::cmd::CmdIncantation::cmdPreIncantation(std::weak_ptr<Player> player, World& world, const std::string& args)
 {
-    if (!canIncantationBeDone(*player.lock(), world)) {
-        world.getMainZappyServer().sendMessageToClient("ko", player.lock()->ID);
+    auto lockPlayer = player.lock();
+    auto& tile = world.getTileAt(lockPlayer->getX(), lockPlayer->getY());
+    std::vector<std::weak_ptr<engine::Player>> players;
+
+    if (!canIncantationBeDone(*lockPlayer, world)) {
+        world.getMainZappyServer().sendMessageToClient("ko", lockPlayer->ID);
         return false;
     }
+
+    for (const auto possiblePlayer : tile.getPlayers())
+        if (possiblePlayer->getLevel() == lockPlayer->getLevel())
+	    players.push_back(possiblePlayer);
+
+    EventSystem::trigger("start_incantation", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, players);
+
     world.getMainZappyServer().sendMessageToClient("Elevation underway", player.lock()->ID);
     return true;
 }
