@@ -14,7 +14,7 @@
 #include "../Directions.hpp"
 #include "../Ressources.hpp"
 
-namespace zappy::engine
+namespace zappy::engine::entities
 {
     class Player
     {

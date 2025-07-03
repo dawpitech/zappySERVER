@@ -14,7 +14,7 @@
 #include "../../../utils/Debug.hpp"
 #include "../../../utils/EventSystem.hpp"
 
-void zappy::engine::cmd::CmdTake::cmdTake(std::weak_ptr<Player> player, World& world, const std::string& args)
+void zappy::engine::cmd::CmdTake::cmdTake(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
 {
     const auto lockPlayer = player.lock();
     std::stringstream ss(args);

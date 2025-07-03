@@ -15,18 +15,19 @@
 #include "entities/Egg.hpp"
 
 namespace zappy::engine {
-
-    class Player;
+    namespace entities {
+        class Player;
+    }
 
     class Tile {
         public:
             Tile() = default;
             ~Tile() = default;
 
-            void addPlayer(const std::weak_ptr<Player>& player);
-            void removePlayer(const std::weak_ptr<Player>& player);
-            [[nodiscard]] bool hasPlayer(const std::weak_ptr<Player>& player) const;
-            [[nodiscard]] std::vector<std::shared_ptr<Player>> getPlayers() const;
+            void addPlayer(const std::weak_ptr<entities::Player>& player);
+            void removePlayer(const std::weak_ptr<entities::Player>& player);
+            [[nodiscard]] bool hasPlayer(const std::weak_ptr<entities::Player>& player) const;
+            [[nodiscard]] std::vector<std::shared_ptr<entities::Player>> getPlayers() const;
             [[nodiscard]] size_t getPlayerCount() const;
 
             void addEgg(const std::weak_ptr<entities::Egg>& egg);
@@ -43,7 +44,7 @@ namespace zappy::engine {
             [[nodiscard]] int getTotalResourceCount() const;
 
         private:
-            std::vector<std::weak_ptr<Player>> _players;
+            std::vector<std::weak_ptr<entities::Player>> _players;
             std::vector<std::weak_ptr<entities::Egg>> _eggs;
             std::map<Ressources, int> _resources;
     };

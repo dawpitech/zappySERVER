@@ -15,7 +15,7 @@ namespace zappy::engine
 {
 
     namespace {
-        bool weakPtrEquals(const std::weak_ptr<Player>& a, const std::weak_ptr<Player>& b) {
+        bool weakPtrEquals(const std::weak_ptr<entities::Player>& a, const std::weak_ptr<entities::Player>& b) {
             return !a.owner_before(b) && !b.owner_before(a);
         }
 
@@ -24,23 +24,23 @@ namespace zappy::engine
         }
     }
 
-    void Tile::addPlayer(const std::weak_ptr<Player>& player) {
+    void Tile::addPlayer(const std::weak_ptr<entities::Player>& player) {
         if (!hasPlayer(player)) {
             this->_players.push_back(player);
         }
     }
 
-    void Tile::removePlayer(const std::weak_ptr<Player>& player) {
-        const auto it = std::ranges::remove_if(this->_players, [&](const std::weak_ptr<Player>& p) { return weakPtrEquals(p, player); }).begin();
+    void Tile::removePlayer(const std::weak_ptr<entities::Player>& player) {
+        const auto it = std::ranges::remove_if(this->_players, [&](const std::weak_ptr<entities::Player>& p) { return weakPtrEquals(p, player); }).begin();
         this->_players.erase(it, this->_players.end());
     }
 
-    bool Tile::hasPlayer(const std::weak_ptr<Player>& player) const {
-        return std::ranges::any_of(this->_players, [&](const std::weak_ptr<Player>& p) { return weakPtrEquals(p, player); });
+    bool Tile::hasPlayer(const std::weak_ptr<entities::Player>& player) const {
+        return std::ranges::any_of(this->_players, [&](const std::weak_ptr<entities::Player>& p) { return weakPtrEquals(p, player); });
     }
 
-    std::vector<std::shared_ptr<Player>> Tile::getPlayers() const {
-        std::vector<std::shared_ptr<Player>> result;
+    std::vector<std::shared_ptr<entities::Player>> Tile::getPlayers() const {
+        std::vector<std::shared_ptr<entities::Player>> result;
         for (const auto& wp : this->_players) {
             if (auto sp = wp.lock()) {
                 result.push_back(sp);
@@ -50,7 +50,7 @@ namespace zappy::engine
     }
 
     size_t Tile::getPlayerCount() const {
-        return std::ranges::count_if(this->_players, [](const std::weak_ptr<Player>& wp){ return !wp.expired(); });
+        return std::ranges::count_if(this->_players, [](const std::weak_ptr<entities::Player>& wp){ return !wp.expired(); });
     }
 
     void Tile::addEgg(const std::weak_ptr<entities::Egg>& egg)

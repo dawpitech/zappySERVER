@@ -37,8 +37,8 @@ zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
     signal(SIGINT, signalHandler);
 
 
-    EventSystem::subscribe<std::weak_ptr<engine::Player>, int>("end_incantation", std::function(engine::GraphicalClient::sendPie));
-    EventSystem::subscribe<std::vector<std::weak_ptr<engine::Player>>>("start_incantation", std::function(engine::GraphicalClient::sendPic));
+    EventSystem::subscribe<std::weak_ptr<engine::entities::Player>, int>("end_incantation", std::function(engine::GraphicalClient::sendPie));
+    EventSystem::subscribe<std::vector<std::weak_ptr<engine::entities::Player>>>("start_incantation", std::function(engine::GraphicalClient::sendPic));
     EventSystem::subscribe("player_spawn", std::function(engine::GraphicalClient::sendPnw_proxy));
     EventSystem::subscribe<unsigned int>("player_egg_spawn", std::function(engine::GraphicalClient::sendEbo));
     EventSystem::subscribe<unsigned int>("player_egg_died", std::function(engine::GraphicalClient::sendEdi));
@@ -91,7 +91,7 @@ void zappy::ZappyServer::launch()
     std::cout << "Zappy server exiting..." << std::endl;
 }
 
-std::weak_ptr<zappy::engine::Player> zappy::ZappyServer::createNewPlayerInTeam(const std::string& teamName, const unsigned int clientID)
+std::weak_ptr<zappy::engine::entities::Player> zappy::ZappyServer::createNewPlayerInTeam(const std::string& teamName, const unsigned int clientID)
 {
     const auto player = this->_world->connectPlayer(teamName, clientID);
     {

@@ -75,7 +75,7 @@ namespace zappy::engine
         this->_tickSinceBigBang++;
     }
 
-    std::weak_ptr<Player> World::connectPlayer(const std::string& teamName, const unsigned int clientID) {
+    std::weak_ptr<entities::Player> World::connectPlayer(const std::string& teamName, const unsigned int clientID) {
         int teamID = this->getTeamID(teamName);
 
         int eggIdx = -1;
@@ -91,7 +91,7 @@ namespace zappy::engine
 
             this->eggs.erase(this->eggs.begin() + eggIdx);
             this->getTileAt(static_cast<int>(egg->getX()), static_cast<int>(egg->getY())).removeEgg(egg);
-            this->players.emplace_back(std::make_shared<Player>(egg->getX(), egg->getY(), teamID, clientID, this->_tickSinceBigBang));
+            this->players.emplace_back(std::make_shared<entities::Player>(egg->getX(), egg->getY(), teamID, clientID, this->_tickSinceBigBang));
 
             std::cout << debug::getTS() << "[INFO] EGG " << egg->ID << " OF TEAM "
                 << teamName << " HAS HATCHED INTO PLAYER " << clientID << " AT "
@@ -184,7 +184,7 @@ namespace zappy::engine
         return RESSOURCES_PRESENT;
     }
 
-    void World::tickPlayer(const std::shared_ptr<Player>& player)
+    void World::tickPlayer(const std::shared_ptr<entities::Player>& player)
     {
         if (this->_tickSinceBigBang - player->getTickAtLastMeal() >= 126) {
             player->eat(this->_tickSinceBigBang);
@@ -192,7 +192,7 @@ namespace zappy::engine
 	}
 
         do {
-            if (player->getStatus() == Player::Status::WAITING_BEFORE_EXECUTE) {
+            if (player->getStatus() == entities::Player::Status::WAITING_BEFORE_EXECUTE) {
                 if (player->getWaitingCyclesRemaining() > 0)
                     player->setWaitingCyclesRemaining(player->getWaitingCyclesRemaining() - 1);
                 if (player->getWaitingCyclesRemaining() <= 0) {
@@ -203,10 +203,10 @@ namespace zappy::engine
 
                     CommandInterpreter::COMMANDS.at(action).handler(player, *this, fullCommand);
                     player->getCommandsBuffer().pop();
-                    player->setStatus(Player::Status::WAITING_FOR_COMMAND);
+                    player->setStatus(entities::Player::Status::WAITING_FOR_COMMAND);
                 }
             }
-            if (player->getStatus() == Player::Status::WAITING_FOR_COMMAND) {
+            if (player->getStatus() == entities::Player::Status::WAITING_FOR_COMMAND) {
                 if (player->getCommandsBuffer().empty())
                     return;
 
@@ -216,10 +216,10 @@ namespace zappy::engine
                 try {
                     const unsigned int duration = CommandInterpreter::COMMANDS.at(action).duration;
                     player->setWaitingCyclesRemaining(duration);
-                    player->setStatus(Player::Status::WAITING_BEFORE_EXECUTE);
+                    player->setStatus(entities::Player::Status::WAITING_BEFORE_EXECUTE);
                     if (!CommandInterpreter::COMMANDS.at(action).preHandler(player, *this, fullCommand)) {
                         player->getCommandsBuffer().pop();
-                        player->setStatus(Player::Status::WAITING_FOR_COMMAND);
+                        player->setStatus(entities::Player::Status::WAITING_FOR_COMMAND);
                     }
                 } catch (std::out_of_range&) {
                     std::cout << debug::getTS() << "[WARN] Unknown command received from player: " << action << std::endl;
@@ -286,7 +286,7 @@ namespace zappy::engine
         return _map[ny][nx];
     }
 
-    void World::movePlayer(const std::shared_ptr<Player>& player, const int newX, const int newY) {
+    void World::movePlayer(const std::shared_ptr<entities::Player>& player, const int newX, const int newY) {
         const auto oldX = static_cast<int>(player->getX());
         const auto oldY = static_cast<int>(player->getY());
         getTileAt(oldX, oldY).removePlayer(player);
@@ -306,11 +306,11 @@ namespace zappy::engine
     }
 
 
-    [[nodiscard]] std::vector<std::shared_ptr<Player>> World::getPlayers() const {
+    [[nodiscard]] std::vector<std::shared_ptr<entities::Player>> World::getPlayers() const {
         return this->players;
     }
 
-    [[nodiscard]] std::shared_ptr<Player> World::getPlayer(unsigned int id) const {
+    [[nodiscard]] std::shared_ptr<entities::Player> World::getPlayer(unsigned int id) const {
         for (unsigned int i = 0; i < this->players.size(); i++) {
 	    if (this->players[i]->ID == id)
 		return this->players[i];

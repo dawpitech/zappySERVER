@@ -9,14 +9,14 @@
 
 #include <iostream>
 
-#include "../../entities/Player.hpp"
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
 #include "../../../utils/Debug.hpp"
-#include "../../../utils/EventSystem.hpp"
 #include "../../../utils/EventRayDirectionInterpreter.hpp"
+#include "../../../utils/EventSystem.hpp"
+#include "../../entities/Player.hpp"
 
-void zappy::engine::cmd::CmdBroadcast::cmdBroadcast(std::weak_ptr<Player> player, World& world, const std::string& args)
+void zappy::engine::cmd::CmdBroadcast::cmdBroadcast(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
 {
     const auto sender = player.lock();
     auto messageContent = args;

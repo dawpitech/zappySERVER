@@ -73,7 +73,7 @@ namespace generic
                     bool managedByGameEngine = false;
                     bool isGraphical = false;
                     bool alive = true;
-                    std::weak_ptr<zappy::engine::Player> _gameEnginePlayer;
+                    std::weak_ptr<zappy::engine::entities::Player> _gameEnginePlayer;
                     std::weak_ptr<zappy::engine::GraphicalClient> _gameEngineGraphicalClient;
 
                     std::string inputBuffer;

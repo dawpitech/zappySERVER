@@ -30,7 +30,7 @@ namespace zappy::engine
 
             void tick();
 
-            std::weak_ptr<Player> connectPlayer(const std::string& teamName, unsigned int clientID);
+            std::weak_ptr<entities::Player> connectPlayer(const std::string& teamName, unsigned int clientID);
             std::weak_ptr<entities::Egg> addPlayerEgg(const std::string& teamName, unsigned int motherPlayerID);
             std::weak_ptr<entities::Egg> addPlayerEgg(unsigned int teamID, unsigned int motherPlayerID);
             std::weak_ptr<GraphicalClient> addGraphicalClient();
@@ -41,7 +41,7 @@ namespace zappy::engine
             Tile& getTileAt(int x, int y);
             [[nodiscard]] const Tile& getTileAt(int x, int y) const;
 
-            void movePlayer(const std::shared_ptr<Player>& player, int newX, int newY);
+            void movePlayer(const std::shared_ptr<entities::Player>& player, int newX, int newY);
 
             [[nodiscard]] int getWidth() const;
             [[nodiscard]] int getHeight() const;
@@ -49,8 +49,8 @@ namespace zappy::engine
             [[nodiscard]] std::pair<int, int> normalizeCoordinates(int x, int y) const;
 
             void distributeRandomResources();
-	    [[nodiscard]] std::vector<std::shared_ptr<Player>> getPlayers() const;
-	    [[nodiscard]] std::shared_ptr<Player> getPlayer(unsigned int id) const;
+	    [[nodiscard]] std::vector<std::shared_ptr<entities::Player>> getPlayers() const;
+	    [[nodiscard]] std::shared_ptr<entities::Player> getPlayer(unsigned int id) const;
 
             [[nodiscard]] unsigned int getEggCount(const std::string& teamName) const;
             [[nodiscard]] unsigned int getEggCount(unsigned int teamID) const;
@@ -67,14 +67,14 @@ namespace zappy::engine
             unsigned int _tickWhenLastRessourceSpawn = 0;
             unsigned int _eggIDCount = 0;
 
-            void tickPlayer(const std::shared_ptr<Player>& player);
+            void tickPlayer(const std::shared_ptr<entities::Player>& player);
             void tickGraphic(const std::shared_ptr<GraphicalClient>& graphic);
 
             int getTeamID(const std::string& teamName) const;
 
             std::map<Ressources, int> getCurrentRessourcesPlacedOnMap();
 
-            std::vector<std::shared_ptr<Player>> players;
+            std::vector<std::shared_ptr<entities::Player>> players;
             std::vector<std::shared_ptr<entities::Egg>> eggs;
             std::vector<std::shared_ptr<GraphicalClient>> graphicalClients;
 

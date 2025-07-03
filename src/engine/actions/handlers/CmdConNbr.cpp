@@ -12,7 +12,7 @@
 #include "../../../ZappyServer.hpp"
 #include "../../../utils/Debug.hpp"
 
-void zappy::engine::cmd::CmdConNbr::cmdConNbr(std::weak_ptr<Player> player, World& world, const std::string& args)
+void zappy::engine::cmd::CmdConNbr::cmdConNbr(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
 {
     const auto lockPlayer = player.lock();
 

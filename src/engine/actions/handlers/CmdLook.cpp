@@ -14,7 +14,7 @@
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
 
-void zappy::engine::cmd::CmdLook::cmdLook(std::weak_ptr<Player> player, World& world, const std::string& args)
+void zappy::engine::cmd::CmdLook::cmdLook(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
 {
     const auto lockPlayer = player.lock();
     std::string reply = "[ ";

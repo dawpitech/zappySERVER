@@ -16,7 +16,7 @@
 
 namespace zappy::engine::cmd
 {
-    void CmdForward::cmdForward(std::weak_ptr<Player> player, World& world, const std::string& args)
+    void CmdForward::cmdForward(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
     {
         const auto lockPlayer = player.lock();
 

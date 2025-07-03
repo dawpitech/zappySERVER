@@ -178,7 +178,7 @@ void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, zappy::ut
         return;
     }
 
-    std::shared_ptr<Player> player;
+    std::shared_ptr<entities::Player> player;
     try {
         player = world.getPlayer(n);
     } catch (...) {
@@ -204,7 +204,7 @@ void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, zappy::ut
         return;
     }
 
-    std::shared_ptr<Player> player;
+    std::shared_ptr<entities::Player> player;
     try {
         player = world.getPlayer(n);
     } catch (...) {
@@ -236,7 +236,7 @@ void zappy::engine::GraphicalClient::sendPin(GraphicalClient& graphic, zappy::ut
         return;
     }
 
-    std::shared_ptr<Player> player;
+    std::shared_ptr<entities::Player> player;
     try {
         player = world.getPlayer(n);
     } catch (...) {
@@ -285,7 +285,7 @@ void zappy::engine::GraphicalClient::sendSst(GraphicalClient& graphic, zappy::ut
 
 void zappy::engine::GraphicalClient::sendPnw(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, bool firsttime) {
     if (world.getPlayers().empty()) return;
-    std::vector<std::shared_ptr<Player>> last_player {world.getPlayers().back()};
+    std::vector<std::shared_ptr<entities::Player>> last_player {world.getPlayers().back()};
     auto players = firsttime ? world.getPlayers() : last_player;
 
     std::string com = "pnw #";
@@ -386,7 +386,7 @@ void zappy::engine::GraphicalClient::sendPgt(const std::vector<std::shared_ptr<G
     }
 }
 
-void zappy::engine::GraphicalClient::sendPic(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, std::vector<std::weak_ptr<engine::Player>> players) {
+void zappy::engine::GraphicalClient::sendPic(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, std::vector<std::weak_ptr<engine::entities::Player>> players) {
     std::string com = "pic " + std::to_string(players[0].lock()->getX()) + " " + std::to_string(players[0].lock()->getY()) + " " + std::to_string(players[0].lock()->getLevel());
     for (auto player: players)
         com += " #" + std::to_string(player.lock()->ID);
@@ -397,7 +397,7 @@ void zappy::engine::GraphicalClient::sendPic(const std::vector<std::shared_ptr<G
     }
 }
 
-void zappy::engine::GraphicalClient::sendPie(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, std::weak_ptr<engine::Player> player, int success) {
+void zappy::engine::GraphicalClient::sendPie(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, std::weak_ptr<engine::entities::Player> player, int success) {
     std::string com = "pie " + std::to_string(player.lock()->getX()) + " " + std::to_string(player.lock()->getY()) + " " + std::to_string(success);
     for (auto graphic: graphics) {
         std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending pie command to CLIENT : " << graphic->getID() << std::endl;

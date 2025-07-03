@@ -16,7 +16,7 @@
 #include "../../../utils/EventSystem.hpp"
 #include "../../../utils/EventRayDirectionInterpreter.hpp"
 
-void zappy::engine::cmd::CmdEject::cmdEject(std::weak_ptr<Player> player, World& world, const std::string& args)
+void zappy::engine::cmd::CmdEject::cmdEject(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
 {
     const auto pusher = player.lock();
     const auto& tile = world.getTileAt(pusher->getX(), pusher->getY());

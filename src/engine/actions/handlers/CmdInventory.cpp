@@ -14,7 +14,7 @@
 
 namespace zappy::engine::cmd
 {
-    void CmdInventory::cmdInventory(std::weak_ptr<Player> player, World& world, const std::string& args)
+    void CmdInventory::cmdInventory(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
     {
         const auto lockPlayer = player.lock();
         std::string reply = "[ ";

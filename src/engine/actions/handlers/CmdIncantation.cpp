@@ -57,7 +57,7 @@ const std::map<unsigned int, zappy::engine::cmd::CmdIncantation::LevelInfo> zapp
     }}}
 };
 
-void zappy::engine::cmd::CmdIncantation::cmdIncantation(std::weak_ptr<Player> player, World& world, const std::string& args)
+void zappy::engine::cmd::CmdIncantation::cmdIncantation(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
 {
     const auto lockPlayer = player.lock();
     const auto& [_, requiredRessources] = ELEVATION_101.at(lockPlayer->getLevel() + 1);
@@ -76,11 +76,11 @@ void zappy::engine::cmd::CmdIncantation::cmdIncantation(std::weak_ptr<Player> pl
     world.getMainZappyServer().sendMessageToClient("Current level: " + std::to_string(lockPlayer->getLevel()), lockPlayer->ID);
 }
 
-bool zappy::engine::cmd::CmdIncantation::cmdPreIncantation(std::weak_ptr<Player> player, World& world, const std::string& args)
+bool zappy::engine::cmd::CmdIncantation::cmdPreIncantation(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
 {
     auto lockPlayer = player.lock();
     auto& tile = world.getTileAt(lockPlayer->getX(), lockPlayer->getY());
-    std::vector<std::weak_ptr<engine::Player>> players;
+    std::vector<std::weak_ptr<engine::entities::Player >> players;
 
     if (!canIncantationBeDone(*lockPlayer, world)) {
         world.getMainZappyServer().sendMessageToClient("ko", lockPlayer->ID);
@@ -109,7 +109,7 @@ bool zappy::engine::cmd::CmdIncantation::hasRequiredRessources(const std::map<Re
     return true;
 }
 
-bool zappy::engine::cmd::CmdIncantation::canIncantationBeDone(Player& player, World& world)
+bool zappy::engine::cmd::CmdIncantation::canIncantationBeDone(entities::Player& player, World& world)
 {
     const auto& tile = world.getTileAt(player.getX(), player.getY());
     int fittingPlayersOnTheTile = 0;
