@@ -104,17 +104,12 @@ namespace generic
     }
 
     void NetworkServer::acceptNewClient() {
-        std::cout << "NEW CLIENT WILL HAVE ID " << this->clientIDCount << std::endl;
         sockaddr_in client_addr{};
         socklen_t client_addr_len = sizeof(client_addr);
         const auto fd = accept(this->_serverFD, reinterpret_cast<sockaddr*>(&client_addr), &client_addr_len);
 
-        std::cout << "d" << std::endl;
-
 	    unsigned int clientID = this->clientIDCount++;
 	    this->_clients.emplace(clientID, std::make_unique<Client>(clientID, fd));
-
-        std::cout << "e" << std::endl;
 
         this->writeToClient("WELCOME", clientID);
 
