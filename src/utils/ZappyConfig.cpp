@@ -81,7 +81,7 @@ zappy::utils::ZappyConfig::ZappyConfig(const int argc, const char** argv)
         }
     }
 
-    if (this->worldHeight < 8 || this->worldWidth < 8)
+    if (this->worldHeight < 8 || this->worldWidth < 8 || this->initialTeamSize <= 0 || this->freqValue <= 0.1)
         throw errors::InvalidArgsException();
 }
 
@@ -92,8 +92,8 @@ void zappy::utils::ZappyConfig::printHelp()
         << "width\t\tis the width of the world (min 8)\n"
         << "height\t\tis the height of the world (min 8)\n"
         << "nameX\t\tis the name of the team X\n"
-        << "clientsNb\tis the number of authorized clients per team\n"
-        << "freq\t\tis the reciprocal of time unit for execution of actions"
+        << "clientsNb\tis the number of authorized clients per team (min 1)\n"
+        << "freq\t\tis the reciprocal of time unit for execution of actions (min 0.1)"
         << std::endl;
 }
 

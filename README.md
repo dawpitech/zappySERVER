@@ -14,6 +14,6 @@ port		is the port number
 width		is the width of the world (min 8)
 height		is the height of the world (min 8)
 nameX		is the name of the team X
-clientsNb	is the number of authorized clients per team
-freq		is the reciprocal of time unit for execution of actions
+clientsNb	is the number of authorized clients per team (min 1)
+freq		is the reciprocal of time unit for execution of actions (min 0.1)
 ```
