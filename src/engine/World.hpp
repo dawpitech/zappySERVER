@@ -10,10 +10,10 @@
 #include <memory>
 #include <vector>
 
-#include "entities/Player.hpp"
 #include "Tile.hpp"
 #include "../utils/ZappyConfig.hpp"
 #include "entities/Egg.hpp"
+#include "entities/Player.hpp"
 
 namespace zappy {
     class ZappyServer;
@@ -68,7 +68,7 @@ namespace zappy::engine
             unsigned int _eggIDCount = 0;
 
             void tickPlayer(const std::shared_ptr<entities::Player>& player);
-            void tickGraphic(const std::shared_ptr<GraphicalClient>& graphic);
+            void tickGraphic(const std::shared_ptr<GraphicalClient>& graphic) const;
 
             int getTeamID(const std::string& teamName) const;
 

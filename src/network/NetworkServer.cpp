@@ -6,15 +6,13 @@
 */
 
 #include <iostream>
+#include <ranges>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
 
 #include "NetworkServer.hpp"
-
-#include <ranges>
-
 #include "../ZappyServer.hpp"
 #include "../utils/Debug.hpp"
 

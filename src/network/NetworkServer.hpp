@@ -6,15 +6,12 @@
 */
 
 #pragma once
+
 #include <map>
 #include <memory>
-#include <optional>
 #include <stdexcept>
 #include <string>
 #include <unistd.h>
-#include <vector>
-#include <sys/poll.h>
-#include <sys/socket.h>
 
 #include "../engine/entities/Player.hpp"
 #include "../engine/graphical/Graphical.hpp"

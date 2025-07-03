@@ -1,11 +1,20 @@
+/*
+** EPITECH PROJECT, 2025
+** zappySERVER
+** File description:
+** EventSystem.hpp
+*/
+
 #pragma once
+
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <vector>
-#include <iostream>
-#include "../engine/graphical/Graphical.hpp"
+
 #include "Debug.hpp"
 #include "ZappyConfig.hpp"
+#include "../engine/graphical/Graphical.hpp"
 
 class EventSystem {
 public:
@@ -35,5 +44,4 @@ private:
 };
 
 template<typename... Args>
-std::unordered_map<std::string, std::vector<typename EventSystem::EventCallback<Args...>>> EventSystem::callbacks;
-
+std::unordered_map<std::string, std::vector<EventSystem::EventCallback<Args...>>> EventSystem::callbacks;

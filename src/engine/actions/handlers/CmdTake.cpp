@@ -34,7 +34,7 @@ void zappy::engine::cmd::CmdTake::cmdTake(std::weak_ptr<entities::Player> player
         return;
     }
     const auto safeType = type.value();
-    auto& tile = world.getTileAt(lockPlayer->getX(), lockPlayer->getY());
+    auto& tile = world.getTileAt(static_cast<int>(lockPlayer->getX()), static_cast<int>(lockPlayer->getY()));
     if (tile.getResourceQuantity(safeType) == 0) {
         world.getMainZappyServer().sendMessageToClient("ko", lockPlayer->ID);
         std::cout << debug::getTS() << "[TRACE] PLAYER " << lockPlayer->ID << " TRY TO TAKE FROM A CELL WITHOUT SPECIFIED RESSOURCE" << std::endl;
@@ -47,7 +47,7 @@ void zappy::engine::cmd::CmdTake::cmdTake(std::weak_ptr<entities::Player> player
         getRessourceName(safeType) << " FROM " << lockPlayer->getX() << ":"
         << lockPlayer->getY() << std::endl;
 
-    EventSystem::trigger("player_take", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, (unsigned int)safeType, lockPlayer->ID);
+    EventSystem::trigger("player_take", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, static_cast<unsigned int>(safeType), lockPlayer->ID);
     EventSystem::trigger("map_refill", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world);
     world.getMainZappyServer().sendMessageToClient("ok", lockPlayer->ID);
 }

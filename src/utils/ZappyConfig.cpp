@@ -5,10 +5,10 @@
 ** ZappyConfig.cpp
 */
 
-#include "ZappyErrors.hpp"
-#include "ZappyConfig.hpp"
-
 #include <iostream>
+
+#include "ZappyConfig.hpp"
+#include "ZappyErrors.hpp"
 
 zappy::utils::ZappyConfig::ZappyConfig(const int argc, const char** argv)
 {
@@ -100,9 +100,9 @@ void zappy::utils::ZappyConfig::parseFloat(float& value, const std::string& arg)
 {
     try {
         value = std::stof(arg);
-    } catch (std::invalid_argument) {
+    } catch (std::invalid_argument&) {
         throw errors::InvalidArgsException();
-    } catch (std::out_of_range) {
+    } catch (std::out_of_range&) {
         throw errors::InvalidArgsException();
     }
 }

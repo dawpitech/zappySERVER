@@ -15,10 +15,10 @@ int main(const int argc, const char **argv)
         auto server = zappy::ZappyServer(config);
 
         server.launch();
-    } catch (zappy::errors::InvalidArgsException& iae) {
+    } catch (zappy::errors::InvalidArgsException&) {
         zappy::utils::ZappyConfig::printHelp();
         return 84;
-    } catch (zappy::errors::EarlyExit& ee) {
+    } catch (zappy::errors::EarlyExit&) {
         return 0;
     }
 }

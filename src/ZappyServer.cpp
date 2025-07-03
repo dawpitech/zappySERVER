@@ -5,16 +5,14 @@
 ** ZappyServer.cpp
 */
 
-#include <iostream>
-
-#include "ZappyServer.hpp"
-
 #include <csignal>
+#include <iostream>
 #include <memory>
 #include <thread>
 
-#include "engine/entities/Player.hpp"
+#include "ZappyServer.hpp"
 #include "engine/entities/Egg.hpp"
+#include "engine/entities/Player.hpp"
 #include "engine/graphical/Graphical.hpp"
 #include "utils/Debug.hpp"
 #include "utils/EventSystem.hpp"
@@ -76,6 +74,7 @@ void zappy::ZappyServer::launch()
         this->_networkServer->pollNetworkActivity(*this, 5);
 
         const auto currentTime = std::chrono::steady_clock::now();
+        // ReSharper disable once CppTooWideScopeInitStatement
         const auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - _lastTickTime);
 
         if (elapsedTime >= _tickDuration) {
@@ -91,23 +90,23 @@ void zappy::ZappyServer::launch()
     std::cout << "Zappy server exiting..." << std::endl;
 }
 
-std::weak_ptr<zappy::engine::entities::Player> zappy::ZappyServer::createNewPlayerInTeam(const std::string& teamName, const unsigned int clientID)
+std::weak_ptr<zappy::engine::entities::Player> zappy::ZappyServer::createNewPlayerInTeam(const std::string& teamName, const unsigned int clientID) const
 {
     const auto player = this->_world->connectPlayer(teamName, clientID);
     {
         const auto lockPlayer = player.lock();
-        this->_world->getTileAt(lockPlayer->getX(), lockPlayer->getY()).addPlayer(lockPlayer);
+        this->_world->getTileAt(static_cast<int>(lockPlayer->getX()), static_cast<int>(lockPlayer->getY())).addPlayer(lockPlayer);
     }
     this->sendMessageToClient(std::to_string(this->_world->getEggCount(teamName)), clientID);
     this->sendMessageToClient(std::to_string(this->_config.worldWidth) + " " + std::to_string(this->_config.worldHeight), clientID);
     return player;
 }
 
-std::weak_ptr<zappy::engine::GraphicalClient> zappy::ZappyServer::createNewGraphicalClient(unsigned int id) {
+std::weak_ptr<zappy::engine::GraphicalClient> zappy::ZappyServer::createNewGraphicalClient(const unsigned int id) {
     const auto graphic = this->_world->addGraphicalClient();
-    auto graphic_ = graphic.lock();
+    const auto graphic_ = graphic.lock();
     graphic_->setID(id);
-    graphic_->sendGreetings(this->getConfig(), *(this->_world.get()), "");
+    graphic_->sendGreetings(this->getConfig(), *this->_world, "");
     return graphic;
 }
 

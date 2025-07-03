@@ -17,13 +17,13 @@ namespace zappy::engine::entities
 
             unsigned int ID;
 
-            unsigned int getTeamID() const { return this->_teamID; }
-            unsigned int getX() const { return this->_x; }
-            unsigned int getY() const { return this->_y; }
-            int getMotherID() const { return this->motherPlayerID; }
+            [[nodiscard]] unsigned int getTeamID() const { return this->_teamID; }
+            [[nodiscard]] unsigned int getX() const { return this->_x; }
+            [[nodiscard]] unsigned int getY() const { return this->_y; }
+            [[nodiscard]] int getMotherID() const { return this->motherPlayerID; }
 
             void crush() { this->alive = false; }
-            bool isDead() const { return !this->alive; }
+            [[nodiscard]] bool isDead() const { return !this->alive; }
 
         private:
             bool alive = true;

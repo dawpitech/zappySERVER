@@ -52,12 +52,12 @@ namespace zappy::engine
         {"Incantation", {Command::INCANTATION, 300, &cmd::CmdIncantation::cmdIncantation, &cmd::CmdIncantation::cmdPreIncantation}},
     };
 
-    void CommandInterpreter::dummyAction(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
+    void CommandInterpreter::dummyAction([[maybe_unused]] std::weak_ptr<entities::Player> player, World& world, const std::string& args) // NOLINT(*-unnecessary-value-param)
     {
         std::cout << "Dummy action due to request: " << args << std::endl;
     }
 
-    bool CommandInterpreter::silenceDummyPreAction([[maybe_unused]] std::weak_ptr<entities::Player> player, [[maybe_unused]] World& world, [[maybe_unused]] const std::string& args)
+    bool CommandInterpreter::silenceDummyPreAction([[maybe_unused]] std::weak_ptr<entities::Player> player, [[maybe_unused]] World& world, [[maybe_unused]] const std::string& args) // NOLINT(*-unnecessary-value-param)
     {
         return true;
     }
