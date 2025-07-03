@@ -52,7 +52,7 @@ void zappy::engine::cmd::CmdLook::cmdLook(std::weak_ptr<Player> player, World& w
             break;
     }
 
-    for (int l = 0; l <= level + 1; l++) {
+    for (int l = 0; l <= level; l++) {
         for (int offset = -l; offset <= l; offset++) {
             bool firstElement = true;
             int tileX = playerX;

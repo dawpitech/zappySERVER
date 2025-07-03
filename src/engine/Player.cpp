@@ -12,7 +12,7 @@
 
 zappy::engine::Player::Player(const unsigned int x, const unsigned int y, const unsigned int teamID, const unsigned int playerID, const unsigned int tickAtSpawn)
     : ID(playerID), _tickAtLastMeal(tickAtSpawn), _currentX(x), _currentY(y), _teamID(teamID),
-      _currentLevel(0), _facing(Directions::NORTH), alive(true), _status(Status::WAITING_FOR_COMMAND), _waitingCyclesRemaining(0)
+      _currentLevel(1), _facing(Directions::NORTH), alive(true), _status(Status::WAITING_FOR_COMMAND), _waitingCyclesRemaining(0)
 {
     this->_inventory.insert({Ressources::FOOD, 10});
     for (const auto rsc : {Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE, Ressources::PHIRAS, Ressources::THYSTAME})
