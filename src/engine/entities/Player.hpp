@@ -11,8 +11,8 @@
 #include <queue>
 #include <string>
 
-#include "Directions.hpp"
-#include "Ressources.hpp"
+#include "../Directions.hpp"
+#include "../Ressources.hpp"
 
 namespace zappy::engine
 {

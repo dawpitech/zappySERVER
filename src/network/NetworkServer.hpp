@@ -16,7 +16,7 @@
 #include <sys/poll.h>
 #include <sys/socket.h>
 
-#include "../engine/Player.hpp"
+#include "../engine/entities/Player.hpp"
 #include "../engine/graphical/Graphical.hpp"
 
 namespace zappy

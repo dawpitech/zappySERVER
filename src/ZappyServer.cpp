@@ -13,7 +13,7 @@
 #include <memory>
 #include <thread>
 
-#include "engine/Player.hpp"
+#include "engine/entities/Player.hpp"
 #include "engine/entities/Egg.hpp"
 #include "engine/graphical/Graphical.hpp"
 #include "utils/Debug.hpp"

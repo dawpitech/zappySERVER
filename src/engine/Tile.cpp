@@ -9,7 +9,7 @@
 #include <ranges>
 
 #include "Tile.hpp"
-#include "Player.hpp"
+#include "entities/Player.hpp"
 
 namespace zappy::engine
 {

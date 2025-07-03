@@ -10,7 +10,7 @@
 #include <chrono>
 #include <memory>
 
-#include "engine/Player.hpp"
+#include "engine/entities/Player.hpp"
 #include "engine/World.hpp"
 #include "network/NetworkServer.hpp"
 #include "utils/ZappyConfig.hpp"

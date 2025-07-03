@@ -8,7 +8,7 @@
 #include <iostream>
 
 #include "Player.hpp"
-#include "../utils/Debug.hpp"
+#include "../../utils/Debug.hpp"
 
 zappy::engine::Player::Player(const unsigned int x, const unsigned int y, const unsigned int teamID, const unsigned int playerID, const unsigned int tickAtSpawn)
     : ID(playerID), _tickAtLastMeal(tickAtSpawn), _currentX(x), _currentY(y), _teamID(teamID),

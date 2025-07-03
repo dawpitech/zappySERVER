@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-#include "../../Player.hpp"
+#include "../../entities/Player.hpp"
 #include "../../Tile.hpp"
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"

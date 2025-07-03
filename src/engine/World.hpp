@@ -10,7 +10,7 @@
 #include <memory>
 #include <vector>
 
-#include "Player.hpp"
+#include "entities/Player.hpp"
 #include "Tile.hpp"
 #include "../utils/ZappyConfig.hpp"
 #include "entities/Egg.hpp"
