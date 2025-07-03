@@ -9,6 +9,7 @@
 
 #include "ZappyServer.hpp"
 
+#include <csignal>
 #include <thread>
 
 #include "engine/Player.hpp"
@@ -16,11 +17,22 @@
 #include "utils/Debug.hpp"
 #include "utils/EventSystem.hpp"
 
+namespace
+{
+    std::atomic_flag shouldRun = true;
+
+    void signalHandler([[maybe_unused]] int signum) {
+        shouldRun.clear();
+    }
+}
+
 zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
     : _config(config), _tickDuration(static_cast<int>(1000 / config.freqValue))
 {
     this->_networkServer = std::make_unique<generic::NetworkServer>(config.listeningPort);
     this->_world = std::make_unique<engine::World>(config, *this);
+
+    signal(SIGINT, signalHandler);
 
     EventSystem::subscribe("player_spawn", std::function(engine::GraphicalClient::sendPnw_proxy));
     EventSystem::subscribe<unsigned int, unsigned int>("player_set", std::function(engine::GraphicalClient::sendPdr));
@@ -50,7 +62,7 @@ void zappy::ZappyServer::launch()
 
     _lastTickTime = std::chrono::steady_clock::now();
 
-    while (true) {
+    while (shouldRun.test()) {
         this->_networkServer->pollNetworkActivity(*this, 5);
 
         const auto currentTime = std::chrono::steady_clock::now();
@@ -66,6 +78,7 @@ void zappy::ZappyServer::launch()
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
     }
+    std::cout << "Zappy server exiting..." << std::endl;
 }
 
 std::weak_ptr<zappy::engine::Player> zappy::ZappyServer::createNewPlayerInTeam(const std::string& teamName, const unsigned int clientID)

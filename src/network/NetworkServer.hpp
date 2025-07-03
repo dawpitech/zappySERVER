@@ -80,7 +80,7 @@ namespace generic
                 { public: explicit NetworkException(const std::string& what) : std::runtime_error(what) {} };
 
             explicit NetworkServer(unsigned short port);
-            ~NetworkServer() = default;
+            ~NetworkServer();
 
             void pollNetworkActivity(zappy::ZappyServer& zappyServer, int timeoutMs);
             void writeToClient(const std::string& message, unsigned int clientID) const;

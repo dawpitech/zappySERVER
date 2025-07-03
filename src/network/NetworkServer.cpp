@@ -12,6 +12,9 @@
 #include <sys/socket.h>
 
 #include "NetworkServer.hpp"
+
+#include <ranges>
+
 #include "../ZappyServer.hpp"
 #include "../utils/Debug.hpp"
 
@@ -36,6 +39,12 @@ namespace generic
         if (listen(this->_serverFD, QUEUE_SIZE) == -1)
             throw NetworkException("Cannot listen on socket");
         std::cout << debug::getTS() << "[INFO] Listening on 0.0.0.0:" << port << std::endl;
+    }
+
+    NetworkServer::~NetworkServer()
+    {
+        for (const auto& client : this->_clients | std::views::values)
+            close(client->connectionFD);
     }
 
     void NetworkServer::pollNetworkActivity(zappy::ZappyServer& zappyServer, const int timeoutMs)
