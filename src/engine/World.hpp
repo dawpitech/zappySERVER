@@ -66,6 +66,7 @@ namespace zappy::engine
             void doEggCleanup();
             void doPlayerCleanup();
             void doGraphicalCleanup();
+            void checkForWin();
 
         private:
             unsigned int _tickSinceBigBang = 0;
@@ -86,6 +87,7 @@ namespace zappy::engine
             std::vector<std::vector<Tile>> _map;
 
             std::vector<std::string> teams;
+            std::vector<bool> teamWins;
             ZappyServer& _zappyServer;
     };
 }

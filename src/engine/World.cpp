@@ -33,6 +33,9 @@ namespace zappy::engine
         for (const auto& team : teams)
             for (int i = 0; i < config.initialTeamSize; i++)
                 this->addPlayerEgg(team, -1);
+
+        for (int i = 0; i < teams.size(); i++)
+            this->teamWins.emplace_back(false);
     }
 
     void World::tick()
@@ -61,6 +64,7 @@ namespace zappy::engine
         this->doEggCleanup();
         this->doPlayerCleanup();
         this->doGraphicalCleanup();
+        this->checkForWin();
         this->_tickSinceBigBang++;
     }
 
@@ -428,6 +432,30 @@ namespace zappy::engine
                 continue;
             this->getMainZappyServer().markClientAsDead(graphical->getID());
             this->graphicalClients.erase(this->graphicalClients.begin() + i);
+        }
+    }
+
+    void World::checkForWin() {
+        std::map<int, int> level8PlayersByTeam;
+
+        for (const auto& player : this->players) {
+            if (player->getLevel() != 8)
+                continue;
+            if (level8PlayersByTeam.contains(player->getTeamId()))
+                level8PlayersByTeam.at(player->getTeamId()) += 1;
+            else
+                level8PlayersByTeam.insert({player->getTeamId(), 1});
+        }
+
+        for (const auto& [teamID, level8Players] : level8PlayersByTeam) {
+            if (this->teamWins.at(teamID) == true)
+                continue;
+            if (level8Players >= 8) {
+                std::cout << debug::getTS() << BOLDRED << "[INFO] TEAM " << getTeamName(teamID)
+                    << " (ID " << teamID << ") HAS " << YELLOW << "W" << GREEN
+                    << "O" << BLUE << "N" << CYAN "!" << RESET << std::endl;
+                this->teamWins.at(teamID) = true;
+            }
         }
     }
 }
