@@ -29,7 +29,7 @@ namespace zappy::engine {
         void sendGreetings(zappy::utils::ZappyConfig &config, const zappy::engine::World &world, const std::string& args);
 
         static void sendSuc(unsigned int graphic_id, const zappy::engine::World &world);
-        
+
 		static void sendEnw(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world);
         static void sendMsz(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world, const std::string& args);
         static void sendSgt(GraphicalClient& graphic, zappy::utils::ZappyConfig& config, const World &world, const std::string& args);
@@ -45,21 +45,21 @@ namespace zappy::engine {
     	void markAsDead() { this->alive = false; }
 
         static void sendPinProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int unused, unsigned int pl_id);
-        static void sendPnw(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, const zappy::utils::ZappyConfig &config, const World &world, bool firsttime);
-        static void sendPnw_proxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, const zappy::utils::ZappyConfig &config, const World &world);
+        static void sendPnw(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, bool firsttime);
+        static void sendPnw_proxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world);
         static void sendPdr(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int res_id, unsigned int pl_id);
         static void sendPex(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id);
         static void sendPpoProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id);
-        static void sendPbc(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id, const std::string& msg);
+        static void sendPbc(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id, std::string msg);
         static void sendPfk(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id);
 	static void sendMctProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world);
-	static void sendEnwProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, const std::weak_ptr<engine::entities::Egg>& egg);
+	static void sendEnwProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, std::weak_ptr<engine::entities::Egg> egg);
 	static void sendEbo(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int egg_id);
 	static void sendEdi(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int egg_id);
 	static void sendPdi(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id);
 	static void sendPgt(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int res_id, unsigned int pl_id);
-	static void sendPic(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, const std::vector<std::weak_ptr<engine::entities::Player>>& players);
-	static void sendPie(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, const std::weak_ptr<engine::entities::Player>& player, int success);
+	static void sendPic(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, std::vector<std::weak_ptr<engine::entities::Player>> players);
+	static void sendPie(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, std::weak_ptr<engine::entities::Player> player, int success);
 
 
 	static void sendSmg(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, const std::string& message);
