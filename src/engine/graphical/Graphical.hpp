@@ -95,7 +95,9 @@ namespace zappy::engine
             static void sendPie(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
                                 utils::ZappyConfig& config, const World& world,
                                 std::weak_ptr<entities::Player> player, int success);
-
+            static void sendSeg(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
+                                utils::ZappyConfig& config, const World& world,
+                                std::string team);
 
             static void sendSmg(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
                                 utils::ZappyConfig& config, const World& world, const std::string& message);

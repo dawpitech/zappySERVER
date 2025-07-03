@@ -574,3 +574,17 @@ void zappy::engine::GraphicalClient::sendPie(const std::vector<std::shared_ptr<G
         world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
     }
 }
+
+void zappy::engine::GraphicalClient::sendSeg(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
+                                             [[maybe_unused]] utils::ZappyConfig& config, const World& world,
+                                             // ReSharper disable once CppParameterMayBeConst
+                                             std::string team)
+{
+    const std::string com = "seg " + team;
+    for (const auto& graphic : graphics)
+    {
+        std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending seg command to CLIENT : " << graphic->getID() <<
+            std::endl;
+        world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
+    }
+}

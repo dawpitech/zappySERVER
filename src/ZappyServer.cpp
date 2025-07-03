@@ -36,6 +36,8 @@ zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
     signal(SIGINT, signalHandler);
 
 
+    EventSystem::subscribe<std::string>(
+        "end_game", std::function(engine::GraphicalClient::sendSeg));
     EventSystem::subscribe<std::weak_ptr<engine::entities::Player>, int>(
         "end_incantation", std::function(engine::GraphicalClient::sendPie));
     EventSystem::subscribe<std::vector<std::weak_ptr<engine::entities::Player>>>(

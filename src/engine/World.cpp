@@ -450,8 +450,9 @@ namespace zappy::engine
         for (const auto& [teamID, level8Players] : level8PlayersByTeam) {
             if (this->teamWins.at(teamID) == true)
                 continue;
-            if (level8Players >= 8) {
-                std::cout << debug::getTS() << BOLDRED << "[INFO] TEAM " << getTeamName(teamID)
+            if (level8Players >= 6) {
+                EventSystem::trigger("end_game", this->graphicalClients, this->_zappyServer.getConfig(), *this, getTeamName(teamID));
+                    std::cout << debug::getTS() << BOLDRED << "[INFO] TEAM " << getTeamName(teamID)
                     << " (ID " << teamID << ") HAS " << YELLOW << "W" << GREEN
                     << "O" << BLUE << "N" << CYAN "!" << RESET << std::endl;
                 this->teamWins.at(teamID) = true;
