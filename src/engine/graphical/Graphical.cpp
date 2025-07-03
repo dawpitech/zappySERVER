@@ -377,3 +377,11 @@ void zappy::engine::GraphicalClient::sendSmg(const std::vector<std::shared_ptr<G
         world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
     }
 }
+
+void zappy::engine::GraphicalClient::sendPgt(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int res_id, unsigned int pl_id) {
+    std::string com = "pgt #" + std::to_string(pl_id) + " " + std::to_string(res_id);
+    for (auto graphic: graphics) {
+	std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending pgt command to CLIENT : " << graphic->getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
+    }
+}

@@ -43,6 +43,7 @@ zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
     EventSystem::subscribe<unsigned int, unsigned int>("player_set", std::function(engine::GraphicalClient::sendPdr));
     EventSystem::subscribe<unsigned int, unsigned int>("player_set", std::function(engine::GraphicalClient::sendPinProxy));
     EventSystem::subscribe<unsigned int, unsigned int>("player_take", std::function(engine::GraphicalClient::sendPinProxy));
+    EventSystem::subscribe<unsigned int, unsigned int>("player_take", std::function(engine::GraphicalClient::sendPgt));
     EventSystem::subscribe<unsigned int, unsigned int>("player_eat", std::function(engine::GraphicalClient::sendPinProxy));
     EventSystem::subscribe<unsigned int>("player_move", std::function(engine::GraphicalClient::sendPpoProxy));
     EventSystem::subscribe<unsigned int>("player_eject", std::function(engine::GraphicalClient::sendPpoProxy));
