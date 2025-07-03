@@ -49,7 +49,8 @@ namespace zappy::engine
             [[nodiscard]] std::pair<int, int> normalizeCoordinates(int x, int y) const;
 
             void distributeRandomResources();
-	        [[nodiscard]] std::vector<std::shared_ptr<Player>> getPlayers() const;
+	    [[nodiscard]] std::vector<std::shared_ptr<Player>> getPlayers() const;
+	    [[nodiscard]] std::shared_ptr<Player> getPlayer(unsigned int id) const;
 
             [[nodiscard]] unsigned int getEggCount(const std::string& teamName) const;
             [[nodiscard]] unsigned int getEggCount(unsigned int teamID) const;

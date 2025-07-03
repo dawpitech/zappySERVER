@@ -12,6 +12,7 @@
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
 #include "../../../utils/Debug.hpp"
+#include "../../../utils/EventSystem.hpp"
 
 namespace zappy::engine::cmd
 {
@@ -28,6 +29,7 @@ namespace zappy::engine::cmd
         }
 
         std::cout << debug::getTS() << "[TRACE] Player " << lockPlayer->ID << " NOW FACING " << directionToString(lockPlayer->getDirection()) << std::endl;
+	EventSystem::trigger("player_move", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, lockPlayer->ID);
         world.getMainZappyServer().sendMessageToClient("ok", lockPlayer->ID);
     }
 }

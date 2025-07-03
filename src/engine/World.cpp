@@ -6,6 +6,7 @@
 */
 
 #include <algorithm>
+#include <exception>
 #include <iostream>
 #include <locale>
 #include <stdexcept>
@@ -169,8 +170,10 @@ namespace zappy::engine
 
     void World::tickPlayer(const std::shared_ptr<Player>& player)
     {
-        if (this->_tickSinceBigBang - player->getTickAtLastMeal() >= 126)
+        if (this->_tickSinceBigBang - player->getTickAtLastMeal() >= 126) {
             player->eat(this->_tickSinceBigBang);
+	    EventSystem::trigger("player_eat", this->graphicalClients, this->_zappyServer.getConfig(), *this, (unsigned int)0, player->ID);
+	}
 
         do {
             if (player->getStatus() == Player::Status::WAITING_BEFORE_EXECUTE) {
@@ -285,6 +288,14 @@ namespace zappy::engine
 
     [[nodiscard]] std::vector<std::shared_ptr<Player>> World::getPlayers() const {
         return this->players;
+    }
+
+    [[nodiscard]] std::shared_ptr<Player> World::getPlayer(unsigned int id) const {
+        for (unsigned int i = 0; i < this->players.size(); i++) {
+	    if (this->players[i]->ID == id)
+		return this->players[i];
+	}
+	throw std::exception();
     }
 
     unsigned int World::getEggCount(const std::string& teamName) const

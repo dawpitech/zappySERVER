@@ -13,6 +13,7 @@
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
 #include "../../../utils/Debug.hpp"
+#include "../../../utils/EventSystem.hpp"
 #include "../../../utils/EventRayDirectionInterpreter.hpp"
 
 void zappy::engine::cmd::CmdEject::cmdEject(std::weak_ptr<Player> player, World& world, const std::string& args)
@@ -50,6 +51,7 @@ void zappy::engine::cmd::CmdEject::cmdEject(std::weak_ptr<Player> player, World&
             victim->ID);
         std::cout << debug::getTS() << "[TRACE] PLAYER " << pusher->ID << " PUSH PLAYER "
             << victim->ID << " TO CELL " << victim->getX() << ":" << victim->getY() << std::endl;
+	EventSystem::trigger("player_eject", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, victim->ID);
     }
 
     for (const auto egg : tile.getEggs()) {

@@ -13,6 +13,7 @@
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
 #include "../../../utils/Debug.hpp"
+#include "../../../utils/EventSystem.hpp"
 #include "../../../utils/EventRayDirectionInterpreter.hpp"
 
 void zappy::engine::cmd::CmdBroadcast::cmdBroadcast(std::weak_ptr<Player> player, World& world, const std::string& args)
@@ -45,5 +46,6 @@ void zappy::engine::cmd::CmdBroadcast::cmdBroadcast(std::weak_ptr<Player> player
     }
 
     std::cout << debug::getTS() << "[TRACE] PLAYER " << sender->ID << " SENT A BROADCAST" << std::endl;
+    EventSystem::trigger("player_broadcast", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, sender->ID, messageContent);
     world.getMainZappyServer().sendMessageToClient("ok", sender->ID);
 }

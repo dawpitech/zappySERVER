@@ -14,34 +14,37 @@ namespace zappy::engine {
 
         void addCommandToBuffer(const std::string& command);
         std::queue<std::string>& getCommandsBuffer();
-	unsigned int getID();
-	void setID(unsigned int id);
+        unsigned int getID();
+        void setID(unsigned int id);
 
-        void sendGreetings(zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args);
+        void sendGreetings(zappy::utils::ZappyConfig &config, const zappy::engine::World &world, const std::string& args);
 
-        static void sendSuc(unsigned int graphic_id, zappy::engine::World &world);
-
-        static void sendMsz(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, zappy::engine::World &world, const std::string& args);
-        static void sendSgt(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendTna(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendMct(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendBct(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendPpo(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendPlv(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendPin(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-        static void sendSst(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World &world, const std::string& args);
-
-        static void sendPnw(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, bool firsttime);
-        static void sendPnw_proxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world);
-		static void sendPdr(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int res_id, unsigned int pl_id);
+        static void sendSuc(unsigned int graphic_id, const zappy::engine::World &world);
+        
+        static void sendMsz(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const zappy::engine::World &world, const std::string& args);
+        static void sendSgt(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world, const std::string& args);
+        static void sendTna(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world, const std::string& args);
+        static void sendMct(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world, const std::string& args);
+        static void sendBct(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world, const std::string& args);
+        static void sendPpo(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world, const std::string& args);
+        static void sendPlv(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world, const std::string& args);
+        static void sendPin(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world, const std::string& args);
+        static void sendSst(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world, const std::string& args);
 
     	[[nodiscard]] bool isDead() const { return !this->alive; }
     	void markAsDead() { this->alive = false; }
 
-    private:
-		bool alive = true;
+        static void sendPinProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int unused, unsigned int pl_id);
+        static void sendPnw(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, bool firsttime);
+        static void sendPnw_proxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world);
+        static void sendPdr(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int res_id, unsigned int pl_id);
+        static void sendPex(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id);
+        static void sendPpoProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id);
+        static void sendPbc(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id, std::string msg);
 
+    private:
+	bool alive = true;
         std::queue<std::string> _commandsBuffer;
-		unsigned int _ID;
+        unsigned int _ID;
     };
 }

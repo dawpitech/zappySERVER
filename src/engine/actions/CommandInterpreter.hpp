@@ -44,31 +44,31 @@ namespace zappy::engine
 
     enum class GraphicCommand
     {
-	MSZ,
-	BCT,
-	MCT,
-	TNA,
-	PNW,
-	PPO,
-	PLV,
-	PIN,
-	PEX,
-	PBC,
-	PIC,
-	PIE,
-	PFK,
-	PDR,
-	PGT,
-	PDI,
-	ENW,
-	EBO,
-	EDI,
-	SGT,
-	SST,
-	SEG,
-	SMG,
-	SUC,
-	SBP,
+        MSZ,
+        BCT,
+        MCT,
+        TNA,
+        PNW,
+        PPO,
+        PLV,
+        PIN,
+        PEX,
+        PBC,
+        PIC,
+        PIE,
+        PFK,
+        PDR,
+        PGT,
+        PDI,
+        ENW,
+        EBO,
+        EDI,
+        SGT,
+        SST,
+        SEG,
+        SMG,
+        SUC,
+        SBP,
     };
 
     class CommandInterpreter
@@ -85,18 +85,18 @@ namespace zappy::engine
                 Command command;
                 unsigned int duration;
                 void (*handler)(std::weak_ptr<Player> player, World& world, const std::string& args);
-            	void (*preHandler)(std::weak_ptr<Player> player, World& world, const std::string& args);
+                void (*preHandler)(std::weak_ptr<Player> player, World& world, const std::string& args);
             };
 
             struct GraphicCommandInfo
             {
                 GraphicCommand command;
-                void (*handler)(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, World& world, const std::string& args);
+                void (*handler)(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World& world, const std::string& args);
             };
 
             CommandInterpreter() = delete;
             static void dummyAction(std::weak_ptr<Player> player, World& world, const std::string& args);
-    		static void silenceDummyAction(std::weak_ptr<Player> player, World& world, const std::string& args);
+                static void silenceDummyAction(std::weak_ptr<Player> player, World& world, const std::string& args);
 
             const static std::map<std::string, CommandInfo> COMMANDS;
             const static std::map<std::string, GraphicCommandInfo> GRAPHIC_COMMANDS;
