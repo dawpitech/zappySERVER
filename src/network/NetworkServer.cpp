@@ -155,36 +155,24 @@ namespace generic
         }
 
         client->inputBuffer.resize(readable_bytes);
-
-        // Append new data to the persistent message buffer
         client->messageBuffer.append(client->inputBuffer);
 
-        // Process complete commands (ending with '\n')
         size_t pos = 0;
         while ((pos = client->messageBuffer.find('\n')) != std::string::npos) {
             std::string command = client->messageBuffer.substr(0, pos);
-            
-            // Remove the processed command (including '\n') from the buffer
             client->messageBuffer.erase(0, pos + 1);
-            
-            // Remove trailing carriage return if present
-            if (!command.empty() && command.back() == '\r') {
+
+            if (!command.empty() && command.back() == '\r')
                 command.pop_back();
-            }
-            
-            // Skip empty commands
-            if (command.empty()) {
+            if (command.empty())
                 continue;
-            }
             
             std::cout << debug::getTS() << "[TRACE] (CLIENT ID" << client->clientID << ") SEND:" << command << std::endl;
-            
-            // Process the complete command
             this->processCompleteCommand(command, client, zappyServer);
         }
     }
 
-    void NetworkServer::processCompleteCommand(const std::string& command, const std::unique_ptr<Client>& client, zappy::ZappyServer& zappyServer) {
+    void NetworkServer::processCompleteCommand(const std::string& command, const std::unique_ptr<Client>& client, zappy::ZappyServer& zappyServer) const {
         if (client->managedByGameEngine) {
             if (client->isGraphical) {
                 const auto graphic = client->_gameEngineGraphicalClient.lock();

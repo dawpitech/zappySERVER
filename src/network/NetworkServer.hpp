@@ -99,6 +99,6 @@ namespace generic
 
             void acceptNewClient();
             void parseClientInput(unsigned int clientID, zappy::ZappyServer& zappyServer);
-            void processCompleteCommand(const std::string& command, const std::unique_ptr<Client>& client, zappy::ZappyServer& zappyServer);
+            void processCompleteCommand(const std::string& command, const std::unique_ptr<Client>& client, zappy::ZappyServer& zappyServer) const;
     };
 } // generic
