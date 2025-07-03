@@ -31,7 +31,7 @@ namespace zappy::engine
 
         for (const auto& team : teams)
             for (int i = 0; i < config.initialTeamSize; i++)
-                this->addPlayerEgg(team);
+                this->addPlayerEgg(team, -1);
     }
 
     void World::tick()
@@ -87,18 +87,18 @@ namespace zappy::engine
         return {this->players.back()};
     }
 
-    std::weak_ptr<entities::Egg> World::addPlayerEgg(const std::string& teamName)
+    std::weak_ptr<entities::Egg> World::addPlayerEgg(const std::string& teamName, const unsigned int motherPlayerID)
     {
-        return this->addPlayerEgg(this->getTeamID(teamName));
+        return this->addPlayerEgg(this->getTeamID(teamName), motherPlayerID);
     }
 
-    std::weak_ptr<entities::Egg> World::addPlayerEgg(unsigned int teamID)
+    std::weak_ptr<entities::Egg> World::addPlayerEgg(const unsigned int teamID, const unsigned int motherPlayerID)
     {
         const auto& config = this->_zappyServer.getConfig();
         unsigned int randomX = std::rand() % config.worldWidth;
         unsigned int randomY = std::rand() % config.worldHeight;
 
-        this->eggs.emplace_back(std::make_shared<entities::Egg>(randomX, randomY, teamID, ++this->_eggIDCount));
+        this->eggs.emplace_back(std::make_shared<entities::Egg>(randomX, randomY, teamID, ++this->_eggIDCount, motherPlayerID));
         this->getTileAt(static_cast<int>(randomX), static_cast<int>(randomY)).addEgg(this->eggs.back());
         std::cout << debug::getTS() << "[INFO] EGG " << this->_eggIDCount << " OF TEAM " << this->teams.at(teamID) << " SPAWNED AT " << randomX << ":" << randomY << std::endl;
         return this->eggs.back();

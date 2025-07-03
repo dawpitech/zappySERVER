@@ -31,8 +31,8 @@ namespace zappy::engine
             void tick();
 
             std::weak_ptr<Player> connectPlayer(const std::string& teamName, unsigned int clientID);
-            std::weak_ptr<entities::Egg> addPlayerEgg(const std::string& teamName);
-            std::weak_ptr<entities::Egg> addPlayerEgg(unsigned int teamID);
+            std::weak_ptr<entities::Egg> addPlayerEgg(const std::string& teamName, unsigned int motherPlayerID);
+            std::weak_ptr<entities::Egg> addPlayerEgg(unsigned int teamID, unsigned int motherPlayerID);
             std::weak_ptr<GraphicalClient> addGraphicalClient();
 
             [[nodiscard]] ZappyServer& getMainZappyServer() const { return this->_zappyServer; }

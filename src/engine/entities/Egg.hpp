@@ -12,7 +12,7 @@ namespace zappy::engine::entities
     class Egg
     {
         public:
-            explicit Egg(unsigned int x, unsigned int y, unsigned int teamID, unsigned int EggID);
+            explicit Egg(unsigned int x, unsigned int y, unsigned int teamID, unsigned int EggID, unsigned int motherPlayerID);
             ~Egg() = default;
 
             unsigned int ID;
@@ -26,8 +26,9 @@ namespace zappy::engine::entities
 
         private:
             bool alive = true;
-            unsigned int _x;
-            unsigned int _y;
-            unsigned int _teamID;
+            const unsigned int _x;
+            const unsigned int _y;
+            const unsigned int _teamID;
+            const unsigned int motherPlayerID;
     };
 }
