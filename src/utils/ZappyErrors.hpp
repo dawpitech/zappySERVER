@@ -21,4 +21,9 @@ namespace zappy::errors
         public:
             InvalidArgsException() : ZappyException("Invalid arguments given") {}
     };
+    class EarlyExit final : public ZappyException
+    {
+        public:
+            EarlyExit() : ZappyException("") {}
+    };
 }

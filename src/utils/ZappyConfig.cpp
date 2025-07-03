@@ -14,6 +14,11 @@ zappy::utils::ZappyConfig::ZappyConfig(const int argc, const char** argv)
 {
     auto status = ParseStatus::UNKNOWN;
 
+    if (argc == 2 && (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help")) {
+        printHelp();
+        throw errors::EarlyExit();
+    }
+
     if (argc < 13 || argv == nullptr)
         throw errors::InvalidArgsException();
 
@@ -68,13 +73,25 @@ zappy::utils::ZappyConfig::ZappyConfig(const int argc, const char** argv)
     }
 }
 
+void zappy::utils::ZappyConfig::printHelp()
+{
+    std::cout << "USAGE: ./zappy_server -p port -x width -y height -n name1 name2 ... -c clientsNb -f freq\n"
+        << "port\t\tis the port number\n"
+        << "width\t\tis the width of the world\n"
+        << "height\t\tis the height of the world\n"
+        << "nameX\t\tis the name of the team X\n"
+        << "clientsNb\tis the number of authorized clients per team\n"
+        << "freq\t\tis the reciprocal of time unit for execution of actions"
+        << std::endl;
+}
+
 void zappy::utils::ZappyConfig::parseUnsignedInt(unsigned int& value, const std::string& arg)
 {
     try {
         value = std::stoul(arg);
-    } catch (std::invalid_argument) {
+    } catch (std::invalid_argument&) {
         throw errors::InvalidArgsException();
-    } catch (std::out_of_range) {
+    } catch (std::out_of_range&) {
         throw errors::InvalidArgsException();
     }
 }

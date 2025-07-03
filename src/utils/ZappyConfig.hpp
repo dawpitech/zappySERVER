@@ -25,6 +25,8 @@ namespace zappy::utils
             unsigned int initialTeamSize;
             float freqValue;
 
+            static void printHelp();
+
         private:
             enum class ParseStatus
             {

@@ -77,7 +77,7 @@ namespace generic
                     std::weak_ptr<zappy::engine::GraphicalClient> _gameEngineGraphicalClient;
 
                     std::string inputBuffer;
-                    std::string messageBuffer;  // Persistent buffer for accumulating incoming data
+                    std::string messageBuffer;
             };
             class NetworkException final : public std::runtime_error
                 { public: explicit NetworkException(const std::string& what) : std::runtime_error(what) {} };
