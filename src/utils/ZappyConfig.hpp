@@ -15,15 +15,15 @@ namespace zappy::utils
     class ZappyConfig
     {
         public:
-            explicit ZappyConfig(int argc, const char **argv);
+            explicit ZappyConfig(int argc, const char** argv);
             ~ZappyConfig() = default;
 
-            unsigned int listeningPort;
-            unsigned int worldWidth;
-            unsigned int worldHeight;
+            unsigned int listeningPort = 0;
+            unsigned int worldWidth = 0;
+            unsigned int worldHeight = 0;
             std::vector<std::string> teamNames;
-            unsigned int initialTeamSize;
-            float freqValue;
+            unsigned int initialTeamSize = 0;
+            float freqValue = 0;
 
             static void printHelp();
 

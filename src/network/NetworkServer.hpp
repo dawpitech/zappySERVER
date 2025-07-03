@@ -34,6 +34,7 @@ namespace generic
                     {
                         this->inputBuffer.resize(BUFSIZ);
                     }
+
                     ~Client()
                     {
                         if (connectionFD != -1)
@@ -44,16 +45,18 @@ namespace generic
                     Client& operator=(const Client&) = delete;
 
                     Client(Client&& o) noexcept
-                      : clientID(o.clientID)
-                      , connectionFD(o.connectionFD)
-                      , inputBuffer(std::move(o.inputBuffer))
-                      , messageBuffer(std::move(o.messageBuffer))
+                        : clientID(o.clientID)
+                          , connectionFD(o.connectionFD)
+                          , inputBuffer(std::move(o.inputBuffer))
+                          , messageBuffer(std::move(o.messageBuffer))
                     {
                         o.connectionFD = -1;
                     }
 
-                    Client& operator=(Client&& o) noexcept {
-                        if (this != &o) {
+                    Client& operator=(Client&& o) noexcept
+                    {
+                        if (this != &o)
+                        {
                             if (connectionFD >= 0) ::close(connectionFD);
                             clientID = o.clientID;
                             connectionFD = o.connectionFD;
@@ -76,8 +79,12 @@ namespace generic
                     std::string inputBuffer;
                     std::string messageBuffer;
             };
+
             class NetworkException final : public std::runtime_error
-                { public: explicit NetworkException(const std::string& what) : std::runtime_error(what) {} };
+            {
+                public:
+                    explicit NetworkException(const std::string& what) : std::runtime_error(what) {}
+            };
 
             explicit NetworkServer(unsigned short port);
             ~NetworkServer();
@@ -96,6 +103,7 @@ namespace generic
 
             void acceptNewClient();
             void parseClientInput(unsigned int clientID, zappy::ZappyServer& zappyServer);
-            void processCompleteCommand(const std::string& command, const std::unique_ptr<Client>& client, zappy::ZappyServer& zappyServer) const;
+            void processCompleteCommand(const std::string& command, const std::unique_ptr<Client>& client,
+                                        zappy::ZappyServer& zappyServer) const;
     };
 } // generic

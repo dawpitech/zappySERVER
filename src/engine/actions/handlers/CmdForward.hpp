@@ -10,8 +10,10 @@
 #include <memory>
 #include <string>
 
-namespace zappy::engine {
-    namespace entities {
+namespace zappy::engine
+{
+    namespace entities
+    {
         class Player;
     }
 

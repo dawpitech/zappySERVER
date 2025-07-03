@@ -37,19 +37,31 @@ namespace zappy::engine
         {"sst", {GraphicCommand::SST, &GraphicalClient::sendSst}},
     };
 
-    const std::map<std::string, CommandInterpreter::CommandInfo> CommandInterpreter::COMMANDS =  {
+    const std::map<std::string, CommandInterpreter::CommandInfo> CommandInterpreter::COMMANDS = {
         {"Forward", {Command::FORWARD, 7, &cmd::CmdForward::cmdForward, &CommandInterpreter::silenceDummyPreAction}},
         {"Right", {Command::RIGHT, 7, &cmd::CmdRight::cmdRight, &CommandInterpreter::silenceDummyPreAction}},
         {"Left", {Command::LEFT, 7, &cmd::CmdLeft::cmdLeft, &CommandInterpreter::silenceDummyPreAction}},
         {"Look", {Command::LOOK, 7, &cmd::CmdLook::cmdLook, &CommandInterpreter::silenceDummyPreAction}},
-        {"Inventory", {Command::INVENTORY, 1, &cmd::CmdInventory::cmdInventory, &CommandInterpreter::silenceDummyPreAction}},
-        {"Broadcast", {Command::BROADCAST, 7, &cmd::CmdBroadcast::cmdBroadcast, &CommandInterpreter::silenceDummyPreAction}},
-        {"Connect_nbr", {Command::CONNECT_NBR, 0, &cmd::CmdConNbr::cmdConNbr, &CommandInterpreter::silenceDummyPreAction}},
+        {
+            "Inventory",
+            {Command::INVENTORY, 1, &cmd::CmdInventory::cmdInventory, &CommandInterpreter::silenceDummyPreAction}
+        },
+        {
+            "Broadcast",
+            {Command::BROADCAST, 7, &cmd::CmdBroadcast::cmdBroadcast, &CommandInterpreter::silenceDummyPreAction}
+        },
+        {
+            "Connect_nbr",
+            {Command::CONNECT_NBR, 0, &cmd::CmdConNbr::cmdConNbr, &CommandInterpreter::silenceDummyPreAction}
+        },
         {"Fork", {Command::FORK, 42, &cmd::CmdFork::cmdFork, &cmd::CmdFork::cmdPreFork}},
         {"Eject", {Command::EJECT, 7, &cmd::CmdEject::cmdEject, &CommandInterpreter::silenceDummyPreAction}},
         {"Take", {Command::TAKE, 7, &cmd::CmdTake::cmdTake, &CommandInterpreter::silenceDummyPreAction}},
         {"Set", {Command::SET, 7, &cmd::CmdSet::cmdSet, &CommandInterpreter::silenceDummyPreAction}},
-        {"Incantation", {Command::INCANTATION, 300, &cmd::CmdIncantation::cmdIncantation, &cmd::CmdIncantation::cmdPreIncantation}},
+        {
+            "Incantation",
+            {Command::INCANTATION, 300, &cmd::CmdIncantation::cmdIncantation, &cmd::CmdIncantation::cmdPreIncantation}
+        },
     };
 
     void CommandInterpreter::dummyAction([[maybe_unused]] std::weak_ptr<entities::Player> player, World& world, const std::string& args) // NOLINT(*-unnecessary-value-param)

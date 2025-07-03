@@ -38,16 +38,19 @@ namespace zappy::engine
     void World::tick()
     {
         //std::cout << "[TRACE] World ticking" << std::endl;
-        for (const auto& player : this->players) {
+        for (const auto& player : this->players)
+        {
             if (player->isDead())
                 std::cout << debug::getTS() << "[WARN] PLAYER " << player->ID << " was disconnected" << std::endl;
             else
                 this->tickPlayer(player);
         }
 
-        for (const auto& graphical : this->graphicalClients) {
+        for (const auto& graphical : this->graphicalClients)
+        {
             if (graphical->isDead())
-                std::cout << debug::getTS() << "[WARN] GUI CLIENT " << graphical->getID() << " was disconnected" << std::endl;
+                std::cout << debug::getTS() << "[WARN] GUI CLIENT " << graphical->getID() << " was disconnected" <<
+                    std::endl;
             else
                 this->tickGraphic(graphical);
         }
@@ -61,7 +64,8 @@ namespace zappy::engine
         this->_tickSinceBigBang++;
     }
 
-    std::weak_ptr<entities::Player> World::connectPlayer(const std::string& teamName, const unsigned int clientID) {
+    std::weak_ptr<entities::Player> World::connectPlayer(const std::string& teamName, const unsigned int clientID)
+    {
         int teamID = this->getTeamID(teamName);
 
         int eggIdx = -1;
@@ -77,12 +81,15 @@ namespace zappy::engine
 
             this->eggs.erase(this->eggs.begin() + eggIdx);
             this->getTileAt(static_cast<int>(egg->getX()), static_cast<int>(egg->getY())).removeEgg(egg);
-            this->players.emplace_back(std::make_shared<entities::Player>(egg->getX(), egg->getY(), teamID, clientID, this->_tickSinceBigBang));
+            this->players.emplace_back(
+                std::make_shared<entities::Player>(egg->getX(), egg->getY(), teamID, clientID,
+                                                   this->_tickSinceBigBang));
 
             std::cout << debug::getTS() << "[INFO] EGG " << egg->ID << " OF TEAM "
                 << teamName << " HAS HATCHED INTO PLAYER " << clientID << " AT "
                 << egg->getX() << ":" << egg->getY() << std::endl;
-	    EventSystem::trigger("player_egg_spawn", this->graphicalClients, this->_zappyServer.getConfig(), *this, egg->ID);
+            EventSystem::trigger("player_egg_spawn", this->graphicalClients, this->_zappyServer.getConfig(), *this,
+                                 egg->ID);
         }
 
         EventSystem::trigger("player_spawn", this->graphicalClients, this->_zappyServer.getConfig(), *this);
@@ -100,13 +107,16 @@ namespace zappy::engine
         unsigned int randomX = std::rand() % config.worldWidth; // NOLINT(*-msc50-cpp)
         unsigned int randomY = std::rand() % config.worldHeight; // NOLINT(*-msc50-cpp)
 
-        this->eggs.emplace_back(std::make_shared<entities::Egg>(randomX, randomY, teamID, ++this->_eggIDCount, motherPlayerID));
+        this->eggs.emplace_back(
+            std::make_shared<entities::Egg>(randomX, randomY, teamID, ++this->_eggIDCount, motherPlayerID));
         this->getTileAt(static_cast<int>(randomX), static_cast<int>(randomY)).addEgg(this->eggs.back());
-        std::cout << debug::getTS() << "[INFO] EGG " << this->_eggIDCount << " OF TEAM " << this->teams.at(teamID) << " SPAWNED AT " << randomX << ":" << randomY << std::endl;
+        std::cout << debug::getTS() << "[INFO] EGG " << this->_eggIDCount << " OF TEAM " << this->teams.at(teamID) <<
+            " SPAWNED AT " << randomX << ":" << randomY << std::endl;
         return this->eggs.back();
     }
 
-    std::weak_ptr<GraphicalClient> World::addGraphicalClient() {
+    std::weak_ptr<GraphicalClient> World::addGraphicalClient()
+    {
         this->graphicalClients.emplace_back(std::make_shared<GraphicalClient>());
         return {this->graphicalClients.back()};
     }
@@ -130,10 +140,15 @@ namespace zappy::engine
             args = "";
 
         std::erase(args, '#');
-        try {
-        CommandInterpreter::GRAPHIC_COMMANDS.at(action).handler(*graphic, this->_zappyServer.getConfig(), *this, args);
-        } catch (std::out_of_range&) {
-            std::cout << debug::getTS() << "[WARN] Unknown command received from graphic client: " << action << std::endl;
+        try
+        {
+            CommandInterpreter::GRAPHIC_COMMANDS.at(action).handler(*graphic, this->_zappyServer.getConfig(), *this,
+                                                                    args);
+        }
+        catch (std::out_of_range&)
+        {
+            std::cout << debug::getTS() << "[WARN] Unknown command received from graphic client: " << action <<
+                std::endl;
             GraphicalClient::sendSuc(graphic->getID(), *this);
         }
         graphic->getCommandsBuffer().pop();
@@ -141,7 +156,8 @@ namespace zappy::engine
 
     int World::getTeamID(const std::string& teamName) const
     {
-        for (size_t i = 0; i < this->teams.size(); i++) {
+        for (size_t i = 0; i < this->teams.size(); i++)
+        {
             if (this->teams.at(i) != teamName)
                 continue;
             return static_cast<int>(i);
@@ -153,9 +169,12 @@ namespace zappy::engine
     {
         std::map<Ressources, int> RESSOURCES_PRESENT;
 
-        for (int x = 0; x < this->getWidth(); x++) {
-            for (int y = 0; y < this->getHeight(); y++) {
-                for (const auto& [type, quantity] : this->getTileAt(x, y).getAllResources()) {
+        for (int x = 0; x < this->getWidth(); x++)
+        {
+            for (int y = 0; y < this->getHeight(); y++)
+            {
+                for (const auto& [type, quantity] : this->getTileAt(x, y).getAllResources())
+                {
                     if (RESSOURCES_PRESENT.contains(type))
                         RESSOURCES_PRESENT.at(type) += quantity;
                     else
@@ -164,7 +183,10 @@ namespace zappy::engine
             }
         }
 
-        for (const auto rsc : {Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE, Ressources::PHIRAS, Ressources::THYSTAME})
+        for (const auto rsc : {
+                 Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE,
+                 Ressources::PHIRAS, Ressources::THYSTAME
+             })
             if (!RESSOURCES_PRESENT.contains(rsc))
                 RESSOURCES_PRESENT.insert(std::make_pair(rsc, 0));
 
@@ -173,17 +195,23 @@ namespace zappy::engine
 
     void World::tickPlayer(const std::shared_ptr<entities::Player>& player)
     {
-        if (this->_tickSinceBigBang - player->getTickAtLastMeal() >= 126) {
+        if (this->_tickSinceBigBang - player->getTickAtLastMeal() >= 126)
+        {
             player->eat(this->_tickSinceBigBang);
-	    EventSystem::trigger("player_eat", this->graphicalClients, this->_zappyServer.getConfig(), *this, static_cast<unsigned int>(0), player->ID);
-	}
+            EventSystem::trigger("player_eat", this->graphicalClients, this->_zappyServer.getConfig(), *this,
+                                 static_cast<unsigned int>(0), player->ID);
+        }
 
-        do {
-            if (player->getStatus() == entities::Player::Status::WAITING_BEFORE_EXECUTE) {
+        do
+        {
+            if (player->getStatus() == entities::Player::Status::WAITING_BEFORE_EXECUTE)
+            {
                 if (player->getWaitingCyclesRemaining() > 0)
                     player->setWaitingCyclesRemaining(player->getWaitingCyclesRemaining() - 1);
-                if (player->getWaitingCyclesRemaining() <= 0) {
-                    std::cout << debug::getTS() << "[INFO] EXECUTING COMMAND " << player->getCommandsBuffer().front() << std::endl;
+                if (player->getWaitingCyclesRemaining() <= 0)
+                {
+                    std::cout << debug::getTS() << "[INFO] EXECUTING COMMAND " << player->getCommandsBuffer().front() <<
+                        std::endl;
 
                     std::string fullCommand = player->getCommandsBuffer().front();
                     std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
@@ -193,31 +221,39 @@ namespace zappy::engine
                     player->setStatus(entities::Player::Status::WAITING_FOR_COMMAND);
                 }
             }
-            if (player->getStatus() == entities::Player::Status::WAITING_FOR_COMMAND) {
+            if (player->getStatus() == entities::Player::Status::WAITING_FOR_COMMAND)
+            {
                 if (player->getCommandsBuffer().empty())
                     return;
 
                 std::string fullCommand = player->getCommandsBuffer().front();
                 std::string action = fullCommand.substr(0, fullCommand.find_first_of(' '));
 
-                try {
+                try
+                {
                     const unsigned int duration = CommandInterpreter::COMMANDS.at(action).duration;
                     player->setWaitingCyclesRemaining(duration);
                     player->setStatus(entities::Player::Status::WAITING_BEFORE_EXECUTE);
-                    if (!CommandInterpreter::COMMANDS.at(action).preHandler(player, *this, fullCommand)) {
+                    if (!CommandInterpreter::COMMANDS.at(action).preHandler(player, *this, fullCommand))
+                    {
                         player->getCommandsBuffer().pop();
                         player->setStatus(entities::Player::Status::WAITING_FOR_COMMAND);
                     }
-                } catch (std::out_of_range&) {
-                    std::cout << debug::getTS() << "[WARN] Unknown command received from player: " << action << std::endl;
+                }
+                catch (std::out_of_range&)
+                {
+                    std::cout << debug::getTS() << "[WARN] Unknown command received from player: " << action <<
+                        std::endl;
                     player->getCommandsBuffer().pop();
                     this->getMainZappyServer().sendMessageToClient("ko", player->ID);
                 }
             }
-        } while (player->getWaitingCyclesRemaining() <= 0);
+        }
+        while (player->getWaitingCyclesRemaining() <= 0);
     }
 
-    std::pair<int, int> World::normalizeCoordinates(int x, int y) const {
+    std::pair<int, int> World::normalizeCoordinates(int x, int y) const
+    {
         const auto width = static_cast<int>(this->_zappyServer.getConfig().worldWidth);
         const auto height = static_cast<int>(this->_zappyServer.getConfig().worldHeight);
         x = ((x % width) + width) % width;
@@ -234,24 +270,36 @@ namespace zappy::engine
         const auto RESSOURCES_ALREADY_PLACED = this->getCurrentRessourcesPlacedOnMap();
         std::map<Ressources, int> RESSOURCES_TO_BE_PLACED;
 
-        for (const auto& rsc : {Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE, Ressources::PHIRAS, Ressources::THYSTAME})
-            RESSOURCES_TO_BE_PLACED.insert(std::make_pair(rsc, static_cast<int>(Ressource::RESSOURCE_DENSITY.at(rsc) * static_cast<float>(mapArea))));
+        for (const auto& rsc : {
+                 Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE,
+                 Ressources::PHIRAS, Ressources::THYSTAME
+             })
+            RESSOURCES_TO_BE_PLACED.insert(std::make_pair(
+                rsc, static_cast<int>(Ressource::RESSOURCE_DENSITY.at(rsc) * static_cast<float>(mapArea))));
 
         //DEBUG: Used to print ressource generation density
         //std::cout << "TO BE PLACED (WITHOUT CURRENT RESSOURCE TAKEN INTO ACCOUNT)" << std::endl;
         //for (const auto& [type, quantity] : RESSOURCES_TO_BE_PLACED)
         //    std::cout << "\t" << getRessourceName(type) << " x" << quantity << std::endl;
 
-        for (const auto& rsc : {Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE, Ressources::PHIRAS, Ressources::THYSTAME})
+        for (const auto& rsc : {
+                 Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE,
+                 Ressources::PHIRAS, Ressources::THYSTAME
+             })
             RESSOURCES_TO_BE_PLACED.at(rsc) -= RESSOURCES_ALREADY_PLACED.at(rsc);
 
         // Should NEVER be the case but its one of the rules of the ressource generation system
-        for (const auto& rsc : {Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE, Ressources::PHIRAS, Ressources::THYSTAME})
+        for (const auto& rsc : {
+                 Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE,
+                 Ressources::PHIRAS, Ressources::THYSTAME
+             })
             if (RESSOURCES_TO_BE_PLACED.at(rsc) <= 0)
                 RESSOURCES_TO_BE_PLACED.at(rsc) = 1;
 
-        for (const auto& [type, quantity] : RESSOURCES_TO_BE_PLACED) {
-            for (int i = 0; i < quantity; i++) {
+        for (const auto& [type, quantity] : RESSOURCES_TO_BE_PLACED)
+        {
+            for (int i = 0; i < quantity; i++)
+            {
                 const int randomX = static_cast<int>(std::rand() % this->getMainZappyServer().getConfig().worldWidth); // NOLINT(*-msc50-cpp)
                 const int randomY = static_cast<int>(std::rand() % this->getMainZappyServer().getConfig().worldHeight); // NOLINT(*-msc50-cpp)
 
@@ -263,17 +311,20 @@ namespace zappy::engine
         EventSystem::trigger("map_refill", this->graphicalClients, this->_zappyServer.getConfig(), *this);
     }
 
-    Tile& World::getTileAt(const int x, const int y) {
+    Tile& World::getTileAt(const int x, const int y)
+    {
         auto [nx, ny] = normalizeCoordinates(x, y);
         return _map[ny][nx];
     }
 
-    const Tile& World::getTileAt(const int x, const int y) const {
+    const Tile& World::getTileAt(const int x, const int y) const
+    {
         auto [nx, ny] = normalizeCoordinates(x, y);
         return _map[ny][nx];
     }
 
-    void World::movePlayer(const std::shared_ptr<entities::Player>& player, const int newX, const int newY) {
+    void World::movePlayer(const std::shared_ptr<entities::Player>& player, const int newX, const int newY)
+    {
         const auto oldX = static_cast<int>(player->getX());
         const auto oldY = static_cast<int>(player->getY());
         getTileAt(oldX, oldY).removePlayer(player);
@@ -293,16 +344,19 @@ namespace zappy::engine
     }
 
 
-    [[nodiscard]] std::vector<std::shared_ptr<entities::Player>> World::getPlayers() const {
+    [[nodiscard]] std::vector<std::shared_ptr<entities::Player>> World::getPlayers() const
+    {
         return this->players;
     }
 
-    [[nodiscard]] std::shared_ptr<entities::Player> World::getPlayer(const unsigned int id) const {
-        for (const auto & player : this->players) {
-	        if (player->ID == id)
-		    return player;
-	    }
-	    throw std::exception();
+    [[nodiscard]] std::shared_ptr<entities::Player> World::getPlayer(const unsigned int id) const
+    {
+        for (const auto& player : this->players)
+        {
+            if (player->ID == id)
+                return player;
+        }
+        throw std::exception();
     }
 
     unsigned int World::getEggCount(const std::string& teamName) const
@@ -310,8 +364,9 @@ namespace zappy::engine
         return this->getEggCount(this->getTeamID(teamName));
     }
 
-    std::vector<std::shared_ptr<entities::Egg>> World::getEggs() const {
-	return this->eggs;
+    std::vector<std::shared_ptr<entities::Egg>> World::getEggs() const
+    {
+        return this->eggs;
     }
 
     unsigned int World::getEggCount(const unsigned int teamID) const
@@ -330,11 +385,13 @@ namespace zappy::engine
 
     void World::doEggCleanup()
     {
-        for (int i = 0; i < this->eggs.size(); i++) {
+        for (int i = 0; i < this->eggs.size(); i++)
+        {
             const auto egg = this->eggs.at(i);
             if (!egg->isDead())
                 continue;
-	    EventSystem::trigger("player_egg_died", this->graphicalClients, this->_zappyServer.getConfig(), *this, egg->ID);
+            EventSystem::trigger("player_egg_died", this->graphicalClients, this->_zappyServer.getConfig(), *this,
+                                 egg->ID);
             this->getTileAt(static_cast<int>(egg->getX()), static_cast<int>(egg->getY()))
                 .removeEgg(egg);
             this->eggs.erase(this->eggs.begin() + i);
@@ -343,16 +400,20 @@ namespace zappy::engine
 
     void World::doPlayerCleanup()
     {
-        for (int i = static_cast<int>(this->players.size()) - 1; i >= 0; --i) {
+        for (int i = static_cast<int>(this->players.size()) - 1; i >= 0; --i)
+        {
             const auto player = this->players.at(i);
             if (!player->isDead())
                 continue;
-            try {
+            try
+            {
                 this->getMainZappyServer().sendMessageToClient("dead", player->ID);
-            } catch (std::runtime_error&) {}
-	    EventSystem::trigger("player_died", this->graphicalClients, this->_zappyServer.getConfig(), *this, player->ID);
+            }
+            catch (std::runtime_error&) {}
+            EventSystem::trigger("player_died", this->graphicalClients, this->_zappyServer.getConfig(), *this,
+                                 player->ID);
             this->getMainZappyServer().markClientAsDead(player->ID);
-            this->getTileAt(static_cast<int>(player->getX()),static_cast<int>(player->getY()))
+            this->getTileAt(static_cast<int>(player->getX()), static_cast<int>(player->getY()))
                 .removePlayer(player);
             this->players.erase(this->players.begin() + i);
         }
@@ -360,7 +421,8 @@ namespace zappy::engine
 
     void World::doGraphicalCleanup()
     {
-        for (int i = static_cast<int>(this->graphicalClients.size()) - 1; i >= 0; --i) {
+        for (int i = static_cast<int>(this->graphicalClients.size()) - 1; i >= 0; --i)
+        {
             const auto graphical = this->graphicalClients.at(i);
             if (!graphical->isDead())
                 continue;

@@ -11,7 +11,7 @@
 
 namespace zappy::engine
 {
-    const std::map<Ressources, float>  Ressource::RESSOURCE_DENSITY =  {
+    const std::map<Ressources, float> Ressource::RESSOURCE_DENSITY = {
         {Ressources::FOOD, 0.5},
         {Ressources::LINEMATE, 0.3},
         {Ressources::DERAUMERE, 0.15},

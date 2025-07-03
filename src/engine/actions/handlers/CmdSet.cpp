@@ -15,7 +15,7 @@
 #include "../../../utils/Debug.hpp"
 #include "../../../utils/EventSystem.hpp"
 
-void zappy::engine::cmd::CmdSet::cmdSet(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
+void zappy::engine::cmd::CmdSet::cmdSet(std::weak_ptr<entities::Player> player, World& world, const std::string& args) // NOLINT(*-unnecessary-value-param)
 {
     const auto lockPlayer = player.lock();
     std::stringstream ss(args);
@@ -23,19 +23,24 @@ void zappy::engine::cmd::CmdSet::cmdSet(std::weak_ptr<entities::Player> player, 
     std::string secondWord;
 
     ss >> firstWorld >> secondWord;
-    if (secondWord.empty()) {
+    if (secondWord.empty())
+    {
         world.getMainZappyServer().sendMessageToClient("ko", lockPlayer->ID);
-        std::cout << debug::getTS() << "[TRACE] PLAYER " << lockPlayer->ID << " SENT SET COMMAND WITH INCORRECT SYNTAX" << std::endl;
+        std::cout << debug::getTS() << "[TRACE] PLAYER " << lockPlayer->ID << " SENT SET COMMAND WITH INCORRECT SYNTAX"
+            << std::endl;
         return;
     }
     const auto type = getRessourceFromName(secondWord);
-    if (type == std::nullopt) {
+    if (type == std::nullopt)
+    {
         world.getMainZappyServer().sendMessageToClient("ko", lockPlayer->ID);
-        std::cout << debug::getTS() << "[TRACE] PLAYER " << lockPlayer->ID << " SENT SET COMMAND WITH UNKNOWN TYPE" << std::endl;
+        std::cout << debug::getTS() << "[TRACE] PLAYER " << lockPlayer->ID << " SENT SET COMMAND WITH UNKNOWN TYPE" <<
+            std::endl;
         return;
     }
     const auto safeType = type.value();
-    if (lockPlayer->getInventory().at(safeType) == 0) {
+    if (lockPlayer->getInventory().at(safeType) == 0)
+    {
         world.getMainZappyServer().sendMessageToClient("ko", lockPlayer->ID);
         std::cout << debug::getTS() << "[TRACE] PLAYER " << lockPlayer->ID <<
             " TRY TO SET ON A CELL WITHOUT HAVING SPECIFIED RESSOURCE IN INVENTORY" << std::endl;
@@ -48,7 +53,8 @@ void zappy::engine::cmd::CmdSet::cmdSet(std::weak_ptr<entities::Player> player, 
         getRessourceName(safeType) << " DOWN AT " << lockPlayer->getX() << ":"
         << lockPlayer->getY() << std::endl;
 
-    EventSystem::trigger("player_set", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, (unsigned int)safeType, lockPlayer->ID);
+    EventSystem::trigger("player_set", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world,
+                         (unsigned int)safeType, lockPlayer->ID);
     EventSystem::trigger("map_refill", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world);
     world.getMainZappyServer().sendMessageToClient("ok", lockPlayer->ID);
 }

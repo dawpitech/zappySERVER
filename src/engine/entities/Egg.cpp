@@ -7,6 +7,7 @@
 
 #include "Egg.hpp"
 
-zappy::engine::entities::Egg::Egg(const unsigned int x, const unsigned int y, const unsigned int teamID, const unsigned int EggID, const int motherPlayerID):
+zappy::engine::entities::Egg::Egg(const unsigned int x, const unsigned int y, const unsigned int teamID,
+                                  const unsigned int EggID, const int motherPlayerID):
     ID(EggID), _x(x),
     _y(y), _teamID(teamID), motherPlayerID(motherPlayerID) {}

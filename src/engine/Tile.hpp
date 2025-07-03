@@ -14,12 +14,15 @@
 #include "Ressources.hpp"
 #include "entities/Egg.hpp"
 
-namespace zappy::engine {
-    namespace entities {
+namespace zappy::engine
+{
+    namespace entities
+    {
         class Player;
     }
 
-    class Tile {
+    class Tile
+    {
         public:
             Tile() = default;
             ~Tile() = default;
@@ -48,5 +51,4 @@ namespace zappy::engine {
             std::vector<std::weak_ptr<entities::Egg>> _eggs;
             std::map<Ressources, int> _resources;
     };
-
 } // namespace zappy::engine

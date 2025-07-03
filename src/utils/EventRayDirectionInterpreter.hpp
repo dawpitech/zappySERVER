@@ -40,28 +40,29 @@ namespace zappy::engine::utils
         if (dx == 0 && dy == 0)
             return 0;
 
-        if (!diagonals) {
+        if (!diagonals)
+        {
             if (std::abs(dx) > std::abs(dy)) dy = 0;
             else if (std::abs(dy) > std::abs(dx)) dx = 0;
         }
 
         const int facing = static_cast<int>(receiverFacing);
-        for (int i = 0; i < facing; ++i) {
+        for (int i = 0; i < facing; ++i)
+        {
             const int tmp = dx;
             dx = -dy;
             dy = tmp;
         }
 
         if (dx == 0 && dy < 0) return 1;
-        if (dx > 0 && dy < 0)  return 2;
+        if (dx > 0 && dy < 0) return 2;
         if (dx > 0 && dy == 0) return 3;
-        if (dx > 0 && dy > 0)  return 4;
+        if (dx > 0 && dy > 0) return 4;
         if (dx == 0 && dy > 0) return 5;
-        if (dx < 0 && dy > 0)  return 6;
+        if (dx < 0 && dy > 0) return 6;
         if (dx < 0 && dy == 0) return 7;
-        if (dx < 0 && dy < 0)  return 8;
+        if (dx < 0 && dy < 0) return 8;
 
         throw std::runtime_error("Couldn't compute eject facing value");
     }
-
 }

@@ -14,7 +14,7 @@
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
 
-void zappy::engine::cmd::CmdLook::cmdLook(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
+void zappy::engine::cmd::CmdLook::cmdLook(std::weak_ptr<entities::Player> player, World& world, const std::string& args) // NOLINT(*-unnecessary-value-param)
 {
     const auto lockPlayer = player.lock();
     std::string reply = "[ ";
@@ -29,7 +29,8 @@ void zappy::engine::cmd::CmdLook::cmdLook(std::weak_ptr<entities::Player> player
     int mainAxis = 0;
     bool invertOffset = false;
 
-    switch (direction) {
+    switch (direction)
+    {
         case Directions::NORTH:
             mainAxisDelta = -1;
             mainAxis = 1;
@@ -52,16 +53,21 @@ void zappy::engine::cmd::CmdLook::cmdLook(std::weak_ptr<entities::Player> player
             break;
     }
 
-    for (int l = 0; l <= level; l++) {
-        for (int offset = -l; offset <= l; offset++) {
+    for (int l = 0; l <= level; l++)
+    {
+        for (int offset = -l; offset <= l; offset++)
+        {
             bool firstElement = true;
             int tileX = playerX;
             int tileY = playerY;
 
-            if (mainAxis == 0) {
+            if (mainAxis == 0)
+            {
                 tileX += l * mainAxisDelta;
                 tileY += invertOffset ? -offset : offset;
-            } else {
+            }
+            else
+            {
                 tileX += invertOffset ? -offset : offset;
                 tileY += l * mainAxisDelta;
             }
@@ -73,14 +79,17 @@ void zappy::engine::cmd::CmdLook::cmdLook(std::weak_ptr<entities::Player> player
                 reply.append(",");
             firstCell = false;
 
-            for (int i = 0; i < tile.getPlayerCount(); i++) {
+            for (int i = 0; i < tile.getPlayerCount(); i++)
+            {
                 if (!firstElement)
                     reply.append(" ");
                 firstElement = false;
                 reply.append("player");
             }
-            for (const auto [type, quantity] : tile.getAllResources()) {
-                for (int i = 0; i < quantity; i++) {
+            for (const auto [type, quantity] : tile.getAllResources())
+            {
+                for (int i = 0; i < quantity; i++)
+                {
                     if (!firstElement)
                         reply.append(" ");
                     firstElement = false;

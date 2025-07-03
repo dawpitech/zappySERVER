@@ -7,14 +7,16 @@
 
 #include "CmdConNbr.hpp"
 
-#include "../../entities/Player.hpp"
 #include "../../World.hpp"
 #include "../../../ZappyServer.hpp"
 #include "../../../utils/Debug.hpp"
+#include "../../entities/Player.hpp"
 
-void zappy::engine::cmd::CmdConNbr::cmdConNbr(std::weak_ptr<entities::Player> player, World& world, const std::string& args)
+void zappy::engine::cmd::CmdConNbr::cmdConNbr(std::weak_ptr<entities::Player> player, World& world,
+                                              const std::string& args)
 {
     const auto lockPlayer = player.lock();
 
-    world.getMainZappyServer().sendMessageToClient(std::to_string(world.getEggCount(lockPlayer->getTeamId())), lockPlayer->ID);
+    world.getMainZappyServer().sendMessageToClient(std::to_string(world.getEggCount(lockPlayer->getTeamId())),
+                                                   lockPlayer->ID);
 }

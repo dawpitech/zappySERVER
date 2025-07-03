@@ -16,11 +16,13 @@ namespace zappy::errors
         public:
             explicit ZappyException(const std::string& what) : std::runtime_error(what) {}
     };
+
     class InvalidArgsException final : public ZappyException
     {
         public:
             InvalidArgsException() : ZappyException("Invalid arguments given") {}
     };
+
     class EarlyExit final : public ZappyException
     {
         public:

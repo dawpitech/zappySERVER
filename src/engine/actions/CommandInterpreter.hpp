@@ -11,19 +11,23 @@
 #include <memory>
 #include <stdexcept>
 
-namespace zappy::utils {
+namespace zappy::utils
+{
     class ZappyConfig;
 }
 
-namespace zappy::engine {
-    namespace entities {
+namespace zappy::engine
+{
+    namespace entities
+    {
         class Player;
     }
 
     class World;
 }
 
-namespace zappy::engine {
+namespace zappy::engine
+{
     class GraphicalClient;
 }
 
@@ -94,15 +98,16 @@ namespace zappy::engine
             struct GraphicCommandInfo
             {
                 GraphicCommand command;
-                void (*handler)(GraphicalClient& graphic, utils::ZappyConfig &config, const World& world, const std::string& args);
+                void (*handler)(GraphicalClient& graphic, utils::ZappyConfig& config, const World& world,
+                                const std::string& args);
             };
 
             CommandInterpreter() = delete;
             static void dummyAction(std::weak_ptr<entities::Player> player, World& world, const std::string& args);
-            static bool silenceDummyPreAction(std::weak_ptr<entities::Player> player, World& world, const std::string& args);
+            static bool silenceDummyPreAction(std::weak_ptr<entities::Player> player, World& world,
+                                              const std::string& args);
 
             static const std::map<std::string, CommandInfo> COMMANDS;
             static const std::map<std::string, GraphicCommandInfo> GRAPHIC_COMMANDS;
-
     };
 }

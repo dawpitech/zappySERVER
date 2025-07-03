@@ -25,8 +25,9 @@ namespace zappy
 
             void launch();
 
-            [[nodiscard]] std::weak_ptr<engine::entities::Player> createNewPlayerInTeam(const std::string& teamName, unsigned int clientID) const;
-	        std::weak_ptr<engine::GraphicalClient> createNewGraphicalClient(unsigned int id);
+            [[nodiscard]] std::weak_ptr<engine::entities::Player> createNewPlayerInTeam(
+                const std::string& teamName, unsigned int clientID) const;
+            std::weak_ptr<engine::GraphicalClient> createNewGraphicalClient(unsigned int id);
 
             void sendMessageToClient(const std::string& message, unsigned int clientID) const;
             void markClientAsDead(unsigned int clientID) const;

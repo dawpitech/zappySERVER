@@ -14,7 +14,8 @@ zappy::utils::ZappyConfig::ZappyConfig(const int argc, const char** argv)
 {
     auto status = ParseStatus::UNKNOWN;
 
-    if (argc == 2 && (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help")) {
+    if (argc == 2 && (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help"))
+    {
         printHelp();
         throw errors::EarlyExit();
     }
@@ -52,19 +53,26 @@ zappy::utils::ZappyConfig::ZappyConfig(const int argc, const char** argv)
             default:
             case ParseStatus::UNKNOWN:
                 {
-                    if (arg.at(0) != '-') {
+                    if (arg.at(0) != '-')
+                    {
                         std::cout << "Here" << std::endl;
                         throw errors::InvalidArgsException();
                     }
 
                     switch (arg.at(1))
                     {
-                        case 'p': status = ParseStatus::PORT; break;
-                        case 'x': status = ParseStatus::WIDTH; break;
-                        case 'y': status = ParseStatus::HEIGHT; break;
-                        case 'n': status = ParseStatus::TEAM_NAME; break;
-                        case 'c': status = ParseStatus::TEAM_SIZE; break;
-                        case 'f': status = ParseStatus::FREQ; break;
+                        case 'p': status = ParseStatus::PORT;
+                            break;
+                        case 'x': status = ParseStatus::WIDTH;
+                            break;
+                        case 'y': status = ParseStatus::HEIGHT;
+                            break;
+                        case 'n': status = ParseStatus::TEAM_NAME;
+                            break;
+                        case 'c': status = ParseStatus::TEAM_SIZE;
+                            break;
+                        case 'f': status = ParseStatus::FREQ;
+                            break;
                         default: throw errors::InvalidArgsException();
                     }
                     break;
@@ -87,22 +95,30 @@ void zappy::utils::ZappyConfig::printHelp()
 
 void zappy::utils::ZappyConfig::parseUnsignedInt(unsigned int& value, const std::string& arg)
 {
-    try {
+    try
+    {
         value = std::stoul(arg);
-    } catch (std::invalid_argument&) {
+    }
+    catch (std::invalid_argument&)
+    {
         throw errors::InvalidArgsException();
-    } catch (std::out_of_range&) {
+    } catch (std::out_of_range&)
+    {
         throw errors::InvalidArgsException();
     }
 }
 
 void zappy::utils::ZappyConfig::parseFloat(float& value, const std::string& arg)
 {
-    try {
+    try
+    {
         value = std::stof(arg);
-    } catch (std::invalid_argument&) {
+    }
+    catch (std::invalid_argument&)
+    {
         throw errors::InvalidArgsException();
-    } catch (std::out_of_range&) {
+    } catch (std::out_of_range&)
+    {
         throw errors::InvalidArgsException();
     }
 }

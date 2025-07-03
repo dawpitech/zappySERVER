@@ -15,14 +15,15 @@
 #include "entities/Egg.hpp"
 #include "entities/Player.hpp"
 
-namespace zappy {
+namespace zappy
+{
     class ZappyServer;
 }
 
 namespace zappy::engine
 {
     class GraphicalClient;
-    
+
     class World
     {
         public:
@@ -36,7 +37,11 @@ namespace zappy::engine
             std::weak_ptr<GraphicalClient> addGraphicalClient();
 
             [[nodiscard]] ZappyServer& getMainZappyServer() const { return this->_zappyServer; }
-            [[nodiscard]] const std::vector<std::shared_ptr<GraphicalClient>> &getGraphicalClients() const { return this->graphicalClients; }
+
+            [[nodiscard]] const std::vector<std::shared_ptr<GraphicalClient>>& getGraphicalClients() const
+            {
+                return this->graphicalClients;
+            }
 
             Tile& getTileAt(int x, int y);
             [[nodiscard]] const Tile& getTileAt(int x, int y) const;
@@ -49,8 +54,8 @@ namespace zappy::engine
             [[nodiscard]] std::pair<int, int> normalizeCoordinates(int x, int y) const;
 
             void distributeRandomResources();
-	    [[nodiscard]] std::vector<std::shared_ptr<entities::Player>> getPlayers() const;
-	    [[nodiscard]] std::shared_ptr<entities::Player> getPlayer(unsigned int id) const;
+            [[nodiscard]] std::vector<std::shared_ptr<entities::Player>> getPlayers() const;
+            [[nodiscard]] std::shared_ptr<entities::Player> getPlayer(unsigned int id) const;
 
             [[nodiscard]] unsigned int getEggCount(const std::string& teamName) const;
             [[nodiscard]] unsigned int getEggCount(unsigned int teamID) const;
@@ -70,7 +75,7 @@ namespace zappy::engine
             void tickPlayer(const std::shared_ptr<entities::Player>& player);
             void tickGraphic(const std::shared_ptr<GraphicalClient>& graphic) const;
 
-            int getTeamID(const std::string& teamName) const;
+            [[nodiscard]] int getTeamID(const std::string& teamName) const;
 
             std::map<Ressources, int> getCurrentRessourcesPlacedOnMap();
 

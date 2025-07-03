@@ -8,17 +8,21 @@
 #include "ZappyServer.hpp"
 #include "utils/ZappyErrors.hpp"
 
-int main(const int argc, const char **argv)
+int main(const int argc, const char** argv)
 {
-    try {
+    try
+    {
         const auto config = zappy::utils::ZappyConfig(argc, argv);
         auto server = zappy::ZappyServer(config);
 
         server.launch();
-    } catch (zappy::errors::InvalidArgsException&) {
+    }
+    catch (zappy::errors::InvalidArgsException&)
+    {
         zappy::utils::ZappyConfig::printHelp();
         return 84;
-    } catch (zappy::errors::EarlyExit&) {
+    } catch (zappy::errors::EarlyExit&)
+    {
         return 0;
     }
 }
