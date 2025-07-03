@@ -8,7 +8,6 @@ _build type sanitizer:
 
 clean:
     rm -rf {{ outdir }}
-    rm -rf plugins
-    rm -f raytracer
+    rm -f zappy_server
 
 re: clean release
