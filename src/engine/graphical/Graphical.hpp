@@ -21,6 +21,7 @@ namespace zappy::engine {
 
         static void sendSuc(unsigned int graphic_id, const zappy::engine::World &world);
         
+	static void sendEnw(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world);
         static void sendMsz(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const zappy::engine::World &world, const std::string& args);
         static void sendSgt(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world, const std::string& args);
         static void sendTna(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world, const std::string& args);
@@ -43,6 +44,10 @@ namespace zappy::engine {
         static void sendPbc(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id, std::string msg);
         static void sendPfk(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id);
 	static void sendMctProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world);
+	static void sendEnwProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, std::weak_ptr<engine::entities::Egg> egg);
+	static void sendEbo(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int egg_id);
+	static void sendEdi(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int egg_id);
+	static void sendPdi(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id);
 
     private:
 	bool alive = true;

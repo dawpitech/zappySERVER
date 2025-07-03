@@ -10,9 +10,11 @@
 #include "ZappyServer.hpp"
 
 #include <csignal>
+#include <memory>
 #include <thread>
 
 #include "engine/Player.hpp"
+#include "engine/entities/Egg.hpp"
 #include "engine/graphical/Graphical.hpp"
 #include "utils/Debug.hpp"
 #include "utils/EventSystem.hpp"
@@ -35,6 +37,9 @@ zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
     signal(SIGINT, signalHandler);
 
     EventSystem::subscribe("player_spawn", std::function(engine::GraphicalClient::sendPnw_proxy));
+    EventSystem::subscribe<unsigned int>("player_egg_spawn", std::function(engine::GraphicalClient::sendEbo));
+    EventSystem::subscribe<unsigned int>("player_egg_died", std::function(engine::GraphicalClient::sendEdi));
+    EventSystem::subscribe<unsigned int>("player_died", std::function(engine::GraphicalClient::sendPdi));
     EventSystem::subscribe<unsigned int, unsigned int>("player_set", std::function(engine::GraphicalClient::sendPdr));
     EventSystem::subscribe<unsigned int, unsigned int>("player_set", std::function(engine::GraphicalClient::sendPinProxy));
     EventSystem::subscribe<unsigned int, unsigned int>("player_take", std::function(engine::GraphicalClient::sendPinProxy));
@@ -45,6 +50,7 @@ zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
     EventSystem::subscribe<unsigned int, std::string>("player_broadcast", std::function(engine::GraphicalClient::sendPbc));
     EventSystem::subscribe<unsigned int>("pre_fork", std::function(engine::GraphicalClient::sendPfk));
     EventSystem::subscribe("map_refill", std::function(engine::GraphicalClient::sendMctProxy));
+    EventSystem::subscribe<std::weak_ptr<engine::entities::Egg>>("egg_layed", std::function(engine::GraphicalClient::sendEnwProxy));
 }
 
 void zappy::ZappyServer::launch()

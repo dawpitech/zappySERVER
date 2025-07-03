@@ -81,6 +81,7 @@ namespace zappy::engine
             std::cout << debug::getTS() << "[INFO] EGG " << egg->ID << " OF TEAM "
                 << teamName << " HAS HATCHED INTO PLAYER " << clientID << " AT "
                 << egg->getX() << ":" << egg->getY() << std::endl;
+	    EventSystem::trigger("player_egg_spawn", this->graphicalClients, this->_zappyServer.getConfig(), *this, egg->ID);
         }
 
         EventSystem::trigger("player_spawn", this->graphicalClients, this->_zappyServer.getConfig(), *this);
@@ -304,6 +305,10 @@ namespace zappy::engine
         return this->getEggCount(this->getTeamID(teamName));
     }
 
+    std::vector<std::shared_ptr<entities::Egg>> World::getEggs() const {
+	return this->eggs;
+    }
+
     unsigned int World::getEggCount(const unsigned int teamID) const
     {
         int eggCount = 0;
@@ -324,10 +329,10 @@ namespace zappy::engine
             const auto egg = this->eggs.at(i);
             if (!egg->isDead())
                 continue;
+	    EventSystem::trigger("player_egg_died", this->graphicalClients, this->_zappyServer.getConfig(), *this, egg->ID);
             this->getTileAt(static_cast<int>(egg->getX()), static_cast<int>(egg->getY()))
                 .removeEgg(egg);
             this->eggs.erase(this->eggs.begin() + i);
-
         }
     }
 
@@ -340,6 +345,7 @@ namespace zappy::engine
             try {
                 this->getMainZappyServer().sendMessageToClient("dead", player->ID);
             } catch (std::runtime_error&) {}
+	    EventSystem::trigger("player_died", this->graphicalClients, this->_zappyServer.getConfig(), *this, player->ID);
             this->getMainZappyServer().markClientAsDead(player->ID);
             this->getTileAt(static_cast<int>(player->getX()),static_cast<int>(player->getY()))
                 .removePlayer(player);

@@ -44,10 +44,11 @@ void zappy::engine::GraphicalClient::sendGreetings(zappy::utils::ZappyConfig &co
     auto shareptr = this->shared_from_this();//std::shared_ptr<GraphicalClient>(this);
     std::vector<std::shared_ptr<GraphicalClient>> vec = {shareptr};
     this->sendPnw(vec, config, world, true);
-    for (unsigned int i = 0; i < world.getPlayers().size(); i++) {
-        this->sendPin(*this, config, world, std::to_string(i));
-        this->sendPlv(*this, config, world, std::to_string(i));
+    for (auto player: world.getPlayers()) {
+        this->sendPin(*this, config, world, std::to_string(player->ID));
+        this->sendPlv(*this, config, world, std::to_string(player->ID));
     }
+    this->sendEnw(*this, config, world);
 }
 
 //bad command
@@ -99,6 +100,25 @@ void zappy::engine::GraphicalClient::sendMct(GraphicalClient& graphic, zappy::ut
         for (int y = 0; y < world.getHeight(); y++) {
             sendBct(graphic, config, world, std::to_string(x) + " " + std::to_string(y));
         }
+    }
+}
+
+void zappy::engine::GraphicalClient::sendEnwProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, std::weak_ptr<engine::entities::Egg> egg) {
+    auto eggLock = egg.lock();
+    for (auto graphic: graphics) {
+	std::string cmd = "enw #" + std::to_string(eggLock->ID) + " #" + std::to_string(eggLock->getMotherID()) + " " + std::to_string(eggLock->getX()) + " " + std::to_string(eggLock->getY());
+
+	std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending enw command to CLIENT : " << graphic->getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient(cmd, graphic->getID());
+    }
+}
+
+void zappy::engine::GraphicalClient::sendEnw(GraphicalClient& graphic, zappy::utils::ZappyConfig &config, const World &world) {
+    for (auto egg: world.getEggs()) {
+	std::string cmd = "enw #" + std::to_string(egg->ID) + " #" + std::to_string(egg->getMotherID()) + " " + std::to_string(egg->getX()) + " " + std::to_string(egg->getY());
+
+	std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending enw command to CLIENT : " << graphic.getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient(cmd, graphic.getID());
     }
 }
 
@@ -322,6 +342,30 @@ void zappy::engine::GraphicalClient::sendPfk(const std::vector<std::shared_ptr<G
     for (auto graphic: graphics) {
 	std::string com = "pfk #" + std::to_string(pl_id);
 	std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending pfk command to CLIENT : " << graphic->getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
+    }
+}
+
+void zappy::engine::GraphicalClient::sendEbo(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int egg_id) {
+    for (auto graphic: graphics) {
+	std::string com = "ebo #" + std::to_string(egg_id);
+	std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending ebo command to CLIENT : " << graphic->getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
+    }
+}
+
+void zappy::engine::GraphicalClient::sendEdi(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int egg_id) {
+    for (auto graphic: graphics) {
+	std::string com = "edi #" + std::to_string(egg_id);
+	std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending edi command to CLIENT : " << graphic->getID() << std::endl;
+        world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
+    }
+}
+
+void zappy::engine::GraphicalClient::sendPdi(const std::vector<std::shared_ptr<GraphicalClient>>& graphics, zappy::utils::ZappyConfig &config, const World &world, unsigned int pl_id) {
+    for (auto graphic: graphics) {
+	std::string com = "pdi #" + std::to_string(pl_id);
+	std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending pdi command to CLIENT : " << graphic->getID() << std::endl;
         world.getMainZappyServer().sendMessageToClient(com, graphic->getID());
     }
 }

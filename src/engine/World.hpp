@@ -54,6 +54,7 @@ namespace zappy::engine
 
             [[nodiscard]] unsigned int getEggCount(const std::string& teamName) const;
             [[nodiscard]] unsigned int getEggCount(unsigned int teamID) const;
+            [[nodiscard]] std::vector<std::shared_ptr<entities::Egg>> getEggs() const;
 
             [[nodiscard]] std::string getTeamName(unsigned int teamID) const;
 

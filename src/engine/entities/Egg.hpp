@@ -12,7 +12,7 @@ namespace zappy::engine::entities
     class Egg
     {
         public:
-            explicit Egg(unsigned int x, unsigned int y, unsigned int teamID, unsigned int EggID, unsigned int motherPlayerID);
+            explicit Egg(unsigned int x, unsigned int y, unsigned int teamID, unsigned int EggID, int motherPlayerID);
             ~Egg() = default;
 
             unsigned int ID;
@@ -20,6 +20,7 @@ namespace zappy::engine::entities
             unsigned int getTeamID() const { return this->_teamID; }
             unsigned int getX() const { return this->_x; }
             unsigned int getY() const { return this->_y; }
+            int getMotherID() const { return this->motherPlayerID; }
 
             void crush() { this->alive = false; }
             bool isDead() const { return !this->alive; }
@@ -29,6 +30,6 @@ namespace zappy::engine::entities
             const unsigned int _x;
             const unsigned int _y;
             const unsigned int _teamID;
-            const unsigned int motherPlayerID;
+            const int motherPlayerID;
     };
 }
