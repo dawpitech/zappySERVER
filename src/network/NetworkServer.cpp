@@ -88,8 +88,20 @@ namespace generic
             auto msg = message;
             msg.append("\n");
 
-            if (write(client->connectionFD, msg.c_str(), msg.size()) != msg.size())
-                throw NetworkException("Error while writing message");
+            pollfd pollConfig {};
+            pollConfig.fd = client->connectionFD;
+            pollConfig.events = POLLOUT;
+
+            poll(&pollConfig, 1, 0);
+            if (pollConfig.revents == 0) {
+                this->markConnectionAsDead(clientID);
+                std::cout << debug::getTS() << "[ERROR] Couldn't write message to client FD" << std::endl;
+            }
+
+            if (write(client->connectionFD, msg.c_str(), msg.size()) != msg.size()) {
+                this->markConnectionAsDead(clientID);
+                std::cout << debug::getTS() << "[ERROR] Couldn't write message to client FD" << std::endl;
+            }
         } catch (std::out_of_range&) {
             throw NetworkException("Unknown client ID");
         }
