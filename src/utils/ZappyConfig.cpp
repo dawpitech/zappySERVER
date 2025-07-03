@@ -80,14 +80,17 @@ zappy::utils::ZappyConfig::ZappyConfig(const int argc, const char** argv)
                 }
         }
     }
+
+    if (this->worldHeight < 8 || this->worldWidth < 8)
+        throw errors::InvalidArgsException();
 }
 
 void zappy::utils::ZappyConfig::printHelp()
 {
     std::cout << "USAGE: ./zappy_server -p port -x width -y height -n name1 name2 ... -c clientsNb -f freq\n"
         << "port\t\tis the port number\n"
-        << "width\t\tis the width of the world\n"
-        << "height\t\tis the height of the world\n"
+        << "width\t\tis the width of the world (min 8)\n"
+        << "height\t\tis the height of the world (min 8)\n"
         << "nameX\t\tis the name of the team X\n"
         << "clientsNb\tis the number of authorized clients per team\n"
         << "freq\t\tis the reciprocal of time unit for execution of actions"
