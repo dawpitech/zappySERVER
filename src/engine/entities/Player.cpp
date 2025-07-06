@@ -16,6 +16,15 @@ zappy::engine::entities::Player::Player(const unsigned int x, const unsigned int
       _currentLevel(1), _facing(Directions::NORTH), alive(true), _status(Status::WAITING_FOR_COMMAND),
       _waitingCyclesRemaining(0)
 {
+    switch (std::rand() % 4) // NOLINT(*-msc50-cpp)
+    {
+        case 0: this->_facing = Directions::NORTH; break;
+        case 1: this->_facing = Directions::EAST; break;
+        case 2: this->_facing = Directions::SOUTH; break;
+        default:
+        case 3: this->_facing = Directions::WEST; break;
+    }
+
     this->_inventory.insert({Ressources::FOOD, 10});
     for (const auto rsc : {
              Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE, Ressources::PHIRAS,
