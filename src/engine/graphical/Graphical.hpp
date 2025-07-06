@@ -56,6 +56,9 @@ namespace zappy::engine
             [[nodiscard]] bool isDead() const { return !this->alive; }
             void markAsDead() { this->alive = false; }
 
+            static void sendPlvProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
+                                     utils::ZappyConfig& config, const World& world,
+                                     unsigned int pl_id);
             static void sendPinProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
                                      utils::ZappyConfig& config, const World& world, unsigned int unused,
                                      unsigned int pl_id);

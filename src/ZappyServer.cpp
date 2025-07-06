@@ -35,7 +35,8 @@ zappy::ZappyServer::ZappyServer(const utils::ZappyConfig& config)
 
     signal(SIGINT, signalHandler);
 
-
+    EventSystem::subscribe<unsigned int>(
+        "player_levelup", std::function(engine::GraphicalClient::sendPlvProxy));
     EventSystem::subscribe<std::string>(
         "end_game", std::function(engine::GraphicalClient::sendSeg));
     EventSystem::subscribe<std::weak_ptr<engine::entities::Player>, int>(

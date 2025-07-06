@@ -112,11 +112,12 @@ void zappy::engine::cmd::CmdIncantation::cmdIncantation(std::weak_ptr<entities::
     for (auto helper : helpers) {
         const auto helperLock = helper.lock();
         helperLock->upLevel();
-        EventSystem::trigger("end_incantation", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world,
-                     helper, 1);
+        EventSystem::trigger("player_levelup", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, helperLock->ID);
         world.getMainZappyServer().sendMessageToClient("Current level: " + std::to_string(helperLock->getLevel()),
                                                helperLock->ID);
     }
+    std::weak_ptr<engine::entities::Player> helperLock = helpers[0].lock();
+    EventSystem::trigger("end_incantation", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world, helperLock, 1);
 }
 
 bool zappy::engine::cmd::CmdIncantation::cmdPreIncantation(std::weak_ptr<entities::Player> player, World& world,

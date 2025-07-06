@@ -229,7 +229,7 @@ void zappy::engine::GraphicalClient::sendPpo(GraphicalClient& graphic, [[maybe_u
     int n;
 
     std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending ppo command to CLIENT : " << graphic.getID() << std::endl;
-    if (!(iss >> n) || n > world.getPlayers().size())
+    if (!(iss >> n))
     {
         std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad ppo command from CLIENT : " << graphic.getID() <<
             std::endl;
@@ -264,7 +264,7 @@ void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, [[maybe_u
     int n;
 
     std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending plv command to CLIENT : " << graphic.getID() << std::endl;
-    if (!(iss >> n) || n > world.getPlayers().size())
+    if (!(iss >> n))
     {
         std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad plv command from CLIENT : " << graphic.getID() <<
             std::endl;
@@ -289,6 +289,16 @@ void zappy::engine::GraphicalClient::sendPlv(GraphicalClient& graphic, [[maybe_u
     world.getMainZappyServer().sendMessageToClient(com, graphic.getID());
 }
 
+void zappy::engine::GraphicalClient::sendPlvProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
+                                                  utils::ZappyConfig& config, const World& world,
+                                                  const unsigned int pl_id)
+{
+    for (const auto& graphic: graphics)
+    {
+        sendPlv(*graphic, config, world, std::to_string(pl_id));
+    }
+}
+
 void zappy::engine::GraphicalClient::sendPinProxy(const std::vector<std::shared_ptr<GraphicalClient>>& graphics,
                                                   utils::ZappyConfig& config, const World& world,
                                                   [[maybe_unused]] unsigned int unused, const unsigned int pl_id)
@@ -308,7 +318,7 @@ void zappy::engine::GraphicalClient::sendPin(GraphicalClient& graphic, [[maybe_u
     int n;
 
     std::cout << debug::getTS() << "[TRACE][GRAPHIC] sending pin command to CLIENT : " << graphic.getID() << std::endl;
-    if (!(iss >> n) || n > world.getPlayers().size())
+    if (!(iss >> n))
     {
         std::cout << debug::getTS() << "[TRACE][GRAPHIC] bad pin command from CLIENT : " << graphic.getID() <<
             std::endl;
