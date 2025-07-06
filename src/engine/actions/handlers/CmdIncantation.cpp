@@ -101,12 +101,22 @@ void zappy::engine::cmd::CmdIncantation::cmdIncantation(std::weak_ptr<entities::
     }
     for (const auto& [element, quantity] : requiredRessources)
         tile.removeResource(element, quantity);
-    lockPlayer->upLevel();
-    EventSystem::trigger("end_incantation", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world,
-                         player, 1);
     EventSystem::trigger("map_refill", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world);
-    world.getMainZappyServer().sendMessageToClient("Current level: " + std::to_string(lockPlayer->getLevel()),
-                                                   lockPlayer->ID);
+
+    std::vector<std::weak_ptr<entities::Player>> helpers;
+    helpers.push_back(lockPlayer);
+    for (const auto possiblePlayer : tile.getPlayers())
+        if (possiblePlayer->getLevel() == lockPlayer->getLevel() && possiblePlayer->ID != lockPlayer->ID)
+            helpers.push_back(possiblePlayer);
+
+    for (auto helper : helpers) {
+        const auto helperLock = helper.lock();
+        helperLock->upLevel();
+        EventSystem::trigger("end_incantation", world.getGraphicalClients(), world.getMainZappyServer().getConfig(), world,
+                     helper, 1);
+        world.getMainZappyServer().sendMessageToClient("Current level: " + std::to_string(helperLock->getLevel()),
+                                               helperLock->ID);
+    }
 }
 
 bool zappy::engine::cmd::CmdIncantation::cmdPreIncantation(std::weak_ptr<entities::Player> player, World& world,
@@ -129,7 +139,15 @@ bool zappy::engine::cmd::CmdIncantation::cmdPreIncantation(std::weak_ptr<entitie
     EventSystem::trigger("start_incantation", world.getGraphicalClients(), world.getMainZappyServer().getConfig(),
                          world, players);
 
-    world.getMainZappyServer().sendMessageToClient("Elevation underway", player.lock()->ID);
+    std::vector<std::weak_ptr<entities::Player>> helpers;
+    helpers.push_back(lockPlayer);
+    for (const auto possiblePlayer : tile.getPlayers())
+        if (possiblePlayer->getLevel() == lockPlayer->getLevel() && possiblePlayer->ID != lockPlayer->ID)
+            helpers.push_back(possiblePlayer);
+
+    for (auto helper : helpers)
+        world.getMainZappyServer().sendMessageToClient("Elevation underway", helper.lock()->ID);
+
     return true;
 }
 
