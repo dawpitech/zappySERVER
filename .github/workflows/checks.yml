@@ -26,25 +26,15 @@ jobs:
       - name: Compile
         run: cmake -S . -B build && cmake --build build
 
-  mirror:
-    if: github.event_name != 'pull_request' && github.repository_owner == 'dawpitech'
+  trigger-submodules-update:
     runs-on: ubuntu-latest
     needs: compile
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'
-          fetch-depth: '0'
-
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: $SSH_PUB_KEY
-
-      - name: Push to epitech
+      - name: Trigger Main Repository CI/CD
+        if: success()
         run: |
-          git remote add epitech "${{ secrets.MIRROR_REPO }}"
-          git push --force epitech
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.MAIN_REPO_TOKEN }}" \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            https://api.github.com/repos/Dawoox/main-repo/dispatches \
+            -d '{"event_type": "update_submodule"}'
