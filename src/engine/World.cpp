@@ -286,12 +286,6 @@ namespace zappy::engine
         //for (const auto& [type, quantity] : RESSOURCES_TO_BE_PLACED)
         //    std::cout << "\t" << getRessourceName(type) << " x" << quantity << std::endl;
 
-        for (const auto& rsc : {
-                 Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE,
-                 Ressources::PHIRAS, Ressources::THYSTAME
-             })
-            RESSOURCES_TO_BE_PLACED.at(rsc) -= RESSOURCES_ALREADY_PLACED.at(rsc);
-
         // Should NEVER be the case but its one of the rules of the ressource generation system
         for (const auto& rsc : {
                  Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE,
@@ -299,6 +293,17 @@ namespace zappy::engine
              })
             if (RESSOURCES_TO_BE_PLACED.at(rsc) <= 0)
                 RESSOURCES_TO_BE_PLACED.at(rsc) = 1;
+
+        for (const auto& rsc : {
+                 Ressources::FOOD, Ressources::LINEMATE, Ressources::DERAUMERE, Ressources::SIBUR, Ressources::MENDIANE,
+                 Ressources::PHIRAS, Ressources::THYSTAME
+             })
+            RESSOURCES_TO_BE_PLACED.at(rsc) -= RESSOURCES_ALREADY_PLACED.at(rsc);
+
+        //DEBUG: Used to print ressource generation density normalized
+        //std::cout << "TO BE PLACED (NORMALIZED)" << std::endl;
+        //for (const auto& [type, quantity] : RESSOURCES_TO_BE_PLACED)
+        //    std::cout << "\t" << getRessourceName(type) << " x" << quantity << std::endl;
 
         for (const auto& [type, quantity] : RESSOURCES_TO_BE_PLACED)
         {
